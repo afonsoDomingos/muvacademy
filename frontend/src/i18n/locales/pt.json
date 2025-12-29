@@ -1,0 +1,218 @@
+{
+    "nav": {
+        "home": "Início",
+        "courses": "Cursos",
+        "about": "Sobre",
+        "contact": "Contato",
+        "login": "Entrar",
+        "register": "Registrar",
+        "dashboard": "Dashboard",
+        "profile": "Perfil",
+        "logout": "Sair",
+        "admin": "Administração"
+    },
+    "home": {
+        "hero": {
+            "title": "Aprenda Engenharia com os Melhores",
+            "subtitle": "Cursos técnicos e profissionais de alta qualidade, adaptados à realidade de Moçambique",
+            "cta": "Explorar Cursos",
+            "secondary": "Saiba Mais"
+        },
+        "features": {
+            "title": "Por que escolher a MUV Academy?",
+            "quality": {
+                "title": "Conteúdo de Qualidade",
+                "description": "Cursos desenvolvidos por profissionais experientes do mercado"
+            },
+            "certificate": {
+                "title": "Certificação",
+                "description": "Certificados reconhecidos para impulsionar sua carreira"
+            },
+            "support": {
+                "title": "Suporte Dedicado",
+                "description": "Acompanhamento e suporte durante todo seu aprendizado"
+            },
+            "access": {
+                "title": "Acesso Ilimitado",
+                "description": "Estude no seu ritmo, quando e onde quiser"
+            }
+        },
+        "courses": {
+            "title": "Cursos em Destaque",
+            "viewAll": "Ver Todos os Cursos"
+        },
+        "stats": {
+            "students": "Alunos",
+            "courses": "Cursos",
+            "instructors": "Instrutores",
+            "certificates": "Certificados"
+        },
+        "cta": {
+            "title": "Pronto para Começar?",
+            "subtitle": "Junte-se a milhares de profissionais que estão transformando suas carreiras",
+            "button": "Criar Conta Grátis"
+        }
+    },
+    "auth": {
+        "login": {
+            "title": "Bem-vindo de Volta",
+            "subtitle": "Entre na sua conta para continuar",
+            "email": "Email",
+            "password": "Senha",
+            "remember": "Lembrar-me",
+            "forgot": "Esqueceu a senha?",
+            "submit": "Entrar",
+            "noAccount": "Não tem conta?",
+            "register": "Criar conta"
+        },
+        "register": {
+            "title": "Criar Conta",
+            "subtitle": "Comece sua jornada de aprendizado",
+            "name": "Nome Completo",
+            "email": "Email",
+            "phone": "Telefone (opcional)",
+            "password": "Senha",
+            "confirmPassword": "Confirmar Senha",
+            "terms": "Aceito os termos de uso e política de privacidade",
+            "submit": "Criar Conta",
+            "hasAccount": "Já tem conta?",
+            "login": "Entrar"
+        },
+        "errors": {
+            "invalidCredentials": "Email ou senha inválidos",
+            "emailExists": "Este email já está registrado",
+            "passwordMismatch": "As senhas não coincidem",
+            "requiredField": "Campo obrigatório"
+        }
+    },
+    "courses": {
+        "title": "Nossos Cursos",
+        "subtitle": "Explore nossa biblioteca de cursos técnicos e profissionais",
+        "search": "Buscar cursos...",
+        "filters": {
+            "all": "Todos",
+            "category": "Categoria",
+            "level": "Nível",
+            "price": "Preço"
+        },
+        "levels": {
+            "all": "Todos os Níveis",
+            "iniciante": "Iniciante",
+            "intermediario": "Intermediário",
+            "avancado": "Avançado"
+        },
+        "card": {
+            "students": "alunos",
+            "lessons": "aulas",
+            "hours": "horas",
+            "free": "Grátis",
+            "enroll": "Inscrever-se",
+            "view": "Ver Curso"
+        },
+        "detail": {
+            "about": "Sobre o Curso",
+            "curriculum": "Currículo",
+            "instructor": "Instrutor",
+            "reviews": "Avaliações",
+            "requirements": "Requisitos",
+            "objectives": "O que você vai aprender",
+            "audience": "Para quem é este curso",
+            "modules": "módulos",
+            "lessons": "aulas",
+            "duration": "duração",
+            "certificate": "Certificado incluso",
+            "lifetime": "Acesso vitalício",
+            "enrollNow": "Inscrever-se Agora"
+        }
+    },
+    "enrollment": {
+        "title": "Confirmar Inscrição",
+        "course": "Curso",
+        "price": "Valor",
+        "paymentInfo": "Informações de Pagamento",
+        "bankTransfer": "Transferência Bancária",
+        "mpesa": "M-Pesa",
+        "emola": "e-Mola",
+        "uploadProof": "Enviar Comprovativo",
+        "uploadHint": "Arraste ou clique para enviar o comprovativo de pagamento",
+        "submit": "Confirmar Inscrição",
+        "pending": "Sua inscrição está pendente de aprovação",
+        "approved": "Inscrição aprovada! Acesse o curso",
+        "rejected": "Inscrição rejeitada"
+    },
+    "dashboard": {
+        "welcome": "Bem-vindo",
+        "myCourses": "Meus Cursos",
+        "inProgress": "Em Andamento",
+        "completed": "Concluídos",
+        "pending": "Pendentes",
+        "progress": "Progresso",
+        "continue": "Continuar",
+        "start": "Começar",
+        "noCourses": "Você ainda não está inscrito em nenhum curso",
+        "exploreCourses": "Explorar Cursos",
+        "notifications": "Notificações",
+        "markAllRead": "Marcar todas como lidas",
+        "noNotifications": "Sem notificações"
+    },
+    "admin": {
+        "title": "Painel Administrativo",
+        "dashboard": "Dashboard",
+        "courses": "Cursos",
+        "enrollments": "Inscrições",
+        "users": "Usuários",
+        "stats": "Estatísticas",
+        "settings": "Configurações",
+        "pending": "Pendentes",
+        "approved": "Aprovadas",
+        "rejected": "Rejeitadas",
+        "approve": "Aprovar",
+        "reject": "Rejeitar",
+        "viewProof": "Ver Comprovativo",
+        "addCourse": "Novo Curso",
+        "editCourse": "Editar Curso",
+        "addModule": "Novo Módulo",
+        "addLesson": "Nova Aula",
+        "addMaterial": "Adicionar Material"
+    },
+    "common": {
+        "loading": "Carregando...",
+        "save": "Salvar",
+        "cancel": "Cancelar",
+        "delete": "Excluir",
+        "edit": "Editar",
+        "view": "Ver",
+        "back": "Voltar",
+        "next": "Próximo",
+        "previous": "Anterior",
+        "search": "Buscar",
+        "filter": "Filtrar",
+        "sort": "Ordenar",
+        "noResults": "Nenhum resultado encontrado",
+        "error": "Erro",
+        "success": "Sucesso",
+        "confirm": "Confirmar",
+        "close": "Fechar",
+        "upload": "Enviar",
+        "download": "Baixar",
+        "currency": "MZN"
+    },
+    "footer": {
+        "about": "Sobre Nós",
+        "aboutText": "MUV Educação e Engenharia é uma plataforma de ensino técnico-profissional focada em capacitar profissionais em Moçambique.",
+        "quickLinks": "Links Rápidos",
+        "contact": "Contato",
+        "social": "Redes Sociais",
+        "rights": "Todos os direitos reservados",
+        "terms": "Termos de Uso",
+        "privacy": "Política de Privacidade"
+    },
+    "theme": {
+        "light": "Modo Claro",
+        "dark": "Modo Escuro"
+    },
+    "language": {
+        "pt": "Português",
+        "en": "English"
+    }
+}
