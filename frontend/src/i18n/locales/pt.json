@@ -51,6 +51,21 @@
             "title": "Pronto para Começar?",
             "subtitle": "Junte-se a milhares de profissionais que estão transformando suas carreiras",
             "button": "Criar Conta Grátis"
+        },
+        "consulting": {
+            "title": "Consultoria & Serviços",
+            "subtitle": "Engenharia e Estratégia para o seu Negócio",
+            "description": "Além da educação, a MUV atua como parceira estratégica para empresas, oferecendo consultoria especializada e integração de soluções.",
+            "services": [
+                "Consultoria em Engenharia Civil e Elétrica",
+                "Implementação de Sistemas de Energia Renovável",
+                "Gestão de Projetos e Processos Industriais",
+                "Integração de Marcas e Parcerias Estratégicas",
+                "Treinamento Corporativo Personalizado",
+                "Estudos de Viabilidade Técnica e Econômica"
+            ],
+            "ctaPrimary": "Solicitar Proposta",
+            "ctaSecondary": "Falar com Especialista"
         }
     },
     "auth": {

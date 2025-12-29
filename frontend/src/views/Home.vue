@@ -138,6 +138,59 @@ onMounted(async () => {
       </div>
     </section>
 
+    <!-- Consulting Section -->
+    <section id="consulting" class="py-24 bg-surface">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 class="text-primary font-bold tracking-wider uppercase text-sm mb-3">
+              {{ t('home.consulting.title') }}
+            </h2>
+            <h3 class="text-3xl sm:text-5xl font-display font-bold mb-6">
+              {{ t('home.consulting.subtitle') }}
+            </h3>
+            <p class="text-lg text-muted mb-8 leading-relaxed">
+              {{ t('home.consulting.description') }}
+            </p>
+            
+            <ul class="space-y-4 mb-10">
+              <li v-for="(service, index) in t('home.consulting.services', { returnObjects: true })" :key="index" class="flex items-start gap-3">
+                <div class="mt-1 w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                  <i class="pi pi-check text-[10px] text-primary"></i>
+                </div>
+                <span class="text-DEFAULT font-medium">{{ service }}</span>
+              </li>
+            </ul>
+
+            <div class="flex flex-wrap gap-4">
+              <button class="btn btn-primary">
+                {{ t('home.consulting.ctaPrimary') }}
+              </button>
+              <button class="btn btn-secondary">
+                {{ t('home.consulting.ctaSecondary') }}
+              </button>
+            </div>
+          </div>
+
+          <div class="relative">
+            <div class="aspect-square rounded-3xl bg-gradient-to-br from-primary-500/10 to-accent-500/10 border border-primary/20 p-8 relative overflow-hidden group">
+              <!-- Decorative elements -->
+              <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary-500/20 rounded-full blur-3xl group-hover:bg-primary-500/30 transition-colors"></div>
+              <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-accent-500/20 rounded-full blur-3xl group-hover:bg-accent-500/30 transition-colors"></div>
+              
+              <div class="relative h-full flex flex-col justify-center items-center text-center">
+                <div class="w-20 h-20 rounded-2xl bg-surface border border-border shadow-glow flex items-center justify-center mb-6">
+                  <i class="pi pi-briefcase text-4xl text-primary"></i>
+                </div>
+                <h4 class="text-2xl font-bold mb-2">Parceria Estratégica</h4>
+                <p class="text-muted">Transformamos desafios técnicos em resultados de negócio com soluções sob medida.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="py-24 bg-gradient-to-r from-primary-600 to-accent-600 relative overflow-hidden">
       <div class="absolute inset-0 opacity-20">

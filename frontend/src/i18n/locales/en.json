@@ -51,6 +51,21 @@
             "title": "Ready to Get Started?",
             "subtitle": "Join thousands of professionals who are transforming their careers",
             "button": "Create Free Account"
+        },
+        "consulting": {
+            "title": "Consulting & Services",
+            "subtitle": "Engineering and Strategy for Your Business",
+            "description": "Beyond education, MUV acts as a strategic partner for companies, offering specialized consulting and solution integration.",
+            "services": [
+                "Civil and Electrical Engineering Consulting",
+                "Implementation of Renewable Energy Systems",
+                "Project Management and Industrial Processes",
+                "Brand Integration and Strategic Partnerships",
+                "Personalized Corporate Training",
+                "Technical and Economic Feasibility Studies"
+            ],
+            "ctaPrimary": "Request Proposal",
+            "ctaSecondary": "Talk to Specialist"
         }
     },
     "auth": {
