@@ -95,11 +95,11 @@ body {
 }
 
 .btn-secondary {
-  @apply bg-surface text-DEFAULT border border-primary/30 hover:border-primary hover:bg-primary/10;
+  @apply bg-surface text-DEFAULT border border-primary-500/30 hover:border-primary hover:bg-primary-500/10;
 }
 
 .btn-outline {
-  @apply border-2 border-primary text-primary hover:bg-primary hover:text-white;
+  @apply border-2 border-primary text-primary hover:bg-primary-500 hover:text-white;
 }
 
 .btn-ghost {
@@ -112,12 +112,12 @@ body {
 }
 
 .card-hover {
-  @apply hover:border-primary hover:shadow-glow hover:-translate-y-1;
+  @apply hover:border-primary-500/30 hover:shadow-glow hover:-translate-y-1;
 }
 
 /* Input styles */
 .input {
-  @apply w-full px-4 py-3 rounded-xl bg-surface border border-border text-DEFAULT placeholder:text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300;
+  @apply w-full px-4 py-3 rounded-xl bg-surface border border-border text-DEFAULT placeholder:text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-500/20 transition-all duration-300;
 }
 
 .input-error {
