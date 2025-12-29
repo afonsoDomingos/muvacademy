@@ -36,8 +36,12 @@ export default {
                     800: '#92400e',
                     900: '#78350f',
                 },
-                surface: 'var(--color-surface)',
-                background: 'var(--color-bg)',
+                surface: {
+                    DEFAULT: 'var(--color-surface)',
+                },
+                background: {
+                    DEFAULT: 'var(--color-bg)',
+                },
                 muted: 'var(--color-text-muted)',
                 DEFAULT: 'var(--color-text)',
             },
