@@ -43,7 +43,7 @@ export default {
                     DEFAULT: 'var(--color-bg)',
                 },
                 muted: 'var(--color-text-muted)',
-                DEFAULT: 'var(--color-text)',
+                base: 'var(--color-text)',
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],

@@ -95,7 +95,7 @@ body {
 }
 
 .btn-secondary {
-  @apply bg-surface text-DEFAULT border border-primary-500/30 hover:border-primary hover:bg-primary-500/10;
+  @apply bg-surface text-base border border-primary-500/30 hover:border-primary hover:bg-primary-500/10;
 }
 
 .btn-outline {
@@ -103,7 +103,7 @@ body {
 }
 
 .btn-ghost {
-  @apply text-muted hover:text-DEFAULT hover:bg-white/5;
+  @apply text-muted hover:text-base hover:bg-white/5;
 }
 
 /* Card styles */
@@ -117,7 +117,7 @@ body {
 
 /* Input styles */
 .input {
-  @apply w-full px-4 py-3 rounded-xl bg-surface border border-border text-DEFAULT placeholder:text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-500/20 transition-all duration-300;
+  @apply w-full px-4 py-3 rounded-xl bg-surface border border-border text-base placeholder:text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary-500/20 transition-all duration-300;
 }
 
 .input-error {
