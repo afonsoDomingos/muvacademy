@@ -88,6 +88,10 @@ const courseSchema = new mongoose.Schema({
             'redes',
             'energia-renovavel',
             'consultoria',
+            'gestao',
+            'geoprocessamento',
+            'energia-sustentabilidade',
+            'software',
             'outros'
         ]
     }],
