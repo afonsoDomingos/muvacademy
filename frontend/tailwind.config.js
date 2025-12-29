@@ -9,6 +9,8 @@ export default {
         extend: {
             colors: {
                 primary: {
+                    DEFAULT: 'var(--color-primary)',
+                    hover: 'var(--color-primary-hover)',
                     50: '#f0fdf4',
                     100: '#dcfce7',
                     200: '#bbf7d0',
@@ -22,6 +24,7 @@ export default {
                     950: '#052e16',
                 },
                 accent: {
+                    DEFAULT: 'var(--color-accent)',
                     50: '#fffbeb',
                     100: '#fef3c7',
                     200: '#fde68a',
@@ -33,14 +36,10 @@ export default {
                     800: '#92400e',
                     900: '#78350f',
                 },
-                surface: {
-                    light: '#ffffff',
-                    dark: '#1a1a2e',
-                },
-                background: {
-                    light: '#f8fafc',
-                    dark: '#0f0f1a',
-                }
+                surface: 'var(--color-surface)',
+                background: 'var(--color-bg)',
+                muted: 'var(--color-text-muted)',
+                DEFAULT: 'var(--color-text)',
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],

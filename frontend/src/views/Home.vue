@@ -37,10 +37,11 @@ onMounted(async () => {
     <!-- Hero Section -->
     <section class="relative min-h-[90vh] flex items-center overflow-hidden">
       <!-- Background -->
-      <div class="absolute inset-0 bg-gradient-to-br from-background-dark via-primary-900/20 to-accent-900/20"></div>
+      <div class="absolute inset-0 bg-slate-950"></div>
+      <div class="absolute inset-0 bg-gradient-to-br from-slate-900 via-primary-900/20 to-accent-900/20"></div>
       <div class="absolute inset-0 opacity-30">
-        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-500 rounded-full blur-[150px] animate-pulse-slow"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-500 rounded-full blur-[150px] animate-pulse-slow" style="animation-delay: 1s"></div>
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-600 rounded-full blur-[150px] animate-pulse-slow"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent-600 rounded-full blur-[150px] animate-pulse-slow" style="animation-delay: 1s"></div>
       </div>
       
       <!-- Grid pattern -->
@@ -71,7 +72,7 @@ onMounted(async () => {
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 animate-slide-up" style="animation-delay: 0.6s">
           <div v-for="stat in stats" :key="stat.key" class="text-center p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
             <div class="text-3xl sm:text-4xl font-bold gradient-text mb-2">{{ stat.value }}</div>
-            <div class="text-gray-400">{{ t(`home.stats.${stat.key}`) }}</div>
+            <div class="text-white/70">{{ t(`home.stats.${stat.key}`) }}</div>
           </div>
         </div>
       </div>
@@ -95,10 +96,10 @@ onMounted(async () => {
             <div class="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
               <i :class="feature.icon" class="text-2xl text-primary-400"></i>
             </div>
-            <h3 class="text-xl font-semibold text-white mb-3">
+            <h3 class="text-xl font-semibold mb-3">
               {{ t(`home.features.${feature.key}.title`) }}
             </h3>
-            <p class="text-gray-400">
+            <p class="text-muted">
               {{ t(`home.features.${feature.key}.description`) }}
             </p>
           </div>

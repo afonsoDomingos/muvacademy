@@ -4,14 +4,13 @@
 
 /* CSS Variables for themes */
 :root {
-  --color-primary: #22c55e;
-  --color-primary-hover: #16a34a;
-  --color-accent: #f59e0b;
-  --color-text: #1f2937;
-  --color-text-muted: #6b7280;
-  --color-bg: #f8fafc;
-  --color-surface: #ffffff;
-  --color-border: #e5e7eb;
+  --color-text: #0f172a;
+  /* Slate 900 */
+  --color-text-muted: #475569;
+  /* Slate 600 */
+  --color-bg: #ffffff;
+  --color-surface: #f8fafc;
+  --color-border: #e2e8f0;
   --color-success: #10b981;
   --color-warning: #f59e0b;
   --color-error: #ef4444;
@@ -26,11 +25,16 @@
 }
 
 .dark {
-  --color-text: #f3f4f6;
-  --color-text-muted: #9ca3af;
-  --color-bg: #0f0f1a;
-  --color-surface: #1a1a2e;
-  --color-border: #2d2d44;
+  --color-text: #f8fafc;
+  /* Slate 50 */
+  --color-text-muted: #94a3b8;
+  /* Slate 400 */
+  --color-bg: #0f172a;
+  /* Slate 900 */
+  --color-surface: #1e293b;
+  /* Slate 800 */
+  --color-border: #334155;
+  /* Slate 700 */
 }
 
 /* Base styles */
@@ -91,29 +95,29 @@ body {
 }
 
 .btn-secondary {
-  @apply bg-surface-dark text-white border border-primary-500/30 hover:border-primary-500 hover:bg-primary-500/10;
+  @apply bg-surface text-DEFAULT border border-primary/30 hover:border-primary hover:bg-primary/10;
 }
 
 .btn-outline {
-  @apply border-2 border-primary-500 text-primary-500 hover:bg-primary-500 hover:text-white;
+  @apply border-2 border-primary text-primary hover:bg-primary hover:text-white;
 }
 
 .btn-ghost {
-  @apply text-gray-400 hover:text-white hover:bg-white/5;
+  @apply text-muted hover:text-DEFAULT hover:bg-white/5;
 }
 
 /* Card styles */
 .card {
-  @apply bg-surface-dark rounded-2xl border border-white/5 transition-all duration-300;
+  @apply bg-surface rounded-2xl border border-border transition-all duration-300;
 }
 
 .card-hover {
-  @apply hover:border-primary-500/30 hover:shadow-glow hover:-translate-y-1;
+  @apply hover:border-primary hover:shadow-glow hover:-translate-y-1;
 }
 
 /* Input styles */
 .input {
-  @apply w-full px-4 py-3 rounded-xl bg-surface-dark border border-white/10 text-white placeholder:text-gray-500 focus:outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all duration-300;
+  @apply w-full px-4 py-3 rounded-xl bg-surface border border-border text-DEFAULT placeholder:text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300;
 }
 
 .input-error {
@@ -231,7 +235,7 @@ body {
 }
 
 .p-dropdown-item {
-  @apply !text-gray-300 hover:!bg-primary-500/20;
+  @apply !text-gray-300 hover: !bg-primary-500/20;
 }
 
 .p-button {
@@ -239,7 +243,7 @@ body {
 }
 
 .p-button.p-button-primary {
-  @apply !bg-gradient-to-r !from-primary-500 !to-accent-500 !border-0 hover:!shadow-glow;
+  @apply !bg-gradient-to-r !from-primary-500 !to-accent-500 !border-0 hover: !shadow-glow;
 }
 
 /* Hide scrollbar for specific elements */

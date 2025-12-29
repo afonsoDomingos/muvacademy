@@ -67,8 +67,8 @@ onMounted(() => {
             v-for="link in navLinks"
             :key="link.name"
             :to="link.path"
-            class="text-gray-300 hover:text-white transition-colors relative py-2"
-            :class="{ 'text-white': route.name === link.name }"
+            class="text-muted hover:text-primary transition-colors relative py-2"
+            :class="{ '!text-primary': route.name === link.name }"
           >
             {{ link.label }}
             <span
@@ -178,7 +178,7 @@ onMounted(() => {
 
           <!-- Guest -->
           <template v-else>
-            <RouterLink to="/login" class="hidden sm:block text-gray-300 hover:text-white transition-colors">
+            <RouterLink to="/login" class="hidden sm:block text-muted hover:text-primary transition-colors">
               {{ t('nav.login') }}
             </RouterLink>
             <RouterLink to="/register" class="btn btn-primary !py-2 !px-4 text-sm">
