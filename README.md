@@ -88,8 +88,9 @@ Após executar o seed:
 
 | Role | Email | Senha |
 |------|-------|-------|
-| Superadmin | superadmin@muvacademy.co.mz | Super@123456 |
-| Admin | admin@muvacademy.co.mz | Admin@123456 |
+| Superadmin | superadmin@muvacademy.co.mz | @SuperAdmin123@ |
+| Admin | admin@muvacademy.co.mz | @Admin123@ |
+| Cliente | cliente@muvacademy.co.mz | @Cliente123@ |
 
 ## 📚 Stack Tecnológica
 
@@ -149,11 +150,27 @@ Ver documentação completa em `backend/README.md`
 - `POST /api/enrollments` - Nova inscrição
 - `PATCH /api/enrollments/:id/approve` - Aprovar inscrição
 
-## 🐳 Docker (Futuro)
+## ☁️ Deploy (Produção)
 
-Dockerfiles serão adicionados para deploy em:
-- Vercel/Netlify (Frontend)
-- Render/DigitalOcean (Backend)
+### 1. Backend (Render)
+- **Repo:** Conectar seu GitHub.
+- **Root Directory:** `backend`
+- **Build Command:** `npm install`
+- **Start Command:** `npm start`
+- **Variáveis de Ambiente:**
+  - `MONGODB_URI`: Sua string do MongoDB Atlas.
+  - `JWT_SECRET`: Uma chave aleatória segura.
+  - `JWT_REFRESH_SECRET`: Outra chave aleatória segura.
+  - `CLOUDINARY_*`: Suas chaves do Cloudinary.
+  - `FRONTEND_URL`: URL do seu frontend na Vercel.
+
+### 2. Frontend (Vercel)
+- **Repo:** Conectar seu GitHub.
+- **Root Directory:** `frontend`
+- **Framework Preset:** `Vite`
+- **Variáveis de Ambiente:**
+  - `VITE_API_URL`: URL do seu backend no Render + `/api` (ex: `https://api-muv.onrender.com/api`).
+- **Observação:** O roteamento SPA já está configurado no `vercel.json`.
 
 ## 📄 Licença
 
