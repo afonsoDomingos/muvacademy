@@ -66,6 +66,27 @@
             ],
             "ctaPrimary": "Request Proposal",
             "ctaSecondary": "Talk to Specialist"
+        },
+        "team": {
+            "title": "Meet Our Team",
+            "subtitle": "Experts dedicated to transforming education and engineering in Mozambique",
+            "members": {
+                "afonso": {
+                    "name": "Afonso Domingos",
+                    "role": "IT and AI Specialist",
+                    "bio": "Specialist in Artificial Intelligence and development of innovative technological solutions."
+                },
+                "gil": {
+                    "name": "Gil Vilanculos",
+                    "role": "Data Analyst and Electronic Eng.",
+                    "bio": "Specialist in data analysis and electronic engineering with extensive experience in complex projects."
+                },
+                "antonio": {
+                    "name": "António Deus",
+                    "role": "GIS Specialist",
+                    "bio": "Specialist in Geographic Information Systems with expertise in mapping and spatial analysis."
+                }
+            }
         }
     },
     "auth": {

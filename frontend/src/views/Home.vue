@@ -4,6 +4,9 @@ import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useCourseStore } from '@/stores/course'
 import CourseCard from '@/components/courses/CourseCard.vue'
+import afonsoImg from '@/assets/team/afonso.jpg'
+import gilImg from '@/assets/team/gil.jpg'
+import antonioImg from '@/assets/team/antonio.jpg'
 
 const { t } = useI18n()
 const courseStore = useCourseStore()
@@ -30,6 +33,12 @@ onMounted(async () => {
   featuredCourses.value = await courseStore.fetchFeaturedCourses()
   loading.value = false
 })
+
+const team = [
+  { id: 'afonso', image: afonsoImg },
+  { id: 'gil', image: gilImg },
+  { id: 'antonio', image: antonioImg }
+]
 </script>
 
 <template>
@@ -186,6 +195,46 @@ onMounted(async () => {
                 <p class="text-muted">Transformamos desafios técnicos em resultados de negócio com soluções sob medida.</p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="py-24">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-primary font-bold tracking-wider uppercase text-sm mb-3">
+            {{ t('home.team.title') }}
+          </h2>
+          <h3 class="text-3xl sm:text-4xl font-display font-bold mb-4">
+            {{ t('home.team.subtitle') }}
+          </h3>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+          <div
+            v-for="member in team"
+            :key="member.id"
+            class="card p-8 text-center card-hover group"
+          >
+            <div class="relative w-40 h-40 mx-auto mb-6">
+              <div class="absolute inset-0 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full blur-xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+              <img
+                :src="member.image"
+                :alt="t(`home.team.members.${member.id}.name`)"
+                class="relative w-full h-full object-cover rounded-full border-2 border-primary/20 group-hover:border-primary transition-colors"
+              />
+            </div>
+            <h4 class="text-xl font-bold mb-1">
+              {{ t(`home.team.members.${member.id}.name`) }}
+            </h4>
+            <p class="text-primary font-medium text-sm mb-4">
+              {{ t(`home.team.members.${member.id}.role`) }}
+            </p>
+            <p class="text-muted text-sm leading-relaxed">
+              {{ t(`home.team.members.${member.id}.bio`) }}
+            </p>
           </div>
         </div>
       </div>

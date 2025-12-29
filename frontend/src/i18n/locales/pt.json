@@ -66,6 +66,27 @@
             ],
             "ctaPrimary": "Solicitar Proposta",
             "ctaSecondary": "Falar com Especialista"
+        },
+        "team": {
+            "title": "Conheça a Nossa Equipa",
+            "subtitle": "Especialistas dedicados a transformar a educação e engenharia em Moçambique",
+            "members": {
+                "afonso": {
+                    "name": "Afonso Domingos",
+                    "role": "Especialista TI e Inteligência Artificial",
+                    "bio": "Especialista em Inteligência Artificial e desenvolvimento de soluções tecnológicas inovadoras."
+                },
+                "gil": {
+                    "name": "Gil Vilanculos",
+                    "role": "Analista de Dados e Eng. Electrónico",
+                    "bio": "Especialista em análise de dados e engenharia electrónica com vasta experiência em projectos complexos."
+                },
+                "antonio": {
+                    "name": "António Deus",
+                    "role": "Especialista em GIS",
+                    "bio": "Especialista em Sistemas de Informação Geográfica com expertise em mapeamento e análise espacial."
+                }
+            }
         }
     },
     "auth": {
