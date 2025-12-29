@@ -1,0 +1,6 @@
+User: superadmin@muvacademy.co.mz
+  MATCH: Super@123456
+User: admin@muvacademy.co.mz
+  MATCH: Admin@123456
+User: cliente@muvacademy.co.mz
+  MATCH: @Cliente123@

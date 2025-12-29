@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import { useNotificationStore } from '@/stores/notification'
+import logoImg from '@/assets/logo.png'
 
 const { t, locale } = useI18n()
 const route = useRoute()
@@ -56,9 +57,7 @@ onMounted(() => {
       <div class="flex items-center justify-between h-16">
         <!-- Logo -->
         <RouterLink to="/" class="flex items-center gap-3 group" @click="closeMenus">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center shadow-glow group-hover:scale-105 transition-transform">
-            <span class="text-white font-bold text-lg">M</span>
-          </div>
+          <img :src="logoImg" alt="MUV Academy" class="h-10 w-auto group-hover:scale-105 transition-transform" />
           <span class="text-xl font-display font-bold gradient-text hidden sm:block">MUV Academy</span>
         </RouterLink>
 

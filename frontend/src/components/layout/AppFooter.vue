@@ -1,6 +1,7 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import logoImg from '@/assets/logo.png'
 
 const { t } = useI18n()
 const currentYear = new Date().getFullYear()
@@ -25,9 +26,7 @@ const socialLinks = [
         <!-- Brand -->
         <div class="md:col-span-2">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
-              <span class="text-white font-bold text-lg">M</span>
-            </div>
+            <img :src="logoImg" alt="MUV Academy" class="h-10 w-auto" />
             <span class="text-xl font-display font-bold gradient-text">MUV Academy</span>
           </div>
           <p class="text-gray-400 max-w-md leading-relaxed">
