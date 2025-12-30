@@ -8,7 +8,7 @@ import afonsoImg from '@/assets/team/afonso.jpg'
 import gilImg from '@/assets/team/gil.jpg'
 import antonioImg from '@/assets/team/antonio.jpg'
 
-const { t } = useI18n()
+const { t, tm } = useI18n()
 const courseStore = useCourseStore()
 
 const featuredCourses = ref([])
@@ -162,12 +162,10 @@ const team = [
               {{ t('home.consulting.description') }}
             </p>
             
-            <ul class="space-y-4 mb-10">
-              <li v-for="(service, index) in t('home.consulting.services', { returnObjects: true })" :key="index" class="flex items-start gap-3">
-                <div class="mt-1 w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                  <i class="pi pi-check text-[10px] text-primary"></i>
-                </div>
-                <span class="text-DEFAULT font-medium">{{ service }}</span>
+            <ul class="space-y-4 mb-8">
+              <li v-for="(service, index) in tm('home.consulting.services')" :key="index" class="flex items-start gap-3">
+                <i class="pi pi-check text-primary mt-1"></i>
+                <span class="text-muted">{{ service }}</span>
               </li>
             </ul>
 

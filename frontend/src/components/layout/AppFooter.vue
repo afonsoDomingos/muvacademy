@@ -91,9 +91,11 @@ const socialLinks = [
 
       <!-- Bottom -->
       <div class="mt-12 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p class="text-gray-500 text-sm">
-          © {{ currentYear }} MUV Educação e Engenharia. {{ t('footer.rights') }}.
-        </p>
+          <p class="text-gray-400 text-sm flex flex-col md:flex-row gap-2">
+            <span>&copy; {{ currentYear }} MUV Academy. Todos os direitos reservados.</span>
+            <span class="hidden md:inline">|</span>
+            <span>Developed by <a href="https://www.linkedin.com/in/afonso-domingos-6b59361a5/" target="_blank" rel="noopener noreferrer" class="text-primary hover:text-primary-hover transition-colors">Vibe</a></span>
+          </p>
         <div class="flex gap-6 text-sm text-gray-500">
           <a href="#" class="hover:text-white transition-colors">{{ t('footer.terms') }}</a>
           <a href="#" class="hover:text-white transition-colors">{{ t('footer.privacy') }}</a>

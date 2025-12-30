@@ -8,6 +8,7 @@ import Button from 'primevue/button'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import InputText from 'primevue/inputtext'
+import Dialog from 'primevue/dialog'
 
 const { t, locale } = useI18n()
 const courseStore = useCourseStore()
@@ -28,6 +29,28 @@ async function togglePublish(course) {
     fetchCourses()
   } else {
     toast.add({ severity: 'error', summary: 'Erro', detail: result.message, life: 5000 })
+  }
+}
+
+const deleteDialog = ref(false)
+const courseToDelete = ref(null)
+
+function confirmDelete(course) {
+  courseToDelete.value = course
+  deleteDialog.value = true
+}
+
+async function deleteCourse() {
+  if (courseToDelete.value) {
+    const result = await courseStore.deleteCourse(courseToDelete.value._id)
+    if (result.success) {
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Curso excluído com sucesso', life: 3000 })
+      fetchCourses()
+    } else {
+      toast.add({ severity: 'error', summary: 'Erro', detail: result.message, life: 5000 })
+    }
+    deleteDialog.value = false
+    courseToDelete.value = null
   }
 }
 
@@ -94,10 +117,30 @@ onMounted(fetchCourses)
                 @click="togglePublish(data)"
                 v-tooltip="data.published ? 'Despublicar' : 'Publicar'"
               />
+              <Button
+                icon="pi pi-trash"
+                class="p-button-sm p-button-text p-button-danger"
+                @click="confirmDelete(data)"
+                v-tooltip="'Excluir'"
+              />
             </div>
           </template>
         </Column>
       </DataTable>
     </div>
+
+    <!-- Confirm Dialog -->
+    <Dialog v-model:visible="deleteDialog" :style="{width: '450px'}" header="Confirmar Exclusão" :modal="true">
+      <div class="confirmation-content flex items-center">
+        <i class="pi pi-exclamation-triangle mr-3 text-4xl text-yellow-500" />
+        <span v-if="courseToDelete">
+          Tem certeza que deseja excluir o curso <b>{{ courseToDelete.title?.[locale] || courseToDelete.title?.pt }}</b>?
+        </span>
+      </div>
+      <template #footer>
+        <Button label="Não" icon="pi pi-times" class="p-button-text" @click="deleteDialog = false" />
+        <Button label="Sim" icon="pi pi-check" class="p-button-danger" @click="deleteCourse" autofocus />
+      </template>
+    </Dialog>
   </div>
 </template>

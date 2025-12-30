@@ -30,7 +30,8 @@ const addCourses = async () => {
                 level: 'todos',
                 published: true,
                 featured: true,
-                instructor: admin._id
+                instructor: admin._id,
+                image: '/images/courses/ai-business.jpg'
             },
             {
                 title: { pt: 'GIS (Sistemas de Informação Geográfica) – Avançado', en: 'GIS (Geographic Information Systems) – Advanced' },
@@ -45,7 +46,8 @@ const addCourses = async () => {
                 level: 'avancado',
                 published: true,
                 featured: true,
-                instructor: admin._id
+                instructor: admin._id,
+                image: '/images/courses/gis.jpg'
             },
             {
                 title: { pt: 'PVSyst – Energia Solar', en: 'PVSyst – Solar Energy' },
@@ -60,7 +62,8 @@ const addCourses = async () => {
                 level: 'intermediario',
                 published: true,
                 featured: true,
-                instructor: admin._id
+                instructor: admin._id,
+                image: '/images/courses/pvsyst.jpg'
             },
             {
                 title: { pt: 'SAP – Gestão Empresarial', en: 'SAP – Business Management' },
@@ -75,18 +78,38 @@ const addCourses = async () => {
                 level: 'todos',
                 published: true,
                 featured: true,
-                instructor: admin._id
+                instructor: admin._id,
+                image: '/images/courses/sap.jpg'
+            },
+            {
+                title: { pt: 'AutoCAD do Básico ao Avançado', en: 'AutoCAD from Basic to Advanced' },
+                description: {
+                    pt: 'Domine o software CAD mais utilizado no mundo para projetos de engenharia e arquitetura.',
+                    en: 'Master the most used CAD software in the world for engineering and architectural projects.'
+                },
+                priceMZN: 4500,
+                priceUSD: 75,
+                categories: ['engenharia-civil', 'arquitetura'],
+                duration: { hours: 50, minutes: 0 },
+                level: 'todos',
+                published: true,
+                featured: true,
+                instructor: admin._id,
+                image: '/images/courses/autocad.jpg'
             }
         ];
 
+        // Cleanup AutoCAD duplicates to ensure clean state
+        await Course.deleteMany({ 'title.pt': 'AutoCAD do Básico ao Avançado' });
+        console.log('🗑️ Removed old/duplicate AutoCAD entries');
+
         for (const courseData of newCourses) {
-            const exists = await Course.findOne({ 'title.pt': courseData.title.pt });
-            if (!exists) {
-                await Course.create(courseData);
-                console.log(`✅ Curso adicionado: ${courseData.title.pt}`);
-            } else {
-                console.log(`ℹ️ Curso já existe: ${courseData.title.pt}`);
-            }
+            await Course.findOneAndUpdate(
+                { 'title.pt': courseData.title.pt },
+                courseData,
+                { upsert: true, new: true }
+            );
+            console.log(`✅ Curso atualizado/criado: ${courseData.title.pt}`);
         }
 
         console.log('\n🚀 Novos cursos adicionados com sucesso ao catálogo!');

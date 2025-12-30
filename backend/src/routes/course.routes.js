@@ -16,7 +16,7 @@ router.post('/', authenticate, requireAdmin, createCourse);
 router.put('/:id', authenticate, requireAdmin, updateCourse);
 router.patch('/:id/publish', authenticate, requireAdmin, togglePublish);
 
-// Superadmin only
-router.delete('/:id', authenticate, requireSuperAdmin, deleteCourse);
+// Superadmin and Admin
+router.delete('/:id', authenticate, requireAdmin, deleteCourse);
 
 export default router;

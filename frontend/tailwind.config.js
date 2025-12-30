@@ -36,14 +36,11 @@ export default {
                     800: '#92400e',
                     900: '#78350f',
                 },
-                surface: {
-                    DEFAULT: 'var(--color-surface)',
-                },
-                background: {
-                    DEFAULT: 'var(--color-bg)',
-                },
+                surface: 'var(--color-surface)',
+                background: 'var(--color-bg)',
+                themeborder: 'var(--color-border)',
                 muted: 'var(--color-text-muted)',
-                base: 'var(--color-text)',
+                foreground: 'var(--color-text)',
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],
