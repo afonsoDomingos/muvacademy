@@ -24,27 +24,28 @@ const discountedPrice = computed(() => {
 </script>
 
 <template>
-  <div class="card card-hover overflow-hidden group">
+  <div class="card card-hover overflow-hidden group bg-surface border border-themeborder">
     <!-- Image -->
-    <div class="relative h-48 overflow-hidden">
+    <div class="relative h-48 overflow-hidden bg-gray-100 dark:bg-gray-800">
       <img
         v-if="course.image"
         :src="course.image"
         :alt="title"
         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
       />
-      <div v-else class="w-full h-full bg-gradient-to-br from-primary-600 to-accent-600 flex items-center justify-center">
-        <i class="pi pi-book text-4xl text-white/50"></i>
+      <!-- Placeholder with solid color -->
+      <div v-else class="w-full h-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
+        <i class="pi pi-book text-4xl text-slate-400"></i>
       </div>
       
       <!-- Featured badge -->
-      <div v-if="course.featured" class="absolute top-3 left-3 badge bg-yellow-500/20 text-yellow-400">
+      <div v-if="course.featured" class="absolute top-3 left-3 badge bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400 border border-yellow-200 dark:border-transparent">
         <i class="pi pi-star-fill mr-1"></i>
         Destaque
       </div>
       
       <!-- Level badge -->
-      <div class="absolute top-3 right-3 badge badge-primary">
+      <div class="absolute top-3 right-3 badge bg-white/90 dark:bg-black/60 backdrop-blur-sm text-foreground shadow-sm">
         {{ t(`courses.levels.${course.level}`) }}
       </div>
     </div>
@@ -56,59 +57,64 @@ const discountedPrice = computed(() => {
         <span
           v-for="cat in course.categories?.slice(0, 2)"
           :key="cat"
-          class="text-xs text-gray-400"
+          class="text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 px-2 py-0.5 rounded"
         >
           #{{ cat }}
         </span>
       </div>
 
       <!-- Title -->
-      <h3 class="text-lg font-semibold text-white mb-2 line-clamp-2 group-hover:text-primary-400 transition-colors">
+      <h3 class="text-lg font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
         {{ title }}
       </h3>
 
       <!-- Description -->
-      <p class="text-gray-400 text-sm line-clamp-2 mb-4">
+      <p class="text-muted text-sm line-clamp-2 mb-4">
         {{ description }}
       </p>
 
       <!-- Instructor -->
       <div v-if="course.instructor" class="flex items-center gap-2 mb-4">
-        <div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
-          <span class="text-white text-xs">{{ course.instructor.name?.charAt(0) }}</span>
+        <div class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
+           <img 
+            v-if="course.instructor.avatar" 
+            :src="course.instructor.avatar" 
+            class="w-full h-full object-cover"
+          />
+          <span v-else class="text-muted text-xs font-bold">{{ course.instructor.name?.charAt(0) }}</span>
         </div>
-        <span class="text-sm text-gray-400">{{ course.instructor.name }}</span>
+        <span class="text-sm text-muted font-medium">{{ course.instructor.name }}</span>
       </div>
 
       <!-- Stats -->
-      <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
+      <div class="flex items-center gap-4 text-sm text-muted mb-4">
         <span class="flex items-center gap-1">
-          <i class="pi pi-users"></i>
+          <i class="pi pi-users text-primary-500"></i>
           {{ course.enrollmentCount || 0 }} {{ t('courses.card.students') }}
         </span>
         <span v-if="course.duration" class="flex items-center gap-1">
-          <i class="pi pi-clock"></i>
+          <i class="pi pi-clock text-primary-500"></i>
           {{ course.duration.hours }}h
         </span>
       </div>
 
       <!-- Footer -->
-      <div class="flex items-center justify-between pt-4 border-t border-white/10">
+      <div class="flex items-center justify-between pt-4 border-t border-themeborder">
         <!-- Price -->
         <div>
-          <span v-if="hasDiscount" class="text-sm text-gray-500 line-through mr-2">
+          <span v-if="hasDiscount" class="text-sm text-muted line-through mr-2 block">
             {{ price.toLocaleString() }} {{ currency }}
           </span>
-          <span class="text-xl font-bold text-primary-400">
+          <span class="text-xl font-bold text-foreground">
             {{ (hasDiscount ? discountedPrice : price).toLocaleString() }}
-            <span class="text-sm text-gray-400">{{ currency }}</span>
+            <span class="text-xs font-normal text-muted">{{ currency }}</span>
           </span>
         </div>
 
         <!-- Action -->
         <RouterLink
           :to="`/courses/${course.slug || course._id}`"
-          class="btn btn-primary !py-2 !px-4 text-sm"
+          class="btn btn-primary !py-2 !px-4 text-sm shadow-none"
         >
           {{ t('courses.card.view') }}
         </RouterLink>

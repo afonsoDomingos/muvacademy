@@ -73,10 +73,10 @@ onMounted(async () => {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
       <div class="text-center mb-12">
-        <h1 class="text-4xl font-display font-bold text-white mb-4">
+        <h1 class="text-4xl font-display font-bold text-foreground mb-4">
           {{ t('courses.title') }}
         </h1>
-        <p class="text-gray-400 max-w-2xl mx-auto">
+        <p class="text-muted max-w-2xl mx-auto">
           {{ t('courses.subtitle') }}
         </p>
       </div>
@@ -121,10 +121,10 @@ onMounted(async () => {
 
       <!-- Courses Grid -->
       <div v-if="loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <div v-for="i in 6" :key="i" class="card p-6 animate-pulse">
-          <div class="w-full h-48 bg-white/10 rounded-xl mb-4"></div>
-          <div class="h-6 bg-white/10 rounded mb-2 w-3/4"></div>
-          <div class="h-4 bg-white/10 rounded w-1/2"></div>
+        <div v-for="i in 6" :key="i" class="card p-6 animate-pulse bg-surface">
+          <div class="w-full h-48 bg-gray-200 dark:bg-gray-700 rounded-xl mb-4"></div>
+          <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded mb-2 w-3/4"></div>
+          <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
         </div>
       </div>
 

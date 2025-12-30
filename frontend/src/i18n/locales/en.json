@@ -133,6 +133,7 @@
         },
         "levels": {
             "all": "All Levels",
+            "todos": "All Levels",
             "iniciante": "Beginner",
             "intermediario": "Intermediate",
             "avancado": "Advanced"
