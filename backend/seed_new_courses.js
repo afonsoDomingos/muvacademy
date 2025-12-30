@@ -71,8 +71,28 @@ const addCourses = async () => {
                     pt: 'Capacitação nos principais módulos do sistema SAP para uma gestão eficiente de recursos empresariais.',
                     en: 'Training in the main modules of the SAP system for efficient management of business resources.'
                 },
-                priceMZN: 8500,
-                priceUSD: 130,
+                priceMZN: 10000,
+                priceUSD: 160,
+                pricingOptions: [
+                    {
+                        title: { pt: 'Módulos Funcionais', en: 'Functional Modules' },
+                        priceMZN: 10000,
+                        priceUSD: 160,
+                        description: { pt: 'Gestão Financeira (FI), Controladoria (CO), Vendas (SD), Materiais (MM), etc.', en: 'Financial (FI), Controlling (CO), Sales (SD), Materials (MM), etc.' }
+                    },
+                    {
+                        title: { pt: 'Módulos Técnicos ou Infraestrutura', en: 'Technical or Infrastructure Modules' },
+                        priceMZN: 25000,
+                        priceUSD: 400,
+                        description: { pt: 'ABAP, Basis, NetWeaver, Integração (PI/PO), etc.', en: 'ABAP, Basis, NetWeaver, Integration (PI/PO), etc.' }
+                    },
+                    {
+                        title: { pt: 'Módulos Setoriais ou Industry', en: 'Sectorial or Industry Modules' },
+                        priceMZN: 35000,
+                        priceUSD: 550,
+                        description: { pt: 'Oil & Gas, Banking, Retail, Healthcare, Utilities, etc.', en: 'Oil & Gas, Banking, Retail, Healthcare, Utilities, etc.' }
+                    }
+                ],
                 categories: ['gestao', 'software'],
                 duration: { hours: 80, minutes: 0 },
                 level: 'todos',
@@ -96,14 +116,65 @@ const addCourses = async () => {
                 featured: true,
                 instructor: admin._id,
                 image: '/images/courses/autocad.jpg'
+            },
+            {
+                title: { pt: 'Tráfego Pago e Marketing Digital', en: 'Paid Traffic & Digital Marketing' },
+                description: {
+                    pt: 'Aprenda a criar campanhas de alta conversão no Facebook Ads e Google Ads com baixo investimento. Domine o Gerenciador de Anúncios e venda mais.',
+                    en: 'Learn to create high-converting campaigns on Facebook Ads and Google Ads with low investment. Master the Ads Manager and sell more.'
+                },
+                priceMZN: 499,
+                priceUSD: 10,
+                pricingOptions: [],
+                categories: ['gestao', 'outros'],
+                duration: { hours: 12, minutes: 0 },
+                level: 'iniciante',
+                published: true,
+                featured: true,
+                instructor: admin._id,
+                image: '/images/courses/marketing.jpg'
             }
         ];
 
-        // Cleanup AutoCAD duplicates to ensure clean state
+        // Cleanup duplicate entries for cleaner seeding
+        await Course.deleteMany({ 'title.pt': 'Tráfego Pago e Marketing Digital' });
         await Course.deleteMany({ 'title.pt': 'AutoCAD do Básico ao Avançado' });
         console.log('🗑️ Removed old/duplicate AutoCAD entries');
 
+        // Helper to generate slug
+        const generateSlug = (text) => {
+            return text.toString().toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Remove accents
+                .replace(/\s+/g, '-')           // Replace spaces with -
+                .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+                .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+                .replace(/^-+/, '')             // Trim - from start
+                .replace(/-+$/, '')             // Trim - from end
+                + '-' + Date.now();
+        };
+
         for (const courseData of newCourses) {
+            // Check if course exists to preserve slug
+            const existing = await Course.findOne({ 'title.pt': courseData.title.pt });
+
+            if (!existing) {
+                // If new, generate slug
+                courseData.slug = generateSlug(courseData.title.pt);
+            } else {
+                // If existing, don't overwrite slug (remove it from update payload if it was auto-generated or static)
+                // Actually, just ensuring we don't send a null slug is enough, but strictly we want to keep existing slug.
+                // However, findOneAndUpdate replaces fields.
+                // Let's just create a slug if it doesn't exist in our payload.
+                if (!courseData.slug) {
+                    courseData.slug = existing.slug;
+                }
+            }
+
+            // Fallback if somehow slug is still missing (e.g. existing doc had no slug, highly unlikely)
+            if (!courseData.slug) {
+                courseData.slug = generateSlug(courseData.title.pt);
+            }
+
             await Course.findOneAndUpdate(
                 { 'title.pt': courseData.title.pt },
                 courseData,

@@ -71,6 +71,18 @@ const courseSchema = new mongoose.Schema({
         default: 0,
         min: [0, 'Discount cannot be negative']
     },
+    pricingOptions: [{
+        title: {
+            pt: { type: String, required: true },
+            en: { type: String, required: true }
+        },
+        priceMZN: { type: Number, required: true },
+        priceUSD: { type: Number, required: true },
+        description: {
+            pt: String,
+            en: String
+        }
+    }],
     categories: [{
         type: String,
         enum: [
