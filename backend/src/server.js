@@ -36,6 +36,9 @@ const allowedOrigins = [
   process.env.FRONTEND_URL || 'http://localhost:5173',
   'http://localhost:5174',
   'http://localhost:3000',
+  'https://muvacademy.vercel.app',
+  'https://muv.co.mz',
+  'https://www.muv.co.mz'
 ];
 
 // Aceitar previews do Vercel dinamicamente
@@ -43,10 +46,12 @@ app.use(cors({
   origin: (origin, callback) => {
     // Permitir requests sem origin (mobile apps, Postman, etc.)
     if (!origin) return callback(null, true);
-    // Permitir origens da lista ou subdomínios do Vercel
+    // Permitir origens da lista ou subdomínios do Vercel/Render/MUV
     const isAllowed = allowedOrigins.includes(origin) ||
       /\.vercel\.app$/.test(origin) ||
-      /\.onrender\.com$/.test(origin);
+      /\.onrender\.com$/.test(origin) ||
+      /\.muv\.co\.mz$/.test(origin);
+    
     if (isAllowed) return callback(null, true);
     return callback(new Error('Not allowed by CORS'));
   },
