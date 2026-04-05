@@ -178,7 +178,7 @@ const openServiceModal = (service) => {
                   <i class="pi pi-bolt text-xl"></i>
                   {{ banner.ctaText?.[locale] || banner.ctaText?.pt }}
                 </RouterLink>
-                <a href="#services" class="btn btn-secondary text-lg px-10 py-5">
+                <a href="#services" class="btn btn-secondary text-lg px-10 py-5 !text-white">
                   Saiba Mais
                 </a>
               </div>

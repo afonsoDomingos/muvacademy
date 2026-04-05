@@ -108,6 +108,15 @@ app.use('/api/service-requests', serviceRequestRoutes);
 app.use('/api/workshops', workshopRoutes);
 app.use('/api/organization', organizationRoutes);
 
+// TEST ROUTE TO VERIFY DEPLOY
+app.get('/api/test-routes', (req, res) => {
+    res.json({ 
+        success: true, 
+        message: 'All MUV ERP & Content Routes are ACTIVE',
+        timestamp: new Date().toISOString()
+    });
+});
+
 console.log('✅ ORGANIZATION & CONTENT ROUTES ACTIVATED');
 
 // Health Check
