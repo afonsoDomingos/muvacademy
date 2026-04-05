@@ -9,6 +9,7 @@ import afonsoImg from '@/assets/team/afonso.jpg'
 import gilImg from '@/assets/team/gil.jpg'
 import antonioImg from '@/assets/team/antonio.jpg'
 import ServiceRequestModal from '@/components/services/ServiceRequestModal.vue'
+import api from '@/services/api'
 
 const { t, tm, locale } = useI18n()
 const courseStore = useCourseStore()
