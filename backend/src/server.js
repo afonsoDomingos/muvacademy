@@ -108,6 +108,8 @@ app.use('/api/service-requests', serviceRequestRoutes);
 app.use('/api/workshops', workshopRoutes);
 app.use('/api/organization', organizationRoutes);
 
+console.log('✅ ORGANIZATION & CONTENT ROUTES ACTIVATED');
+
 // Health Check
 app.get('/api/ping', (req, res) => res.status(200).send('pong'));
 app.get('/api/health', (req, res) => {

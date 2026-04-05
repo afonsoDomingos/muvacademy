@@ -50,17 +50,17 @@ const selectSlide = (index) => {
 onMounted(async () => {
   try {
     loading.value = true
-    const [coursesData, bannersData, servicesData, workshopsData] = await Promise.all([
-      courseStore.fetchFeaturedCourses(),
-      contentStore.fetchHomeBanners(),
-      contentStore.fetchServices(),
-      api.get('/workshops')
+    const [coursesData, bannersData, servicesData, workshopsRes] = await Promise.all([
+      courseStore.fetchFeaturedCourses().catch(e => { console.error('FeaturedCourses Error:', e); return [] }),
+      contentStore.fetchHomeBanners().catch(e => { console.error('Banners Error:', e); return [] }),
+      contentStore.fetchServices().catch(e => { console.error('Services Error:', e); return [] }),
+      api.get('/workshops').catch(e => { console.error('Workshops Error:', e); return { data: { data: { workshops: [] } } } })
     ])
     
     featuredCourses.value = coursesData || []
     banners.value = bannersData || []
     services.value = servicesData || []
-    workshops.value = workshopsData.data.data.workshops || []
+    workshops.value = workshopsRes.data?.data?.workshops || []
     
     // Default static banners if empty
     if (!bannersData || bannersData.length === 0) {
