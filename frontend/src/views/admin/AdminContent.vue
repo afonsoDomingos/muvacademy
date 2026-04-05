@@ -7,6 +7,8 @@ import Dialog from 'primevue/dialog'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Dropdown from 'primevue/dropdown'
+import Toast from 'primevue/toast'
+import ConfirmDialog from 'primevue/confirmdialog'
 
 const contentStore = useContentStore()
 const toast = useToast()
@@ -478,5 +480,7 @@ onMounted(loadData)
         <button @click="saveWorkshop" class="btn btn-primary !py-2 !px-4">Guardar</button>
       </template>
     </Dialog>
+    <Toast />
+    <ConfirmDialog />
   </div>
 </template>
