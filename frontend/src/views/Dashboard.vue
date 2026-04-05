@@ -19,7 +19,9 @@ const user = computed(() => authStore.user)
 const completing = ref(false)
 const myRequests = ref([])
 
-const enrollments = computed(() => enrollmentStore.myEnrollments)
+const enrollments = computed(() => enrollmentStore.myEnrollments || [])
+const notifications = computed(() => notificationStore.notifications || [])
+
 const approvedEnrollments = computed(() => enrollments.value.filter(e => e.status === 'APROVADO'))
 const pendingEnrollments = computed(() => enrollments.value.filter(e => e.status === 'PENDENTE'))
 const inProgressCourses = computed(() => approvedEnrollments.value.filter(e => e.overallProgress < 100))
@@ -36,9 +38,10 @@ import api from '@/services/api'
 const fetchMyRequests = async () => {
     try {
         const response = await api.get('/service-requests/my')
-        myRequests.value = response.data.data.requests
+        myRequests.value = response.data.data?.requests || []
     } catch (e) {
         console.error('Error fetching my requests:', e)
+        myRequests.value = []
     }
 }
 
