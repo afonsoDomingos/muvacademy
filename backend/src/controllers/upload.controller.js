@@ -1,4 +1,22 @@
-import cloudinary, { uploadCourseImage, uploadAvatar, uploadProof, uploadMaterial } from '../config/cloudinary.js';
+import cloudinary, { uploadCourseImage, uploadAvatar, uploadProof, uploadMaterial, uploadBanner, uploadWorkshop } from '../config/cloudinary.js';
+
+// Upload banner
+export const uploadBannerHandler = (req, res) => {
+    uploadBanner.single('image')(req, res, (err) => {
+        if (err) return res.status(400).json({ success: false, message: err.message });
+        if (!req.file) return res.status(400).json({ success: false, message: 'Nenhum arquivo enviado.' });
+        res.json({ success: true, data: { url: req.file.path, publicId: req.file.filename } });
+    });
+};
+
+// Upload workshop image
+export const uploadWorkshopHandler = (req, res) => {
+    uploadWorkshop.single('image')(req, res, (err) => {
+        if (err) return res.status(400).json({ success: false, message: err.message });
+        if (!req.file) return res.status(400).json({ success: false, message: 'Nenhum arquivo enviado.' });
+        res.json({ success: true, data: { url: req.file.path, publicId: req.file.filename } });
+    });
+};
 
 // Upload course image
 export const uploadCourseImageHandler = (req, res) => {

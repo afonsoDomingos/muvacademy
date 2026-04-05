@@ -206,6 +206,35 @@ function confirmDeleteService(service) {
   })
 }
 
+const uploading = ref(false)
+
+async function handleFileUpload(event, type) {
+  const file = event.target.files[0]
+  if (!file) return
+
+  const formData = new FormData()
+  formData.append('image', file)
+  
+  uploading.value = true
+  try {
+    const endpoint = type === 'banner' ? '/upload/banner' : '/upload/workshop'
+    const res = await api.post(endpoint, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    
+    if (type === 'banner') {
+      bannerForm.value.image = res.data.data.url
+    } else {
+      workshopForm.value.image = res.data.data.url
+    }
+    toast.add({ severity: 'info', summary: 'Upload concluído', detail: 'Imagem carregada com sucesso', life: 3000 })
+  } catch (err) {
+    toast.add({ severity: 'error', summary: 'Erro de Upload', detail: 'Falha ao carregar imagem', life: 3000 })
+  } finally {
+    uploading.value = false
+  }
+}
+
 onMounted(loadData)
 </script>
 
@@ -330,8 +359,16 @@ onMounted(loadData)
         </div>
         <div class="grid sm:grid-cols-2 gap-4">
           <div class="field">
-            <label class="block text-sm font-bold mb-2">URL da Imagem</label>
-            <InputText v-model="bannerForm.image" class="input" placeholder="/images/hero-premium.png" />
+            <label class="block text-sm font-bold mb-2">Imagem do Banner</label>
+            <div class="flex gap-2">
+               <InputText v-model="bannerForm.image" class="input flex-1" placeholder="/images/hero-premium.png" disabled />
+               <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center gap-2">
+                  <i v-if="uploading" class="pi pi-spin pi-spinner"></i>
+                  <i v-else class="pi pi-upload"></i>
+                  <span>Alterar</span>
+                  <input type="file" @change="handleFileUpload($event, 'banner')" class="hidden" accept="image/*" />
+               </label>
+            </div>
           </div>
           <div class="field">
             <label class="block text-sm font-bold mb-2">Link do CTA</label>
@@ -401,8 +438,16 @@ onMounted(loadData)
         </div>
         <div class="grid sm:grid-cols-2 gap-4">
           <div class="field">
-            <label class="block text-sm font-bold mb-2">URL da Imagem</label>
-            <InputText v-model="workshopForm.image" class="input" />
+            <label class="block text-sm font-bold mb-2">Imagem do Workshop</label>
+            <div class="flex gap-2">
+               <InputText v-model="workshopForm.image" class="input flex-1" placeholder="Selecione imagem..." disabled />
+               <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center gap-2">
+                  <i v-if="uploading" class="pi pi-spin pi-spinner"></i>
+                  <i v-else class="pi pi-upload"></i>
+                  <span>Alterar</span>
+                  <input type="file" @change="handleFileUpload($event, 'workshop')" class="hidden" accept="image/*" />
+               </label>
+            </div>
           </div>
           <div class="field">
             <label class="block text-sm font-bold mb-2">Link de Inscrição</label>

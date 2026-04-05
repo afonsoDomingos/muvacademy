@@ -22,6 +22,26 @@ const courseImageStorage = new CloudinaryStorage({
     }
 });
 
+// Storage for dynamic banners
+const bannerStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'muv-academy/banners',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+        transformation: [{ width: 1200, height: 600, crop: 'fill' }]
+    }
+});
+
+// Storage for workshops
+const workshopStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'muv-academy/workshops',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+        transformation: [{ width: 800, height: 600, crop: 'fill' }]
+    }
+});
+
 // Storage for user avatars
 const avatarStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
@@ -87,6 +107,16 @@ export const uploadProof = multer({
 export const uploadMaterial = multer({
     storage: materialStorage,
     limits: { fileSize: 500 * 1024 * 1024 } // 500MB for videos
+});
+
+export const uploadBanner = multer({
+    storage: bannerStorage,
+    limits: { fileSize: 5 * 1024 * 1024 }
+});
+
+export const uploadWorkshop = multer({
+    storage: workshopStorage,
+    limits: { fileSize: 5 * 1024 * 1024 }
 });
 
 // Direct Cloudinary upload function
