@@ -354,14 +354,14 @@ const openServiceModal = (service) => {
                    <i class="pi pi-target text-xl"></i>
                 </div>
                 <h4 class="text-white font-bold mb-3">Missão</h4>
-                <p class="text-slate-500 text-xs leading-relaxed italic">"Contribuir para o avanço da educação e da engenharia, oferecendo formações de excelência e soluções consultivas inovadoras..."</p>
+                <p class="text-slate-500 text-[11px] leading-relaxed italic">Contribuir para o avanço da educação e da engenharia, oferecendo formações de excelência e soluções consultivas inovadoras, atuando como um hub integrador de marcas, pessoas e conhecimentos que impulsionam o desenvolvimento sustentável.</p>
              </div>
              <div class="glass-card p-8 group hover:bg-accent-500/10 transition-all duration-500 border-white/10 hover:border-accent-500/40">
                 <div class="w-12 h-12 rounded-xl bg-accent-500/10 flex items-center justify-center text-accent-400 mb-6 group-hover:scale-110 transition-transform">
                    <i class="pi pi-eye text-xl"></i>
                 </div>
                 <h4 class="text-white font-bold mb-3">Visão</h4>
-                <p class="text-slate-500 text-xs leading-relaxed italic">"Ser reconhecida como uma referência global em educação técnico-profissional e consultoria em engenharia..."</p>
+                <p class="text-slate-500 text-[11px] leading-relaxed italic">Ser reconhecida como uma referência global em educação técnico-profissional e consultoria em engenharia, impulsionando a inovação, a formação de profissionais qualificados e o sucesso de projetos estratégicos em Moçambique e além-fronteiras.</p>
              </div>
              <div class="glass-card p-8 sm:col-span-2 group hover:bg-white/10 transition-all duration-500 border-white/10 hover:border-white/20">
                 <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">

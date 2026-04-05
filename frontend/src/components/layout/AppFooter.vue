@@ -72,18 +72,28 @@ const socialLinks = [
         <!-- Contact -->
         <div>
           <h4 class="text-white font-semibold mb-4">{{ t('footer.contact') }}</h4>
-          <ul class="space-y-3 text-gray-400">
-            <li class="flex items-center gap-2">
-              <i class="pi pi-map-marker text-primary-500"></i>
-              Maputo, Moçambique
+          <ul class="space-y-4 text-[13px] text-gray-400">
+            <li class="flex items-start gap-2">
+              <i class="pi pi-map-marker text-primary-500 mt-1"></i>
+              <div>
+                <p class="font-bold text-white mb-1 uppercase text-[10px] tracking-widest">Sede:</p>
+                Bairro de Infulene B, Rua da Agricultura nº 114, Casa nº 14, 1º Andar Único – Maputo
+              </div>
+            </li>
+            <li class="flex items-start gap-2">
+               <i class="pi pi-map-marker text-primary-500 mt-1"></i>
+               <div>
+                  <p class="font-bold text-white mb-1 uppercase text-[10px] tracking-widest">Sucursal:</p>
+                  Bairro de Nkobe – Matola, Moçambique
+               </div>
             </li>
             <li class="flex items-center gap-2">
               <i class="pi pi-envelope text-primary-500"></i>
-              info@muvacademy.co.mz
+              info@muv.co.mz
             </li>
             <li class="flex items-center gap-2">
               <i class="pi pi-phone text-primary-500"></i>
-              +258 84 123 4567
+              +258 84 000 0000
             </li>
           </ul>
         </div>
