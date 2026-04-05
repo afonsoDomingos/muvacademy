@@ -1,8 +1,7 @@
 <script setup>
 import { onMounted } from 'vue'
+
 import { useI18n } from 'vue-i18n'
-import AppHeader from '@/components/layout/AppHeader.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
 
 const { t, locale } = useI18n()
 
@@ -13,8 +12,6 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-slate-950">
-    <AppHeader />
-    
     <main class="pt-20">
       <!-- Hero Section -->
       <section class="py-24 relative overflow-hidden">
@@ -90,7 +87,5 @@ onMounted(() => {
         </div>
       </section>
     </main>
-
-    <AppFooter />
   </div>
 </template>

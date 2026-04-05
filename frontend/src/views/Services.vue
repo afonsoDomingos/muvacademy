@@ -2,8 +2,6 @@
 import { ref, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useContentStore } from '@/stores/content'
-import AppHeader from '@/components/layout/AppHeader.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
 import ServiceRequestModal from '@/components/services/ServiceRequestModal.vue'
 
 const { t, locale } = useI18n()
@@ -24,8 +22,6 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-screen bg-slate-950">
-    <AppHeader />
-    
     <main class="pt-20">
       <!-- Hero -->
       <section class="py-24 relative overflow-hidden">
@@ -85,6 +81,5 @@ onMounted(async () => {
       </section>
     </main>
 
-    <AppFooter />
   </div>
 </template>
