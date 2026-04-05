@@ -35,7 +35,8 @@ const serviceForm = ref({
   title: { pt: '', en: '' },
   description: { pt: '', en: '' },
   icon: 'pi pi-briefcase',
-  category: 'consultoria'
+  category: 'consultoria',
+  slug: ''
 })
 
 const workshopForm = ref({
@@ -82,7 +83,8 @@ function openNewService() {
     title: { pt: '', en: '' },
     description: { pt: '', en: '' },
     icon: 'pi pi-briefcase',
-    category: 'consultoria'
+    category: 'consultoria',
+    slug: ''
   }
   showServiceDialog.value = true
 }
@@ -383,24 +385,40 @@ onMounted(loadData)
     </Dialog>
 
     <!-- Service Dialog -->
-    <Dialog v-model:visible="showServiceDialog" :header="editingItem ? 'Editar Serviço' : 'Novo Serviço'" modal class="p-fluid w-full max-w-xl bg-surface-dark text-white">
+    <Dialog v-model:visible="showServiceDialog" :header="editingItem ? 'Editar Serviço' : 'Novo Serviço'" modal class="p-fluid w-full max-w-2xl bg-surface-dark text-white">
       <div class="grid gap-6 py-4">
-        <div class="field">
-          <label class="block text-sm font-bold mb-2">Título (PT)</label>
-          <InputText v-model="serviceForm.title.pt" class="input" />
-        </div>
-        <div class="field">
-          <label class="block text-sm font-bold mb-2">Descrição (PT)</label>
-          <Textarea v-model="serviceForm.description.pt" rows="3" class="input w-full" />
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Título (PT)</label>
+            <InputText v-model="serviceForm.title.pt" class="input" @input="!editingItem && (serviceForm.slug = serviceForm.title.pt.toLowerCase().replace(/ /g, '-'))" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Título (EN)</label>
+            <InputText v-model="serviceForm.title.en" class="input" />
+          </div>
         </div>
         <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Descrição (PT)</label>
+            <Textarea v-model="serviceForm.description.pt" rows="3" class="input w-full" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Descrição (EN)</label>
+            <Textarea v-model="serviceForm.description.en" rows="3" class="input w-full" />
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Slug Único</label>
+            <InputText v-model="serviceForm.slug" class="input" placeholder="ex: consultoria-solar" />
+          </div>
           <div class="field">
             <label class="block text-sm font-bold mb-2">Ícone (PrimeIcons)</label>
             <InputText v-model="serviceForm.icon" class="input" placeholder="pi pi-briefcase" />
           </div>
           <div class="field">
             <label class="block text-sm font-bold mb-2">Categoria</label>
-            <Dropdown v-model="serviceForm.category" :options="['consultoria', 'energia', 'engenharia', 'tecnologia']" class="input" />
+            <Dropdown v-model="serviceForm.category" :options="['consultoria', 'energia', 'engenharia', 'tecnologia', 'outros']" class="input" />
           </div>
         </div>
       </div>
