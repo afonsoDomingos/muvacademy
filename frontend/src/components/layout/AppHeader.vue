@@ -56,6 +56,18 @@ async function logout() {
   await authStore.logout()
 }
 
+function scrollToSection(sectionId) {
+  closeMenus()
+  if (route.path !== '/') {
+    return // Let RouterLink handle navigation to /#id
+  }
+  
+  const element = document.getElementById(sectionId)
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+
 onMounted(() => {
   if (isAuthenticated.value) {
     notificationStore.fetchUnreadCount()
@@ -79,6 +91,7 @@ onMounted(() => {
             v-for="link in navLinks"
             :key="link.name"
             :to="link.path"
+            @click="link.path.includes('#') ? scrollToSection(link.path.split('#')[1]) : closeMenus()"
             class="text-muted hover:text-primary transition-colors relative py-2"
             :class="{ '!text-primary': route.name === link.name }"
           >
@@ -217,8 +230,8 @@ onMounted(() => {
             v-for="link in navLinks"
             :key="link.name"
             :to="link.path"
+            @click="link.path.includes('#') ? scrollToSection(link.path.split('#')[1]) : closeMenus()"
             class="block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
-            @click="closeMenus"
           >
             {{ link.label }}
           </RouterLink>
