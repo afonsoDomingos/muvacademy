@@ -17,6 +17,7 @@ const contentStore = useContentStore()
 const featuredCourses = ref([])
 const banners = ref([])
 const services = ref([])
+const workshops = ref([])
 const loading = ref(true)
 const currentSlide = ref(0)
 let sliderInterval = null
@@ -48,13 +49,15 @@ const selectSlide = (index) => {
 onMounted(async () => {
   try {
     loading.value = true
-    const [coursesData, bannersData, servicesData] = await Promise.all([
+    const [coursesData, bannersData, servicesData, workshopsData] = await Promise.all([
       courseStore.fetchFeaturedCourses(),
       contentStore.fetchHomeBanners(),
-      contentStore.fetchServices()
+      contentStore.fetchServices(),
+      api.get('/workshops')
     ])
     
     featuredCourses.value = coursesData || []
+    workshops.value = workshopsData.data.data.workshops || []
     
     // Default static banners if empty
     if (!bannersData || bannersData.length === 0) {
@@ -276,6 +279,48 @@ const openServiceModal = (service) => {
            <i :class="feat.icon" class="text-primary-400 text-2xl"></i>
            <span class="text-white font-bold tracking-wide uppercase text-xs">{{ feat.text }}</span>
          </div>
+      </div>
+    </section>
+
+    <!-- Workshops Section -->
+    <section v-if="workshops.length > 0" class="py-32 bg-slate-900/40 relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+          <div class="max-w-2xl">
+            <h3 class="text-primary-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">MUV Eventos</h3>
+            <h2 class="text-4xl sm:text-6xl font-display font-bold text-white tracking-tighter">Workshops Semanais</h2>
+            <p class="text-slate-400 text-lg mt-6">Promoção de inteligência técnica e networking de elite.</p>
+          </div>
+          <RouterLink to="/courses" class="btn btn-secondary !py-3 !px-8 text-sm group">
+            Ver Todos Eventos <i class="pi pi-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+          </RouterLink>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div v-for="workshop in workshops" :key="workshop._id" class="glass-card group overflow-hidden hover:border-primary-500/30 transition-all duration-500">
+            <div class="relative h-56 overflow-hidden">
+              <img :src="workshop.image" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+              <div class="absolute top-6 left-6 px-4 py-2 bg-primary-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-2xl">
+                {{ new Date(workshop.date).toLocaleDateString(locale, { day: 'numeric', month: 'long' }) }}
+              </div>
+            </div>
+            <div class="p-8">
+              <h4 class="text-2xl font-bold text-white mb-4 group-hover:text-primary-400 transition-colors">{{ workshop.title[locale] }}</h4>
+              <p class="text-slate-400 text-sm leading-relaxed mb-8 line-clamp-2">{{ workshop.description[locale] }}</p>
+              
+              <div class="flex items-center justify-between">
+                 <div class="flex items-center gap-2 text-slate-500">
+                    <i class="pi pi-map-marker text-xs"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">{{ workshop.location[locale] }}</span>
+                 </div>
+                 <a :href="workshop.link" target="_blank" class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white hover:bg-primary-500 hover:border-primary-500 transition-all">
+                    <i class="pi pi-arrow-up-right"></i>
+                 </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 

@@ -14,10 +14,12 @@ const confirm = useConfirm()
 
 const banners = ref([])
 const services = ref([])
+const workshops = ref([])
 const loading = ref(false)
 
 const showBannerDialog = ref(false)
 const showServiceDialog = ref(false)
+const showWorkshopDialog = ref(false)
 const editingItem = ref(null)
 
 const bannerForm = ref({
@@ -36,10 +38,28 @@ const serviceForm = ref({
   category: 'consultoria'
 })
 
+const workshopForm = ref({
+  title: { pt: '', en: '' },
+  description: { pt: '', en: '' },
+  date: '',
+  location: { pt: '', en: '' },
+  image: '',
+  link: '',
+  isActive: true
+})
+
+import api from '@/services/api'
+
 async function loadData() {
   loading.value = true
   banners.value = await contentStore.fetchHomeBanners()
   services.value = await contentStore.fetchServices()
+  try {
+     const res = await api.get('/workshops')
+     workshops.value = res.data.data.workshops
+  } catch (e) {
+     console.error('Error loading workshops:', e)
+  }
   loading.value = false
 }
 
@@ -111,6 +131,55 @@ function editService(service) {
   showServiceDialog.value = true
 }
 
+function openNewWorkshop() {
+  editingItem.value = null
+  workshopForm.value = {
+    title: { pt: '', en: '' },
+    description: { pt: '', en: '' },
+    date: '',
+    location: { pt: 'Online / Zoom', en: 'Online / Zoom' },
+    image: '/images/courses/ai-business.jpg',
+    link: '',
+    isActive: true
+  }
+  showWorkshopDialog.value = true
+}
+
+async function saveWorkshop() {
+  try {
+    if (editingItem.value) {
+      await api.put(`/workshops/${editingItem.value._id}`, workshopForm.value)
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Workshop atualizado', life: 3000 })
+    } else {
+      await api.post('/workshops', workshopForm.value)
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Workshop criado', life: 3000 })
+    }
+    showWorkshopDialog.value = false
+    loadData()
+  } catch (err) {
+    toast.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao guardar workshop', life: 3000 })
+  }
+}
+
+function editWorkshop(workshop) {
+  editingItem.value = workshop
+  workshopForm.value = { ...workshop }
+  showWorkshopDialog.value = true
+}
+
+function confirmDeleteWorkshop(workshop) {
+  confirm.require({
+    message: 'Tem a certeza que deseja eliminar este workshop?',
+    header: 'Confirmação',
+    icon: 'pi pi-exclamation-triangle',
+    accept: async () => {
+      await api.delete(`/workshops/${workshop._id}`)
+      loadData()
+      toast.add({ severity: 'success', summary: 'Eliminado', detail: 'Workshop removido', life: 3000 })
+    }
+  })
+}
+
 function confirmDeleteBanner(banner) {
   confirm.require({
     message: 'Tem a certeza que deseja eliminar este banner?',
@@ -145,7 +214,7 @@ onMounted(loadData)
     <div class="flex justify-between items-center mb-10">
       <div>
         <h1 class="text-3xl font-display font-bold text-white mb-2">Gestão de Conteúdo</h1>
-        <p class="text-slate-400">Gira os banners do carrossel e as áreas de serviço da MUV.</p>
+        <p class="text-slate-400">Gira os banners, workshops e serviços da MUV.</p>
       </div>
     </div>
 
@@ -176,6 +245,39 @@ onMounted(loadData)
             <div class="flex gap-2">
               <button @click="editBanner(banner)" class="btn btn-secondary !p-2 flex-1 text-xs">Editar</button>
               <button @click="confirmDeleteBanner(banner)" class="btn bg-red-500/10 text-red-500 border border-red-500/20 !p-2 flex-1 text-xs hover:bg-red-500 hover:text-white transition-colors">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workshops Section -->
+    <section class="mb-16">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="pi pi-calendar text-primary-400"></i>
+          Workshops Semanais
+        </h2>
+        <button @click="openNewWorkshop" class="btn btn-primary !py-2 !px-4 text-sm">
+          <i class="pi pi-plus"></i> Novo Workshop
+        </button>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="workshop in workshops" :key="workshop._id" class="glass-card overflow-hidden group">
+          <div class="h-32 relative">
+            <img :src="workshop.image" class="w-full h-full object-cover opacity-60" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
+            <div class="absolute bottom-2 left-4">
+              <span class="text-[10px] font-bold uppercase tracking-widest text-primary-400">{{ new Date(workshop.date).toLocaleDateString() }}</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-white font-bold mb-2 truncate">{{ workshop.title.pt }}</h3>
+            <p class="text-slate-400 text-sm mb-6 line-clamp-2">{{ workshop.description.pt }}</p>
+            <div class="flex gap-2">
+              <button @click="editWorkshop(workshop)" class="btn btn-secondary !p-2 flex-1 text-xs">Editar</button>
+              <button @click="confirmDeleteWorkshop(workshop)" class="btn bg-red-500/10 text-red-500 border border-red-500/20 !p-2 flex-1 text-xs hover:bg-red-500 hover:text-white transition-colors">Eliminar</button>
             </div>
           </div>
         </div>
@@ -268,6 +370,49 @@ onMounted(loadData)
       <template #footer>
         <button @click="showServiceDialog = false" class="btn btn-secondary !py-2 !px-4">Cancelar</button>
         <button @click="saveService" class="btn btn-accent !py-2 !px-4">Guardar</button>
+      </template>
+    </Dialog>
+    <!-- Workshop Dialog -->
+    <Dialog v-model:visible="showWorkshopDialog" :header="editingItem ? 'Editar Workshop' : 'Novo Workshop'" modal class="p-fluid w-full max-w-2xl bg-surface-dark text-white">
+      <div class="grid gap-6 py-4">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Título (PT)</label>
+            <InputText v-model="workshopForm.title.pt" class="input" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Título (EN)</label>
+            <InputText v-model="workshopForm.title.en" class="input" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="block text-sm font-bold mb-2">Descrição (PT)</label>
+          <Textarea v-model="workshopForm.description.pt" rows="3" class="input w-full" />
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Data do Evento</label>
+            <InputText v-model="workshopForm.date" type="datetime-local" class="input" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Localização (PT)</label>
+            <InputText v-model="workshopForm.location.pt" class="input" />
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">URL da Imagem</label>
+            <InputText v-model="workshopForm.image" class="input" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Link de Inscrição</label>
+            <InputText v-model="workshopForm.link" class="input" />
+          </div>
+        </div>
+      </div>
+      <template #footer>
+        <button @click="showWorkshopDialog = false" class="btn btn-secondary !py-2 !px-4">Cancelar</button>
+        <button @click="saveWorkshop" class="btn btn-primary !py-2 !px-4">Guardar</button>
       </template>
     </Dialog>
   </div>

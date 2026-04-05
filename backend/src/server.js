@@ -16,8 +16,9 @@ import enrollmentRoutes from './routes/enrollment.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import statsRoutes from './routes/stats.routes.js';
-import contentRoutes from './routes/content.routes.js';
 import serviceRequestRoutes from './routes/serviceRequest.routes.js';
+import workshopRoutes from './routes/workshop.routes.js';
+import contentRoutes from './routes/content.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -102,7 +103,12 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/content', contentRoutes);
+import serviceRequestRoutes from './routes/serviceRequest.routes.js';
+import workshopRoutes from './routes/workshop.routes.js';
+
+// ...
 app.use('/api/service-requests', serviceRequestRoutes);
+app.use('/api/workshops', workshopRoutes);
 
 // Health Check
 app.get('/api/ping', (req, res) => res.status(200).send('pong'));
