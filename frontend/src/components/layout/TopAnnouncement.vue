@@ -27,19 +27,23 @@ onMounted(async () => {
 
 <template>
   <transition name="slide-down">
-    <div v-if="showBanner" class="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 min-h-[40px] flex items-center justify-center relative px-10 py-1 text-white text-[11px] sm:text-[13px] font-bold tracking-wider uppercase overflow-hidden z-[100]">
+    <div v-if="showBanner" class="bg-gradient-to-r from-primary-600 via-accent-600 to-primary-600 min-h-[40px] flex items-center justify-center relative px-10 py-2 text-white text-[11px] sm:text-[13px] font-bold tracking-wider uppercase overflow-hidden z-[100]">
       <div class="absolute inset-0 bg-white/10 animate-pulse"></div>
       
-      <p class="relative flex flex-wrap items-center justify-center gap-2 text-center">
-        <span class="animate-bounce">👉</span>
-        <span>{{ announcementText }}</span>
-        <a v-if="announcementLink" :href="announcementLink" target="_blank" class="text-white/90 hover:text-white underline decoration-dashed decoration-1 underline-offset-4 ml-2 group">
-            Ver Mais <i class="pi pi-arrow-right text-[10px] ml-1 group-hover:translate-x-1 transition-transform"></i>
+      <div class="relative flex flex-wrap items-center justify-center gap-2 sm:gap-4 text-center max-w-5xl w-full pr-6">
+        <div class="flex items-center gap-2">
+            <span class="animate-bounce text-base">👉</span>
+            <span>{{ announcementText }}</span>
+        </div>
+        
+        <a v-if="announcementLink" :href="announcementLink" target="_blank" class="inline-flex items-center gap-2 bg-white text-accent-700 hover:bg-accent-50 hover:text-accent-800 hover:scale-105 active:scale-95 px-4 py-1.5 rounded-full text-[10px] sm:text-xs font-extrabold transition-all shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+            VER MAIS <i class="pi pi-arrow-right text-[10px]"></i>
         </a>
-        <button @click="showBanner = false" class="ml-4 hover:scale-125 transition-transform absolute right-2">
-          <i class="pi pi-times"></i>
-        </button>
-      </p>
+      </div>
+      
+      <button @click="showBanner = false" class="absolute right-4 hover:rotate-90 hover:scale-125 transition-all text-white/80 hover:text-white p-1">
+        <i class="pi pi-times"></i>
+      </button>
     </div>
   </transition>
 </template>
