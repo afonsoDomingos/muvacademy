@@ -86,13 +86,15 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="min-h-screen py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Category Hero Banner -->
       <transition name="fade" mode="out-in">
         <div 
           :key="selectedCategory || 'all'"
           class="relative h-64 rounded-[32px] overflow-hidden mb-12 flex items-center group shadow-2xl"
         >
-          <!-- Background with dynamic gradient based on category -->
+          <!-- Background with dynamic gradient -->
           <div class="absolute inset-0 z-0 transition-all duration-700 bg-slate-900">
              <div class="absolute inset-0 opacity-40 bg-[url('@/assets/mesh-bg.png')] bg-cover"></div>
              <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent"></div>
@@ -121,10 +123,7 @@ onMounted(async () => {
 
           <!-- Decorative element -->
           <div class="absolute right-12 top-1/2 -translate-y-1/2 opacity-20 group-hover:scale-110 transition-transform duration-1000 hidden lg:block">
-             <i 
-               class="text-[120px] text-white pi" 
-               :class="categoryIcon"
-             ></i>
+             <i class="text-[120px] text-white pi" :class="categoryIcon"></i>
           </div>
         </div>
       </transition>
@@ -132,7 +131,6 @@ onMounted(async () => {
       <!-- Filters -->
       <div class="card p-6 mb-8">
         <div class="grid md:grid-cols-4 gap-4">
-          <!-- Search -->
           <div class="md:col-span-2">
             <span class="p-input-icon-left w-full">
               <i class="pi pi-search" />
@@ -145,7 +143,6 @@ onMounted(async () => {
             </span>
           </div>
 
-          <!-- Category -->
           <Dropdown
             v-model="selectedCategory"
             :options="[{ id: '', name: { [locale]: t('courses.filters.all') } }, ...categories]"
@@ -155,7 +152,6 @@ onMounted(async () => {
             class="w-full"
           />
 
-          <!-- Level -->
           <Dropdown
             v-model="selectedLevel"
             :options="levels"
