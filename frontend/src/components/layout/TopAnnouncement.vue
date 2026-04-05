@@ -8,7 +8,7 @@ const announcementLink = ref('')
 
 onMounted(async () => {
     try {
-        const response = await api.get('/settings/top_announcement')
+        const response = await api.get('/content/settings/top_announcement')
         const setting = response.data.data.setting
         
         if (setting && setting.active) {

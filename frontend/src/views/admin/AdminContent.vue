@@ -66,7 +66,7 @@ async function loadData() {
   try {
      const [wsRes, setRes] = await Promise.all([
         api.get('/workshops'),
-        api.get('/settings/top_announcement')
+        api.get('/content/settings/top_announcement')
      ])
      workshops.value = wsRes.data.data.workshops
      if (setRes.data.data.setting) {
@@ -80,7 +80,7 @@ async function loadData() {
 
 async function saveAnnouncement() {
   try {
-      await api.put('/settings/top_announcement', { value: topAnnouncement.value })
+      await api.put('/content/settings/top_announcement', { value: topAnnouncement.value })
       toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Barra de Novidade atualizada', life: 3000 })
   } catch (err) {
       toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar novidade', life: 3000 })
