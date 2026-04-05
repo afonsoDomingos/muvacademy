@@ -326,7 +326,51 @@ const openServiceModal = (service) => {
       </div>
     </section>
 
-    <!-- Featured Courses -->
+    <!-- Mission / Vision / Values Section -->
+    <section id="about" class="py-32 relative overflow-hidden bg-white/5 border-y border-white/5">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-20 items-center mb-24">
+          <div>
+            <h3 class="text-primary-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">A Nossa Identidade</h3>
+            <h2 class="text-4xl sm:text-6xl font-display font-bold text-white tracking-tighter leading-tight">
+              MUV Educação e Engenharia
+            </h2>
+            <p class="text-slate-400 text-lg mt-8 leading-relaxed">
+              Fundada em Moçambique, a MUV é um ecossistema que une formação técnica de elite e soluções de engenharia avançadas. A nossa essência é transformar inteligência em valor real para a sociedade e infraestruturas nacionais.
+            </p>
+          </div>
+          <div class="grid sm:grid-cols-2 gap-6">
+             <div class="glass-card p-8 group hover:bg-primary-500/10 transition-all duration-500 border-white/10 hover:border-primary-500/40">
+                <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center text-primary-400 mb-6 group-hover:scale-110 transition-transform">
+                   <i class="pi pi-target text-xl"></i>
+                </div>
+                <h4 class="text-white font-bold mb-3">Missão</h4>
+                <p class="text-slate-500 text-sm leading-relaxed">Capacitar profissionais com competências técnicas de elite para enfrentar os desafios industriais globais.</p>
+             </div>
+             <div class="glass-card p-8 group hover:bg-accent-500/10 transition-all duration-500 border-white/10 hover:border-accent-500/40">
+                <div class="w-12 h-12 rounded-xl bg-accent-500/10 flex items-center justify-center text-accent-400 mb-6 group-hover:scale-110 transition-transform">
+                   <i class="pi pi-eye text-xl"></i>
+                </div>
+                <h4 class="text-white font-bold mb-3">Visão</h4>
+                <p class="text-slate-500 text-sm leading-relaxed">Ser o centro de excelência em educação e engenharia sustentável número 1 na África Austral.</p>
+             </div>
+             <div class="glass-card p-8 sm:col-span-2 group hover:bg-white/10 transition-all duration-500 border-white/10 hover:border-white/20">
+                <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
+                   <i class="pi pi-verified text-xl"></i>
+                </div>
+                <h4 class="text-white font-bold mb-3">Valores</h4>
+                <div class="grid sm:grid-cols-3 gap-4">
+                   <div class="text-[10px] font-black uppercase tracking-[0.2em] text-primary-400">Excelência Técnica</div>
+                   <div class="text-[10px] font-black uppercase tracking-[0.2em] text-accent-400">Inovação Sustentável</div>
+                   <div class="text-[10px] font-black uppercase tracking-[0.2em] text-white">Integridade e Ética</div>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured Team -->
     <section class="py-32">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-20">
