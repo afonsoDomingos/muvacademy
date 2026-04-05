@@ -27,9 +27,9 @@ const isCollaborator = computed(() => authStore.isCollaborator)
 const navLinks = computed(() => {
   const links = [
     { name: 'home', path: '/', label: t('nav.home') },
-    { name: 'about', path: '/#about', label: 'Sobre Nós' },
+    { name: 'about', path: '/about', label: 'Sobre Nós' },
     { name: 'courses', path: '/courses', label: t('nav.courses') },
-    { name: 'services', path: '/#services', label: 'Serviços' }
+    { name: 'services', path: '/services', label: 'Serviços' }
   ]
   
   if (isCollaborator.value) {

@@ -10,10 +10,13 @@ import gilImg from '@/assets/team/gil.jpg'
 import antonioImg from '@/assets/team/antonio.jpg'
 import ServiceRequestModal from '@/components/services/ServiceRequestModal.vue'
 import api from '@/services/api'
+import { useRoute } from 'vue-router'
+import { watch } from 'vue'
 
 const { t, tm, locale } = useI18n()
 const courseStore = useCourseStore()
 const contentStore = useContentStore()
+const route = useRoute()
 
 const featuredCourses = ref([])
 const banners = ref([])
@@ -22,6 +25,20 @@ const workshops = ref([])
 const loading = ref(true)
 const currentSlide = ref(0)
 let sliderInterval = null
+
+const handleAutoScroll = () => {
+    if (route.name === 'about') scrollTo('about')
+    if (route.name === 'services') scrollTo('services')
+}
+
+const scrollTo = (id) => {
+    const el = document.getElementById(id)
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
+}
+
+watch(() => route.name, () => {
+    handleAutoScroll()
+})
 
 const startSlider = () => {
   sliderInterval = setInterval(() => {
@@ -61,6 +78,9 @@ onMounted(async () => {
     banners.value = bannersData || []
     services.value = servicesData || []
     workshops.value = workshopsRes.data?.data?.workshops || []
+    
+    // Smooth scroll for pretty URLs
+    setTimeout(handleAutoScroll, 300)
     
     // Default static banners if empty
     if (!bannersData || bannersData.length === 0) {
