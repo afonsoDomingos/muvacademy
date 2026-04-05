@@ -336,7 +336,7 @@ const openServiceModal = (service) => {
               MUV Educação e Engenharia
             </h2>
             <p class="text-slate-400 text-lg mt-8 leading-relaxed">
-              Fundada em Moçambique, a MUV é um ecossistema que une formação técnica de elite e soluções de engenharia avançadas. A nossa essência é transformar inteligência em valor real para a sociedade e infraestruturas nacionais.
+              A MUV é uma empresa moçambicana especializada em Educação, Engenharia e Transformação Digital, comprometida em impulsionar o desenvolvimento sustentável de pessoas e organizações. Acreditamos que educação e tecnologia são os motores do progresso — por isso, unimos formação de excelência e soluções tecnológicas práticas para preparar profissionais e empresas para os desafios do futuro.
             </p>
           </div>
           <div class="grid sm:grid-cols-2 gap-6">
@@ -345,24 +345,25 @@ const openServiceModal = (service) => {
                    <i class="pi pi-target text-xl"></i>
                 </div>
                 <h4 class="text-white font-bold mb-3">Missão</h4>
-                <p class="text-slate-500 text-sm leading-relaxed">Capacitar profissionais com competências técnicas de elite para enfrentar os desafios industriais globais.</p>
+                <p class="text-slate-500 text-xs leading-relaxed italic">"Contribuir para o avanço da educação e da engenharia, oferecendo formações de excelência e soluções consultivas inovadoras..."</p>
              </div>
              <div class="glass-card p-8 group hover:bg-accent-500/10 transition-all duration-500 border-white/10 hover:border-accent-500/40">
                 <div class="w-12 h-12 rounded-xl bg-accent-500/10 flex items-center justify-center text-accent-400 mb-6 group-hover:scale-110 transition-transform">
                    <i class="pi pi-eye text-xl"></i>
                 </div>
                 <h4 class="text-white font-bold mb-3">Visão</h4>
-                <p class="text-slate-500 text-sm leading-relaxed">Ser o centro de excelência em educação e engenharia sustentável número 1 na África Austral.</p>
+                <p class="text-slate-500 text-xs leading-relaxed italic">"Ser reconhecida como uma referência global em educação técnico-profissional e consultoria em engenharia..."</p>
              </div>
              <div class="glass-card p-8 sm:col-span-2 group hover:bg-white/10 transition-all duration-500 border-white/10 hover:border-white/20">
                 <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
                    <i class="pi pi-verified text-xl"></i>
                 </div>
-                <h4 class="text-white font-bold mb-3">Valores</h4>
-                <div class="grid sm:grid-cols-3 gap-4">
-                   <div class="text-[10px] font-black uppercase tracking-[0.2em] text-primary-400">Excelência Técnica</div>
-                   <div class="text-[10px] font-black uppercase tracking-[0.2em] text-accent-400">Inovação Sustentável</div>
-                   <div class="text-[10px] font-black uppercase tracking-[0.2em] text-white">Integridade e Ética</div>
+                <h4 class="text-white font-bold mb-3 uppercase tracking-tighter">Os Nossos Valores</h4>
+                <div class="flex flex-wrap gap-x-8 gap-y-4">
+                   <div v-for="val in ['Excelência Educacional', 'Inovação', 'Colaboração', 'Integridade', 'Sustentabilidade']" :key="val" class="flex items-center gap-2">
+                       <div class="w-1.5 h-1.5 rounded-full bg-primary-500"></div>
+                       <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">{{ val }}</span>
+                   </div>
                 </div>
              </div>
           </div>
