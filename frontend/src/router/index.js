@@ -3,6 +3,8 @@ import { useAuthStore } from '@/stores/auth'
 
 // Lazy load views
 const Home = () => import('@/views/Home.vue')
+const About = () => import('@/views/About.vue')
+const Services = () => import('@/views/Services.vue')
 const Courses = () => import('@/views/Courses.vue')
 const CourseDetail = () => import('@/views/CourseDetail.vue')
 const Login = () => import('@/views/auth/Login.vue')
@@ -32,8 +34,8 @@ const ManagementTenders = () => import('@/views/management/ManagementTenders.vue
 
 const routes = [
     { path: '/', name: 'home', component: Home, meta: { title: 'MUV Academy - Início' } },
-    { path: '/about', name: 'about', component: Home, meta: { title: 'Sobre Nós' } },
-    { path: '/services', name: 'services', component: Home, meta: { title: 'Serviços' } },
+    { path: '/about', name: 'about', component: About, meta: { title: 'Sobre Nós' } },
+    { path: '/services', name: 'services', component: Services, meta: { title: 'Serviços' } },
     { path: '/courses', name: 'courses', component: Courses, meta: { title: 'Cursos' } },
     { path: '/courses/:identifier', name: 'course-detail', component: CourseDetail, meta: { title: 'Detalhes do Curso' } },
     { path: '/login', name: 'login', component: Login, meta: { title: 'Entrar', guest: true } },
