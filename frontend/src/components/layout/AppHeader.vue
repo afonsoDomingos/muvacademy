@@ -22,12 +22,22 @@ const isAdmin = computed(() => authStore.isAdmin)
 const user = computed(() => authStore.user)
 const unreadCount = computed(() => notificationStore.unreadCount)
 
-const navLinks = computed(() => [
-  { name: 'home', path: '/', label: t('nav.home') },
-  { name: 'about', path: '/#about', label: 'Sobre Nós' },
-  { name: 'courses', path: '/courses', label: t('nav.courses') },
-  { name: 'services', path: '/#services', label: 'Serviços' }
-])
+const isCollaborator = computed(() => authStore.isCollaborator)
+
+const navLinks = computed(() => {
+  const links = [
+    { name: 'home', path: '/', label: t('nav.home') },
+    { name: 'about', path: '/#about', label: 'Sobre Nós' },
+    { name: 'courses', path: '/courses', label: t('nav.courses') },
+    { name: 'services', path: '/#services', label: 'Serviços' }
+  ]
+  
+  if (isCollaborator.value) {
+    links.push({ name: 'management-dashboard', path: '/management', label: 'Gestão ERP' })
+  }
+  
+  return links
+})
 
 function toggleLanguage() {
   const newLocale = locale.value === 'pt' ? 'en' : 'pt'

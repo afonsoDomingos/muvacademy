@@ -18,6 +18,7 @@ import uploadRoutes from './routes/upload.routes.js';
 import statsRoutes from './routes/stats.routes.js';
 import serviceRequestRoutes from './routes/serviceRequest.routes.js';
 import workshopRoutes from './routes/workshop.routes.js';
+import organizationRoutes from './routes/organization.routes.js';
 import contentRoutes from './routes/content.routes.js';
 
 // Load environment variables
@@ -105,6 +106,7 @@ app.use('/api/stats', statsRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/service-requests', serviceRequestRoutes);
 app.use('/api/workshops', workshopRoutes);
+app.use('/api/organization', organizationRoutes);
 
 // Health Check
 app.get('/api/ping', (req, res) => res.status(200).send('pong'));

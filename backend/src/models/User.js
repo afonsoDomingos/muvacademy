@@ -30,8 +30,36 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['cliente', 'admin', 'superadmin'],
+        enum: ['cliente', 'colaborador', 'gestor', 'admin', 'superadmin'],
         default: 'cliente'
+    },
+    department: {
+        type: String,
+        enum: [
+            'Nenhum',
+            'Finanças', 
+            'Comunicação e Marketing', 
+            'Procurement', 
+            'Recursos Humanos', 
+            'Gestão de Propostas', 
+            'Análise de Desempenho', 
+            'Engenharia',
+            'Direção'
+        ],
+        default: 'Nenhum'
+    },
+    status: {
+        type: String,
+        enum: ['ativo', 'pendente_aprovacao', 'inativo'],
+        default: 'ativo' // Default to active for clients, admin changes for employees
+    },
+    hiredAt: {
+        type: Date,
+        default: null
+    },
+    performanceScore: {
+        type: Number,
+        default: 0
     },
     avatar: {
         type: String,

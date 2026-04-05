@@ -22,6 +22,14 @@ const AdminUsers = () => import('@/views/admin/AdminUsers.vue')
 const AdminContent = () => import('@/views/admin/AdminContent.vue')
 const AdminServiceRequests = () => import('@/views/admin/AdminServiceRequests.vue')
 
+// Management views
+const ManagementLayout = () => import('@/views/management/ManagementLayout.vue')
+const ManagementDashboard = () => import('@/views/management/ManagementDashboard.vue')
+const ManagementEmployees = () => import('@/views/management/ManagementEmployees.vue')
+const ManagementTasks = () => import('@/views/management/ManagementTasks.vue')
+const ManagementFinances = () => import('@/views/management/ManagementFinances.vue')
+const ManagementTenders = () => import('@/views/management/ManagementTenders.vue')
+
 const routes = [
     { path: '/', name: 'home', component: Home, meta: { title: 'MUV Academy - Início' } },
     { path: '/courses', name: 'courses', component: Courses, meta: { title: 'Cursos' } },
@@ -50,8 +58,19 @@ const routes = [
         ]
     },
 
-    // 404
-    { path: '/:pathMatch(.*)*', name: 'not-found', redirect: '/' }
+    // Management routes
+    {
+        path: '/management',
+        component: ManagementLayout,
+        meta: { requiresAuth: true, requiresManagement: true },
+        children: [
+            { path: '', name: 'management-dashboard', component: ManagementDashboard, meta: { title: 'MUV - Gestão' } },
+            { path: 'tasks', name: 'management-tasks', component: ManagementTasks, meta: { title: 'MUV - Tarefas' } },
+            { path: 'employees', name: 'management-employees', component: ManagementEmployees, meta: { title: 'MUV - Equipa' } },
+            { path: 'finances', name: 'management-finances', component: ManagementFinances, meta: { title: 'MUV - Finanças' } },
+            { path: 'tenders', name: 'management-tenders', component: ManagementTenders, meta: { title: 'MUV - Concursos' } }
+        ]
+    },
 ]
 
 const router = createRouter({
@@ -77,6 +96,11 @@ router.beforeEach((to, from, next) => {
 
     // Check admin requirements
     if (to.meta.requiresAdmin && !authStore.isAdmin) {
+        return next({ name: 'dashboard' })
+    }
+
+    // Check management requirements (only employees, managers, admins)
+    if (to.meta.requiresManagement && authStore.user?.role === 'cliente') {
         return next({ name: 'dashboard' })
     }
 
