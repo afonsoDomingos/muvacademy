@@ -1,16 +1,30 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import api from '@/services/api'
 
-const proposals = ref([
-    { id: 1, title: 'Concurso: Formação em Energias Renováveis - MIREME', client: 'Governo de Moçambique', deadline: '2026-04-20', status: 'submetido', department: 'Engenharia', amount: 450000 },
-    { id: 2, title: 'Proposta: Consultoria de Eficiência Energética - EDM', client: 'EDM EP', deadline: '2026-05-15', status: 'preparacao', department: 'Consultoria', amount: 120000 }
-])
+const proposals = ref([])
+const loading = ref(true)
 
-const stats = {
-    submetidas: 1,
-    preparacao: 1,
-    aprovadas: 0
+async function fetchProposals() {
+    try {
+        const res = await api.get('/organization/proposals')
+        proposals.value = res.data.data.proposals
+    } catch (e) {
+        console.error('Error fetching proposals:', e)
+    } finally {
+        loading.value = false
+    }
 }
+
+const statsData = computed(() => {
+    return {
+        submetidas: proposals.value.filter(p => p.status === 'submetido').length,
+        preparacao: proposals.value.filter(p => p.status === 'preparacao').length,
+        aprovadas: proposals.value.filter(p => p.status === 'aprovado').length
+    }
+})
+
+onMounted(fetchProposals)
 
 const getStatusColor = (status) => {
     switch(status) {
@@ -38,21 +52,21 @@ const getStatusColor = (status) => {
     <div class="grid md:grid-cols-3 gap-6">
        <div class="glass-card p-10 flex flex-col gap-2">
           <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest">A aguardar resposta</span>
-          <span class="text-3xl font-bold text-white">{{ stats.submetidas }}</span>
+          <span class="text-3xl font-bold text-white">{{ statsData.submetidas }}</span>
        </div>
        <div class="glass-card p-10 flex flex-col gap-2">
           <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest">Em Preparação</span>
-          <span class="text-3xl font-bold text-yellow-500">{{ stats.preparacao }}</span>
+          <span class="text-3xl font-bold text-yellow-500">{{ statsData.preparacao }}</span>
        </div>
        <div class="glass-card p-10 flex flex-col gap-2">
           <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest">Taxa de Sucesso</span>
-          <span class="text-3xl font-bold text-primary-400">{{ Math.round((stats.aprovadas / (stats.submetidas + stats.preparacao || 1)) * 100) }}%</span>
+          <span class="text-3xl font-bold text-primary-400">{{ Math.round((statsData.aprovadas / (statsData.submetidas + statsData.preparacao || 1)) * 100) }}%</span>
        </div>
     </div>
 
     <!-- Proposals List -->
     <div class="grid lg:grid-cols-2 gap-8">
-       <div v-for="prop in proposals" :key="prop.id" class="glass-card p-10 group overflow-hidden border-white/5 hover:border-primary-500/20 transition-all duration-700">
+       <div v-for="prop in proposals" :key="prop._id" class="glass-card p-10 group overflow-hidden border-white/5 hover:border-primary-500/20 transition-all duration-700">
           <div class="flex justify-between items-start mb-8">
              <div class="flex items-center gap-3">
                 <span :class="['px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest border', getStatusColor(prop.status)]">

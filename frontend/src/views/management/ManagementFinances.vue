@@ -1,17 +1,33 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import api from '@/services/api'
 
-const finances = ref([
-    { id: 1, date: '2026-04-01', description: 'Venda de Curso: Energia Solar', amount: 15000, type: 'receita', category: 'cursos' },
-    { id: 2, date: '2026-04-03', description: 'Pagamento Salários - Março', amount: 85000, type: 'despesa', category: 'salarios' },
-    { id: 3, date: '2026-04-05', description: 'Anúncios Facebook/IG', amount: 5000, type: 'despesa', category: 'marketing' }
-])
+const finances = ref([])
+const statsData = ref({
+    receita: 0,
+    despesa: 0,
+    balance: 0
+})
 
-const stats = {
-    receita: 15000,
-    despesa: 90000,
-    balance: -75000
+const loading = ref(true)
+
+async function fetchFinances() {
+    try {
+        const res = await api.get('/organization/finances')
+        finances.value = res.data.data.finances
+        const stats = res.data.data.stats
+        
+        statsData.value.receita = stats.find(s => s._id === 'receita')?.total || 0
+        statsData.value.despesa = stats.find(s => s._id === 'despesa')?.total || 0
+        statsData.value.balance = statsData.value.receita - statsData.value.despesa
+    } catch (e) {
+        console.error('Error fetching finances:', e)
+    } finally {
+        loading.value = false
+    }
 }
+
+onMounted(fetchFinances)
 </script>
 
 <template>
@@ -29,15 +45,15 @@ const stats = {
     <div class="grid md:grid-cols-3 gap-6">
        <div class="glass-card p-10 flex flex-col gap-2 border-green-500/10">
           <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest">Entradas</span>
-          <span class="text-3xl font-bold text-green-400">{{ stats.receita.toLocaleString() }} MT</span>
+          <span class="text-3xl font-bold text-green-400">{{ statsData.receita.toLocaleString() }} MT</span>
        </div>
        <div class="glass-card p-10 flex flex-col gap-2 border-red-500/10">
           <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest">Saídas</span>
-          <span class="text-3xl font-bold text-red-400">{{ stats.despesa.toLocaleString() }} MT</span>
+          <span class="text-3xl font-bold text-red-500">{{ statsData.despesa.toLocaleString() }} MT</span>
        </div>
-       <div class="glass-card p-10 flex flex-col gap-2" :class="stats.balance >= 0 ? 'border-green-500/10' : 'border-red-500/10'">
+       <div class="glass-card p-10 flex flex-col gap-2" :class="statsData.balance >= 0 ? 'border-green-500/10' : 'border-red-500/10'">
           <span class="text-slate-500 text-[10px] font-black uppercase tracking-widest">Saldo Mensal</span>
-          <span class="text-3xl font-bold" :class="stats.balance >= 0 ? 'text-green-500' : 'text-red-500'">{{ stats.balance.toLocaleString() }} MT</span>
+          <span class="text-3xl font-bold" :class="statsData.balance >= 0 ? 'text-green-500' : 'text-red-500'">{{ statsData.balance.toLocaleString() }} MT</span>
        </div>
     </div>
 
