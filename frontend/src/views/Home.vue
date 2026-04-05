@@ -116,32 +116,6 @@ const team = [
 ]
 
 const error = ref(null)
-
-onMounted(async () => {
-  try {
-    loading.value = true
-    console.log('Fetching featured courses...')
-    const data = await courseStore.fetchFeaturedCourses()
-    console.log('Featured courses data:', data)
-    
-    if (data && data.length > 0) {
-      featuredCourses.value = data
-    } else {
-      console.warn('No featured courses returned from API')
-    }
-  } catch (e) {
-    console.error('Error loading featured courses:', e)
-    error.value = 'Failed to load featured courses. Please check connection.'
-  } finally {
-    loading.value = false
-  }
-})
-
-const team = [
-  { id: 'afonso', image: afonsoImg },
-  { id: 'gil', image: gilImg },
-  { id: 'antonio', image: antonioImg }
-]
 </script>
 
 <template>
