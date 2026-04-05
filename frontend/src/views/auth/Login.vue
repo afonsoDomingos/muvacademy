@@ -128,7 +128,7 @@ async function handleSubmit() {
                   v-model="email"
                   type="email"
                   :class="{ 'p-invalid': errors.email }"
-                  class="w-full pl-11 py-3 !rounded-xl !bg-background !border-themeborder focus:!border-primary-500 focus:!ring-primary-500/20 text-foreground"
+                  class="w-full pl-11 py-3 !rounded-xl !bg-background !border-gray-300 dark:!border-gray-600 focus:!border-primary-500 focus:!ring-primary-500/20 text-foreground"
                   placeholder="seu@email.com"
                 />
               </div>
@@ -152,7 +152,7 @@ async function handleSubmit() {
                   :feedback="false"
                   toggleMask
                   :class="{ 'p-invalid': errors.password }"
-                  class="w-full [&>input]:!w-full [&>input]:!pl-11 [&>input]:!py-3 [&>input]:!rounded-xl [&>input]:!bg-background [&>input]:!border-themeborder [&>input]:focus:!border-primary-500 [&>input]:text-foreground"
+                  class="w-full [&>input]:!w-full [&>input]:!pl-11 [&>input]:!py-3 [&>input]:!rounded-xl [&>input]:!bg-background [&>input]:!border-gray-300 dark:[&>input]:!border-gray-600 [&>input]:focus:!border-primary-500 [&>input]:text-foreground"
                   placeholder="••••••••"
                 />
               </div>

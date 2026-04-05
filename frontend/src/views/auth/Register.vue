@@ -134,7 +134,7 @@ async function handleSubmit() {
               <InputText 
                 v-model="name" 
                 :class="{ 'p-invalid': errors.name }" 
-                class="w-full pl-11 py-3 !rounded-xl !bg-background !border-themeborder focus:!border-primary-500 focus:!ring-primary-500/20 text-foreground" 
+                class="w-full pl-11 py-3 !rounded-xl !bg-background !border-gray-300 dark:!border-gray-600 focus:!border-primary-500 focus:!ring-primary-500/20 text-foreground" 
                 placeholder="Seu nome completo" 
               />
             </div>
@@ -150,7 +150,7 @@ async function handleSubmit() {
                 v-model="email" 
                 type="email" 
                 :class="{ 'p-invalid': errors.email }" 
-                class="w-full pl-11 py-3 !rounded-xl !bg-background !border-themeborder focus:!border-primary-500 focus:!ring-primary-500/20 text-foreground" 
+                class="w-full pl-11 py-3 !rounded-xl !bg-background !border-gray-300 dark:!border-gray-600 focus:!border-primary-500 focus:!ring-primary-500/20 text-foreground" 
                 placeholder="seu@email.com" 
               />
             </div>
@@ -164,7 +164,7 @@ async function handleSubmit() {
               <i class="pi pi-phone absolute left-4 top-1/2 -translate-y-1/2 text-muted z-10" />
               <InputText 
                 v-model="phone" 
-                class="w-full pl-11 py-3 !rounded-xl !bg-background !border-themeborder focus:!border-primary-500 focus:!ring-primary-500/20 text-foreground" 
+                class="w-full pl-11 py-3 !rounded-xl !bg-background !border-gray-300 dark:!border-gray-600 focus:!border-primary-500 focus:!ring-primary-500/20 text-foreground" 
                 placeholder="+258 84 123 4567" 
               />
             </div>
@@ -178,7 +178,7 @@ async function handleSubmit() {
                 v-model="password" 
                 toggleMask 
                 :class="{ 'p-invalid': errors.password }" 
-                class="w-full [&>input]:!w-full [&>input]:!pl-11 [&>input]:!py-3 [&>input]:!rounded-xl [&>input]:!bg-background [&>input]:!border-themeborder [&>input]:focus:!border-primary-500 [&>input]:text-foreground" 
+                class="w-full [&>input]:!w-full [&>input]:!pl-11 [&>input]:!py-3 [&>input]:!rounded-xl [&>input]:!bg-background [&>input]:!border-gray-300 dark:[&>input]:!border-gray-600 [&>input]:focus:!border-primary-500 [&>input]:text-foreground" 
                 inputClass="w-full"
               />
               <small v-if="errors.password" class="text-red-500">{{ errors.password }}</small>
@@ -191,7 +191,7 @@ async function handleSubmit() {
                 :feedback="false" 
                 toggleMask 
                 :class="{ 'p-invalid': errors.confirmPassword }" 
-                class="w-full [&>input]:!w-full [&>input]:!pl-11 [&>input]:!py-3 [&>input]:!rounded-xl [&>input]:!bg-background [&>input]:!border-themeborder [&>input]:focus:!border-primary-500 [&>input]:text-foreground" 
+                class="w-full [&>input]:!w-full [&>input]:!pl-11 [&>input]:!py-3 [&>input]:!rounded-xl [&>input]:!bg-background [&>input]:!border-gray-300 dark:[&>input]:!border-gray-600 [&>input]:focus:!border-primary-500 [&>input]:text-foreground" 
                 inputClass="w-full" 
               />
               <small v-if="errors.confirmPassword" class="text-red-500">{{ errors.confirmPassword }}</small>
@@ -199,7 +199,7 @@ async function handleSubmit() {
           </div>
 
           <!-- Terms -->
-          <div class="flex items-start gap-3 p-4 rounded-xl bg-background border border-themeborder">
+          <div class="flex items-start gap-3 p-4 rounded-xl bg-background border border-gray-300 dark:border-gray-600">
             <Checkbox v-model="acceptTerms" :binary="true" inputId="terms" />
             <label for="terms" class="text-sm text-muted cursor-pointer flex-1">
               Li e concordo com os <a href="#" class="text-primary-600 hover:underline font-medium">Termos de Serviço</a> e <a href="#" class="text-primary-600 hover:underline font-medium">Política de Privacidade</a> da MUV Academy.

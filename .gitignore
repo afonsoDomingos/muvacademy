@@ -37,10 +37,25 @@ logs/
 .DS_Store
 Thumbs.db
 
-# Project specific
+# Project specific - Debug e ficheiros temporários (NÃO commitar)
 backend/users_list.txt
 backend/users_final.txt
+backend/password_results.txt
+backend/final_check.txt
+backend/pw_check.results
+backend/results_no_ignore.check
+backend/*.txt
+backend/*.results
+backend/*.check
+
+# Debug scripts temporários
 backend/list_users.js
-backend/users_final.txt
-backend/users_list.txt
-*.txt
+backend/fix_users.js
+backend/check_featured.js
+backend/check_passwords.js
+
+# Vite timestamp cache files
+frontend/vite.config.js.timestamp-*
+
+# Logs
+*.log
