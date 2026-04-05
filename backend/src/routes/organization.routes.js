@@ -8,7 +8,9 @@ import {
     getFinances, createFinanceRecord,
     getProposals, createProposal, updateProposalStatus
 } from '../controllers/finance_proposal.controller.js';
-import { protect, admin } from '../middleware/auth.js';
+import { authenticate as protect } from '../middleware/auth.middleware.js';
+import { requireAdmin as admin } from '../middleware/rbac.middleware.js';
+
 
 const router = express.Router();
 

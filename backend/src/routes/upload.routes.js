@@ -3,7 +3,9 @@ import {
     uploadCourseImageHandler, uploadAvatarHandler, uploadProofHandler, uploadMaterialHandler, deleteFile,
     uploadBannerHandler, uploadWorkshopHandler
 } from '../controllers/upload.controller.js';
-import { protect, admin } from '../middleware/auth.js';
+import { authenticate as protect } from '../middleware/auth.middleware.js';
+import { requireAdmin as admin } from '../middleware/rbac.middleware.js';
+
 
 const router = express.Router();
 

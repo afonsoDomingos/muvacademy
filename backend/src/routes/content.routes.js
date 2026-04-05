@@ -4,7 +4,9 @@ import {
     getAllServices, createService, updateService, deleteService,
     getSetting, updateSetting
 } from '../controllers/content.controller.js';
-import { protect, admin } from '../middleware/auth.js';
+import { authenticate as protect } from '../middleware/auth.middleware.js';
+import { requireAdmin as admin } from '../middleware/rbac.middleware.js';
+
 
 const router = express.Router();
 

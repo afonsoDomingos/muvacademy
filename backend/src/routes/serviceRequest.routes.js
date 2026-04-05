@@ -1,6 +1,8 @@
 import express from 'express';
 import { createServiceRequest, getRequests, updateRequestStatus, getMyRequests } from '../controllers/serviceRequest.controller.js';
-import { protect, admin } from '../middleware/auth.js';
+import { authenticate as protect } from '../middleware/auth.middleware.js';
+import { requireAdmin as admin } from '../middleware/rbac.middleware.js';
+
 
 const router = express.Router();
 
