@@ -24,7 +24,8 @@ const unreadCount = computed(() => notificationStore.unreadCount)
 
 const navLinks = computed(() => [
   { name: 'home', path: '/', label: t('nav.home') },
-  { name: 'courses', path: '/courses', label: t('nav.courses') }
+  { name: 'courses', path: '/courses', label: t('nav.courses') },
+  { name: 'services', path: '/#services', label: 'Serviços' }
 ])
 
 function toggleLanguage() {

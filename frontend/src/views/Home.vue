@@ -192,6 +192,16 @@ const error = ref(null)
           :class="currentSlide === i ? 'w-10 bg-primary-500' : 'w-4 bg-white/20 hover:bg-white/40'"
         ></button>
       </div>
+
+      <!-- Scroll Down Indicator -->
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 hidden lg:block group">
+        <a href="#services" class="flex flex-col items-center gap-3">
+          <span class="text-[9px] font-bold tracking-[0.4em] uppercase text-white/30 group-hover:text-primary-400 transition-colors">Role para Ver Mais</span>
+          <div class="w-5 h-8 rounded-full border border-white/20 flex justify-center p-1 group-hover:border-primary-500/40 transition-colors">
+            <div class="w-1 h-1.5 bg-primary-500 rounded-full animate-mouse-scroll"></div>
+          </div>
+        </a>
+      </div>
     </section>
 
     <!-- Services Section -->
@@ -327,6 +337,15 @@ const error = ref(null)
 
 .text-glow {
   text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+}
+
+@keyframes mouse-scroll {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(10px); opacity: 0; }
+}
+
+.animate-mouse-scroll {
+  animation: mouse-scroll 1.5s infinite;
 }
 </style>
 
