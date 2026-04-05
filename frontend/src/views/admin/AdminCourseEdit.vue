@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useCourseStore } from '@/stores/course'
@@ -108,6 +108,17 @@ onMounted(async () => {
   }
   
   loading.value = false
+})
+
+const EXCHANGE_RATE = 63.92 // Taxa de conversão atual MZN -> USD
+
+watch(() => form.value.priceMZN, (newPrice) => {
+    if (newPrice && newPrice > 0) {
+        // Arredondar a 2 casas decimais
+        form.value.priceUSD = parseFloat((newPrice / EXCHANGE_RATE).toFixed(2))
+    } else {
+        form.value.priceUSD = 0
+    }
 })
 </script>
 
