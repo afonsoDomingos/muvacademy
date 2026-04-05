@@ -27,7 +27,7 @@ const form = ref({
 
 const types = [
   { label: 'Solicitar Orçamento', value: 'orcamento' },
-  { label: 'Marcar Consultoria/Visita', value: 'marcacao' }
+  { label: 'Agendar Reunião / Consultoria', value: 'marcacao' }
 ]
 
 async function handleSubmit() {
@@ -116,7 +116,7 @@ function resetForm() {
         <button @click="emit('update:visible', false)" class="btn btn-secondary flex-1 py-3">Cancelar</button>
         <button @click="handleSubmit" :disabled="loading || !form.name || !form.email || !form.message" class="btn btn-primary flex-1 py-3">
           <i v-if="loading" class="pi pi-spin pi-spinner mr-2"></i>
-          {{ loading ? 'Enviando...' : 'Pedir Orçamento' }}
+          {{ loading ? 'Enviando...' : 'Enviar Pedido' }}
         </button>
       </div>
     </template>

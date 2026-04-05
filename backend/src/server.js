@@ -105,6 +105,7 @@ app.use('/api/content', contentRoutes);
 app.use('/api/service-requests', serviceRequestRoutes);
 
 // Health Check
+app.get('/api/ping', (req, res) => res.status(200).send('pong'));
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,

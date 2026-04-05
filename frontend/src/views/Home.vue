@@ -144,7 +144,7 @@ const openServiceModal = (service) => {
         >
           <!-- Background Image with Overlay -->
           <div class="absolute inset-0 z-0">
-            <img :src="banner.image" class="w-full h-full object-cover opacity-30" />
+            <img :src="banner.image" class="w-full h-full object-cover opacity-30" loading="lazy" />
             <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
           </div>
 

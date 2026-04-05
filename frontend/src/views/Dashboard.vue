@@ -16,9 +16,10 @@ const loading = ref(true)
 const activeTab = ref('inProgress')
 
 const user = computed(() => authStore.user)
-const enrollments = computed(() => enrollmentStore.myEnrollments)
-const notifications = computed(() => notificationStore.notifications.slice(0, 5))
+const completing = ref(false)
+const myRequests = ref([])
 
+const enrollments = computed(() => enrollmentStore.myEnrollments)
 const approvedEnrollments = computed(() => enrollments.value.filter(e => e.status === 'APROVADO'))
 const pendingEnrollments = computed(() => enrollments.value.filter(e => e.status === 'PENDENTE'))
 const inProgressCourses = computed(() => approvedEnrollments.value.filter(e => e.overallProgress < 100))
@@ -27,8 +28,19 @@ const completedCourses = computed(() => approvedEnrollments.value.filter(e => e.
 const tabs = [
   { id: 'inProgress', label: 'dashboard.inProgress', count: () => inProgressCourses.value.length },
   { id: 'completed', label: 'dashboard.completed', count: () => completedCourses.value.length },
-  { id: 'pending', label: 'dashboard.pending', count: () => pendingEnrollments.value.length }
+  { id: 'pending', label: 'dashboard.pending', count: () => pendingEnrollments.value.length },
+  { id: 'requests', label: 'Meus Pedidos', count: () => myRequests.value.length }
 ]
+
+import api from '@/services/api'
+const fetchMyRequests = async () => {
+    try {
+        const response = await api.get('/service-requests/my')
+        myRequests.value = response.data.data.requests
+    } catch (e) {
+        console.error('Error fetching my requests:', e)
+    }
+}
 
 function getTitle(enrollment) {
   return enrollment.courseId?.title?.[locale.value] || enrollment.courseId?.title?.pt || ''
@@ -51,7 +63,8 @@ onMounted(async () => {
   loading.value = true
   await Promise.all([
     enrollmentStore.fetchMyEnrollments(),
-    notificationStore.fetchNotifications({ limit: 5 })
+    notificationStore.fetchNotifications({ limit: 5 }),
+    fetchMyRequests()
   ])
   loading.value = false
 })
@@ -173,6 +186,37 @@ onMounted(async () => {
                     <div class="flex-1">
                       <h3 class="text-white font-medium">{{ getTitle(enrollment) }}</h3>
                       <span class="badge badge-warning mt-2">⏳ Aguardando aprovação</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- My Requests -->
+              <div v-else-if="activeTab === 'requests'">
+                <div v-if="myRequests.length === 0" class="text-center py-12">
+                  <i class="pi pi-briefcase text-4xl text-gray-600 mb-4"></i>
+                  <p class="text-gray-400">Ainda não solicitou nenhum serviço.</p>
+                  <a href="/#services" class="btn btn-primary mt-4">Explorar Serviços</a>
+                </div>
+                <div v-else class="space-y-4">
+                  <div v-for="req in myRequests" :key="req._id" class="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
+                    <div class="w-12 h-12 rounded-lg bg-primary-500/10 flex items-center justify-center text-primary-400">
+                      <i class="pi pi-envelope text-xl"></i>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="text-white font-bold leading-tight">{{ req.service }}</h4>
+                      <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">{{ new Date(req.createdAt).toLocaleDateString() }}</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap" 
+                        :class="{
+                          'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20': req.status === 'pendente',
+                          'bg-blue-500/10 text-blue-500 border border-blue-500/20': req.status === 'em_analise',
+                          'bg-green-500/10 text-green-500 border border-green-500/20': req.status === 'concluido',
+                          'bg-red-500/10 text-red-500 border border-red-500/20': req.status === 'cancelado'
+                        }">
+                        {{ req.status.replace('_', ' ') }}
+                      </span>
                     </div>
                   </div>
                 </div>

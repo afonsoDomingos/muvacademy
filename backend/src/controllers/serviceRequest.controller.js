@@ -23,6 +23,15 @@ export const getRequests = async (req, res) => {
     }
 };
 
+export const getMyRequests = async (req, res) => {
+    try {
+        const requests = await ServiceRequest.find({ user: req.user._id }).sort('-createdAt');
+        res.json({ success: true, data: { requests } });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
 export const updateRequestStatus = async (req, res) => {
     try {
         const request = await ServiceRequest.findByIdAndUpdate(req.params.id, { status: req.body.status }, { new: true });
