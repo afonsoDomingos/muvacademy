@@ -51,20 +51,33 @@ onMounted(async () => {
           </div>
           
           <div v-else class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div v-for="service in services" :key="service._id" class="glass-card group p-10 hover:bg-primary-500/10 transition-all duration-700 border-white/5 hover:border-primary-500/30">
-               <div class="mb-10 w-16 h-16 rounded-2xl bg-primary-500/10 flex items-center justify-center text-primary-400 group-hover:scale-110 transition-transform">
-                  <i :class="service.icon || 'pi pi-cog'" class="text-2xl"></i>
+            <div v-for="service in services" :key="service._id" class="glass-card group overflow-hidden flex flex-col hover:border-primary-500/30 transition-all duration-700">
+               <!-- Imagem de Destaque -->
+               <div class="h-48 w-full relative overflow-hidden bg-slate-900">
+                  <img v-if="service.image" :src="service.image" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 opacity-80 group-hover:opacity-100" loading="lazy" />
+                  <div v-else class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900 group-hover:scale-105 transition-transform duration-1000">
+                     <i :class="service.icon || 'pi pi-cog'" class="text-5xl text-white/10"></i>
+                  </div>
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950 to-transparent"></div>
+                  <!-- Ícone no canto -->
+                  <div class="absolute bottom-4 left-6 w-12 h-12 rounded-xl bg-primary-500/90 backdrop-blur-sm flex items-center justify-center text-white shadow-xl">
+                     <i :class="service.icon || 'pi pi-briefcase'" class="text-xl"></i>
+                  </div>
                </div>
-               <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-primary-400 transition-colors uppercase tracking-tight">
-                  {{ service.title?.pt || service.title }}
-               </h3>
-               <p class="text-slate-500 text-sm leading-relaxed mb-10 min-h-[100px]">
-                  {{ service.description?.pt || service.description }}
-               </p>
                
-               <div class="pt-8 border-t border-white/10 flex justify-between items-center">
-                  <ServiceRequestModal :service="service.title?.pt || service.title" />
-                  <i class="pi pi-arrow-right text-slate-700 group-hover:text-primary-500 group-hover:translate-x-2 transition-all"></i>
+               <!-- Conteúdo do Cartão -->
+               <div class="p-8 flex flex-col flex-1">
+                  <h3 class="text-2xl font-bold text-white mb-4 group-hover:text-primary-400 transition-colors uppercase tracking-tight">
+                     {{ service.title?.pt || service.title }}
+                  </h3>
+                  <p class="text-slate-500 text-sm leading-relaxed mb-10 flex-1">
+                     {{ service.description?.pt || service.description }}
+                  </p>
+                  
+                  <div class="pt-6 border-t border-white/10 flex justify-between items-center mt-auto">
+                     <ServiceRequestModal :service="service.title?.pt || service.title" />
+                     <i class="pi pi-arrow-right text-slate-700 group-hover:text-primary-500 group-hover:translate-x-2 transition-all"></i>
+                  </div>
                </div>
             </div>
           </div>
