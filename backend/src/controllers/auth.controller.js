@@ -1,5 +1,6 @@
 import User from '../models/User.js';
 import Log from '../models/Log.js';
+import { sendWelcomeEmail } from '../config/email.js';
 import {
     generateAccessToken,
     generateRefreshToken,
@@ -53,6 +54,9 @@ export const register = async (req, res) => {
             ip: req.ip,
             userAgent: req.headers['user-agent']
         });
+
+        // Send welcome email (async, non-blocking)
+        sendWelcomeEmail(user).catch(() => {});
 
         res.status(201).json({
             success: true,

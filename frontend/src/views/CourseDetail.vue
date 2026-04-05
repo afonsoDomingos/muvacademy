@@ -36,7 +36,12 @@ const displayPrice = computed(() => {
 })
 const currency = computed(() => locale.value === 'en' ? 'USD' : 'MZN')
 
-const totalLessons = computed(() => modules.value.reduce((sum, m) => sum + (m.lessons?.length || 0), 0))
+const firstLessonId = computed(() => {
+  if (modules.value.length > 0 && modules.value[0].lessons?.length > 0) {
+    return modules.value[0].lessons[0]._id
+  }
+  return null
+})
 
 function handleEnroll() {
   if (!isAuthenticated.value) {
@@ -157,9 +162,14 @@ onMounted(async () => {
                 </div>
                 
                 <div v-if="isEnrolled">
-                  <RouterLink :to="`/courses/${course.slug || course._id}`" class="btn btn-primary w-full">
+                  <RouterLink 
+                    :to="{ name: 'lesson-player', params: { courseId: course._id, lessonId: firstLessonId } }" 
+                    class="btn btn-primary w-full"
+                    v-if="firstLessonId"
+                  >
                     <i class="pi pi-play"></i> Continuar Curso
                   </RouterLink>
+                  <p v-else class="text-xs text-center text-muted italic">Nenhuma aula disponível ainda</p>
                 </div>
                 <div v-else-if="enrollment?.status === 'PENDENTE'">
                   <Button label="Aguardando Aprovação" icon="pi pi-clock" class="w-full" disabled />

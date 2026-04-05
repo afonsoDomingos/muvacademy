@@ -137,7 +137,7 @@ onMounted(async () => {
                       </div>
                       <ProgressBar :value="enrollment.overallProgress" :showValue="false" class="h-2" />
                     </div>
-                    <RouterLink :to="`/courses/${enrollment.courseId?.slug || enrollment.courseId?._id}`" class="btn btn-primary !py-2 !px-4 text-sm self-center">
+                    <RouterLink :to="{ name: 'lesson-player', params: { courseId: enrollment.courseId?._id } }" class="btn btn-primary !py-2 !px-4 text-sm self-center">
                       {{ t('dashboard.continue') }}
                     </RouterLink>
                   </div>

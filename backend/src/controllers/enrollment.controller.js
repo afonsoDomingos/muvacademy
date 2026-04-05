@@ -1,7 +1,13 @@
 import Enrollment from '../models/Enrollment.js';
 import Course from '../models/Course.js';
+import User from '../models/User.js';
 import Notification from '../models/Notification.js';
 import Log from '../models/Log.js';
+import {
+    sendEnrollmentPendingEmail,
+    sendEnrollmentApprovedEmail,
+    sendEnrollmentRejectedEmail
+} from '../config/email.js';
 
 // Get my enrollments (for students)
 export const getMyEnrollments = async (req, res) => {
@@ -79,6 +85,9 @@ export const createEnrollment = async (req, res) => {
 
         const enrollment = await Enrollment.create({ userId: req.user._id, courseId, proofUrl, proofPublicId, paymentMethod, paymentDetails, observations, status: 'PENDENTE' });
 
+        // Send pending email (async, non-blocking)
+        sendEnrollmentPendingEmail(req.user, course.title.pt).catch(() => {});
+
         await Log.createLog({ userId: req.user._id, action: 'enrollment_create', description: `Enrollment created for course: ${course.title.pt}`, targetType: 'enrollment', targetId: enrollment._id });
         res.status(201).json({ success: true, message: 'Pré-inscrição realizada! Aguarde a aprovação.', data: { enrollment } });
     } catch (error) {
@@ -100,8 +109,14 @@ export const approveEnrollment = async (req, res) => {
         enrollment.startedAt = new Date();
         await enrollment.save();
 
-        // Notify user
+        // Notify user (in-app)
         await Notification.createEnrollmentNotification(enrollment.userId, 'enrollment_approved', enrollment.courseId.title, { enrollmentId: enrollment._id, courseId: enrollment.courseId._id });
+
+        // Send approval email
+        const enrolledUser = await User.findById(enrollment.userId).select('name email');
+        if (enrolledUser) {
+            sendEnrollmentApprovedEmail(enrolledUser, enrollment.courseId.title.pt, enrollment.courseId._id).catch(() => {});
+        }
 
         await Log.createLog({ userId: req.user._id, action: 'enrollment_approve', description: `Enrollment approved`, targetType: 'enrollment', targetId: enrollment._id });
         res.json({ success: true, message: 'Inscrição aprovada!', data: { enrollment } });
@@ -125,8 +140,14 @@ export const rejectEnrollment = async (req, res) => {
         enrollment.adminNotes = adminNotes || '';
         await enrollment.save();
 
-        // Notify user
+        // Notify user (in-app)
         await Notification.createEnrollmentNotification(enrollment.userId, 'enrollment_rejected', enrollment.courseId.title, { enrollmentId: enrollment._id, reason: rejectionReason });
+
+        // Send rejection email
+        const rejectedUser = await User.findById(enrollment.userId).select('name email');
+        if (rejectedUser) {
+            sendEnrollmentRejectedEmail(rejectedUser, enrollment.courseId.title.pt, rejectionReason).catch(() => {});
+        }
 
         await Log.createLog({ userId: req.user._id, action: 'enrollment_reject', description: `Enrollment rejected`, targetType: 'enrollment', targetId: enrollment._id });
         res.json({ success: true, message: 'Inscrição rejeitada.', data: { enrollment } });

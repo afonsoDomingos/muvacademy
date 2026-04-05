@@ -29,7 +29,7 @@ const routes = [
     { path: '/dashboard', name: 'dashboard', component: Dashboard, meta: { title: 'Dashboard', requiresAuth: true } },
     { path: '/enroll/:courseId', name: 'enrollment', component: Enrollment, meta: { title: 'Inscrição', requiresAuth: true } },
     { path: '/profile', name: 'profile', component: Profile, meta: { title: 'Perfil', requiresAuth: true } },
-    { path: '/learn/:courseId/lesson/:lessonId', name: 'lesson-player', component: LessonPlayer, meta: { title: 'Aula', requiresAuth: true } },
+    { path: '/learn/:courseId/lesson/:lessonId?', name: 'lesson-player', component: LessonPlayer, meta: { title: 'Aula', requiresAuth: true } },
 
     // Admin routes
     {

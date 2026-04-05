@@ -24,101 +24,96 @@ const discountedPrice = computed(() => {
 </script>
 
 <template>
-  <div class="card card-hover overflow-hidden group bg-surface border border-themeborder">
-    <!-- Image -->
-    <div class="relative h-48 overflow-hidden bg-gray-100 dark:bg-gray-800">
+  <div class="card-premium group relative flex flex-col h-full hover:z-10">
+    <!-- Image with gradient overlay -->
+    <div class="relative aspect-video overflow-hidden bg-slate-900">
       <img
         v-if="course.image"
         :src="course.image"
         :alt="title"
-        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+        class="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-all duration-700 opacity-80 group-hover:opacity-100"
       />
-      <!-- Placeholder with solid color -->
-      <div v-else class="w-full h-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center">
-        <i class="pi pi-book text-4xl text-slate-400"></i>
+      <div v-else class="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
+        <i class="pi pi-book text-6xl text-white/10 group-hover:scale-125 transition-transform duration-700"></i>
       </div>
       
-      <!-- Featured badge -->
-      <div v-if="course.featured" class="absolute top-3 left-3 badge bg-yellow-100 text-yellow-700 dark:bg-yellow-500/20 dark:text-yellow-400 border border-yellow-200 dark:border-transparent">
-        <i class="pi pi-star-fill mr-1"></i>
-        Destaque
+      <!-- Overlays -->
+      <div class="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-slate-950 to-transparent"></div>
+      
+      <!-- Badges -->
+      <div class="absolute top-4 left-4 flex flex-col gap-2">
+        <div v-if="course.featured" class="badge-accent px-3 py-1 bg-accent-500 text-white rounded-full flex items-center gap-1.5 shadow-xl scale-90 origin-left">
+          <i class="pi pi-sparkles text-[10px]"></i>
+          <span class="text-[9px] font-black uppercase tracking-widest">Destaque</span>
+        </div>
+        <div class="badge glass-card px-3 py-1 text-white border-white/20 scale-90 origin-left">
+          {{ t(`courses.levels.${course.level}`) }}
+        </div>
       </div>
       
-      <!-- Level badge -->
-      <div class="absolute top-3 right-3 badge bg-white/90 dark:bg-black/60 backdrop-blur-sm text-foreground shadow-sm">
-        {{ t(`courses.levels.${course.level}`) }}
+      <!-- Price on image -->
+      <div class="absolute bottom-4 right-4 text-right">
+        <div v-if="hasDiscount" class="text-[10px] text-slate-400 line-through mb-0.5">
+          {{ price.toLocaleString() }} {{ currency }}
+        </div>
+        <div class="text-xl font-black text-white text-glow">
+          {{ (hasDiscount ? discountedPrice : price).toLocaleString() }}
+          <span class="text-[10px] font-medium opacity-70">{{ currency }}</span>
+        </div>
       </div>
     </div>
 
     <!-- Content -->
-    <div class="p-6">
+    <div class="p-8 flex flex-col flex-1">
       <!-- Categories -->
-      <div class="flex flex-wrap gap-2 mb-3">
+      <div class="flex flex-wrap gap-2 mb-4">
         <span
           v-for="cat in course.categories?.slice(0, 2)"
           :key="cat"
-          class="text-xs font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 px-2 py-0.5 rounded"
+          class="text-[9px] font-black tracking-widest uppercase text-primary-400 bg-primary-500/10 px-2 py-1 rounded-md border border-primary-500/10 shadow-sm"
         >
-          #{{ cat }}
+          {{ cat }}
         </span>
       </div>
 
       <!-- Title -->
-      <h3 class="text-lg font-bold text-foreground mb-2 line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+      <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 leading-tight group-hover:text-primary-400 transition-colors duration-300">
         {{ title }}
       </h3>
 
       <!-- Description -->
-      <p class="text-muted text-sm line-clamp-2 mb-4">
+      <p class="text-slate-400 text-sm line-clamp-2 mb-6 leading-relaxed flex-1">
         {{ description }}
       </p>
 
-      <!-- Instructor -->
-      <div v-if="course.instructor" class="flex items-center gap-2 mb-4">
-        <div class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden">
-           <img 
-            v-if="course.instructor.avatar" 
-            :src="course.instructor.avatar" 
-            class="w-full h-full object-cover"
-          />
-          <span v-else class="text-muted text-xs font-bold">{{ course.instructor.name?.charAt(0) }}</span>
-        </div>
-        <span class="text-sm text-muted font-medium">{{ course.instructor.name }}</span>
-      </div>
-
-      <!-- Stats -->
-      <div class="flex items-center gap-4 text-sm text-muted mb-4">
-        <span class="flex items-center gap-1">
-          <i class="pi pi-users text-primary-500"></i>
-          {{ course.enrollmentCount || 0 }} {{ t('courses.card.students') }}
-        </span>
-        <span v-if="course.duration" class="flex items-center gap-1">
-          <i class="pi pi-clock text-primary-500"></i>
-          {{ course.duration.hours }}h
-        </span>
-      </div>
-
-      <!-- Footer -->
-      <div class="flex items-center justify-between pt-4 border-t border-themeborder">
-        <!-- Price -->
-        <div>
-          <span v-if="hasDiscount" class="text-sm text-muted line-through mr-2 block">
-            {{ price.toLocaleString() }} {{ currency }}
-          </span>
-          <span class="text-xl font-bold text-foreground">
-            {{ (hasDiscount ? discountedPrice : price).toLocaleString() }}
-            <span class="text-xs font-normal text-muted">{{ currency }}</span>
-          </span>
+      <!-- Bottom Meta -->
+      <div class="flex items-center justify-between mt-auto pt-6 border-t border-white/5">
+        <!-- Instructor -->
+        <div v-if="course.instructor" class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 flex items-center justify-center border border-white/5 overflow-hidden">
+             <img 
+              v-if="course.instructor.avatar" 
+              :src="course.instructor.avatar" 
+              class="w-full h-full object-cover"
+            />
+            <span v-else class="text-white text-[10px] font-bold">{{ course.instructor.name?.charAt(0) }}</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="text-[11px] text-white font-bold truncate max-w-[100px]">{{ course.instructor.name }}</span>
+            <span class="text-[9px] text-slate-500 font-medium">Instrutor</span>
+          </div>
         </div>
 
         <!-- Action -->
         <RouterLink
           :to="`/courses/${course.slug || course._id}`"
-          class="btn btn-primary !py-2 !px-4 text-sm shadow-none"
+          class="btn btn-secondary !py-2.5 !px-5 text-[11px] font-black active:scale-95 group/btn"
         >
           {{ t('courses.card.view') }}
+          <i class="pi pi-arrow-right group-hover/btn:translate-x-1 transition-transform"></i>
         </RouterLink>
       </div>
     </div>
   </div>
 </template>
+
