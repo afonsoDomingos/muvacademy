@@ -103,10 +103,6 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/content', contentRoutes);
-import serviceRequestRoutes from './routes/serviceRequest.routes.js';
-import workshopRoutes from './routes/workshop.routes.js';
-
-// ...
 app.use('/api/service-requests', serviceRequestRoutes);
 app.use('/api/workshops', workshopRoutes);
 

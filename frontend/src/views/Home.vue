@@ -57,6 +57,8 @@ onMounted(async () => {
     ])
     
     featuredCourses.value = coursesData || []
+    banners.value = bannersData || []
+    services.value = servicesData || []
     workshops.value = workshopsData.data.data.workshops || []
     
     // Default static banners if empty
