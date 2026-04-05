@@ -19,6 +19,7 @@ const AdminCourses = () => import('@/views/admin/AdminCourses.vue')
 const AdminCourseEdit = () => import('@/views/admin/AdminCourseEdit.vue')
 const AdminEnrollments = () => import('@/views/admin/AdminEnrollments.vue')
 const AdminUsers = () => import('@/views/admin/AdminUsers.vue')
+const AdminContent = () => import('@/views/admin/AdminContent.vue')
 
 const routes = [
     { path: '/', name: 'home', component: Home, meta: { title: 'MUV Academy - Início' } },
@@ -42,6 +43,7 @@ const routes = [
             { path: 'courses/new', name: 'admin-course-new', component: AdminCourseEdit, meta: { title: 'Admin - Novo Curso' } },
             { path: 'courses/:id/edit', name: 'admin-course-edit', component: AdminCourseEdit, meta: { title: 'Admin - Editar Curso' } },
             { path: 'enrollments', name: 'admin-enrollments', component: AdminEnrollments, meta: { title: 'Admin - Inscrições' } },
+            { path: 'content', name: 'admin-content', component: AdminContent, meta: { title: 'Admin - Conteúdo' } },
             { path: 'users', name: 'admin-users', component: AdminUsers, meta: { title: 'Admin - Usuários', requiresSuperAdmin: true } }
         ]
     },

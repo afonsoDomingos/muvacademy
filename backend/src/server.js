@@ -16,6 +16,7 @@ import enrollmentRoutes from './routes/enrollment.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import statsRoutes from './routes/stats.routes.js';
+import contentRoutes from './routes/content.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -99,6 +100,7 @@ app.use('/api/enrollments', enrollmentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/content', contentRoutes);
 
 // Health Check
 app.get('/api/health', (req, res) => {

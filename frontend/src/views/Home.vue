@@ -1,31 +1,117 @@
-<script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useCourseStore } from '@/stores/course'
+import { useContentStore } from '@/stores/content'
 import CourseCard from '@/components/courses/CourseCard.vue'
 import afonsoImg from '@/assets/team/afonso.jpg'
 import gilImg from '@/assets/team/gil.jpg'
 import antonioImg from '@/assets/team/antonio.jpg'
 
-const { t, tm } = useI18n()
+const { t, tm, locale } = useI18n()
 const courseStore = useCourseStore()
+const contentStore = useContentStore()
 
 const featuredCourses = ref([])
+const banners = ref([])
+const services = ref([])
 const loading = ref(true)
+const currentSlide = ref(0)
+let sliderInterval = null
 
-const features = [
-  { icon: 'pi pi-book', key: 'quality' },
-  { icon: 'pi pi-verified', key: 'certificate' },
-  { icon: 'pi pi-users', key: 'support' },
-  { icon: 'pi pi-clock', key: 'access' }
-]
+const startSlider = () => {
+  sliderInterval = setInterval(() => {
+    nextSlide()
+  }, 6000)
+}
+
+const nextSlide = () => {
+  if (banners.value.length > 0) {
+    currentSlide.value = (currentSlide.value + 1) % banners.value.length
+  }
+}
+
+const prevSlide = () => {
+  if (banners.value.length > 0) {
+    currentSlide.value = (currentSlide.value - 1 + banners.value.length) % banners.value.length
+  }
+}
+
+const selectSlide = (index) => {
+  currentSlide.value = index
+  clearInterval(sliderInterval)
+  startSlider()
+}
+
+onMounted(async () => {
+  try {
+    loading.value = true
+    const [coursesData, bannersData, servicesData] = await Promise.all([
+      courseStore.fetchFeaturedCourses(),
+      contentStore.fetchHomeBanners(),
+      contentStore.fetchServices()
+    ])
+    
+    featuredCourses.value = coursesData || []
+    
+    // Default static banners if empty
+    if (!bannersData || bannersData.length === 0) {
+       banners.value = [
+         {
+           _id: 'default-1',
+           title: { pt: 'MUV Academy 2026', en: 'MUV Academy 2026' },
+           subtitle: { pt: 'Capacitação técnica de elite para profissionais do futuro.', en: 'Elite technical training for future professionals.' },
+           ctaText: { pt: 'Ver Cursos', en: 'See Courses' },
+           ctaLink: '/courses',
+           image: '/images/hero-premium.png'
+         },
+         {
+            _id: 'default-2',
+            title: { pt: 'Infraestrutura & Energia', en: 'Infrastructure & Energy' },
+            subtitle: { pt: 'Soluções completas em Engenharia e Energias Sustentáveis.', en: 'Complete solutions in Engineering and Sustainable Energies.' },
+            ctaText: { pt: 'Consultoria MUV', en: 'MUV Consultancy' },
+            ctaLink: '#consulting',
+            image: '/images/courses/pvsyst.jpg'
+         }
+       ]
+    } else {
+      banners.value = bannersData
+    }
+
+    // Default static services if empty
+    if (!servicesData || servicesData.length === 0) {
+        services.value = [
+            { id: 1, title: { pt: 'Consultoria Técnica', en: 'Technical Consultancy' }, description: { pt: 'Apoio especializado em infraestruturas e gestão de projetos.', en: 'Specialized support in infrastructure and project management.' }, icon: 'pi pi-briefcase' },
+            { id: 2, title: { pt: 'Energia Solar', en: 'Solar Energy' }, description: { pt: 'Dimensionamento e instalação de sistemas fotovoltaicos.', en: 'Sizing and installation of photovoltaic systems.' }, icon: 'pi pi-sun' },
+            { id: 3, title: { pt: 'Sistemas SAP', en: 'SAP Systems' }, description: { pt: 'Implementação e formação em módulos empresariais de elite.', en: 'Implementation and training in elite business modules.' }, icon: 'pi pi-box' }
+        ]
+    } else {
+        services.value = servicesData
+    }
+
+    startSlider()
+  } catch (e) {
+    console.error('Error loading home data:', e)
+  } finally {
+    loading.value = false
+  }
+})
+
+onUnmounted(() => {
+  clearInterval(sliderInterval)
+})
 
 const stats = [
   { value: '500+', key: 'students' },
   { value: '20+', key: 'courses' },
   { value: '10+', key: 'instructors' },
   { value: '300+', key: 'certificates' }
+]
+
+const team = [
+  { id: 'afonso', image: afonsoImg },
+  { id: 'gil', image: gilImg },
+  { id: 'antonio', image: antonioImg }
 ]
 
 const error = ref(null)
@@ -59,148 +145,106 @@ const team = [
 
 <template>
   <div class="bg-mesh min-h-screen">
-    <!-- Hero Section -->
+    <!-- Hero Slider Section -->
     <section class="relative min-h-[95vh] flex items-center overflow-hidden">
       <!-- Animated Background elements -->
       <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary-500/10 rounded-full blur-[120px] animate-pulse"></div>
       <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-accent-500/10 rounded-full blur-[120px] animate-pulse" style="animation-delay: 2s"></div>
 
-      <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div class="text-center">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-bold tracking-widest uppercase mb-8 animate-fade-in">
-            <span class="relative flex h-2 w-2">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
-            </span>
-            MUV ACADEMY 2026
+      <!-- Carousel Items -->
+      <transition-group name="fade" tag="div" class="absolute inset-0">
+        <div 
+          v-for="(banner, index) in banners" 
+          :key="banner._id"
+          v-show="currentSlide === index"
+          class="absolute inset-0 flex items-center"
+        >
+          <!-- Background Image with Overlay -->
+          <div class="absolute inset-0 z-0">
+            <img :src="banner.image" class="w-full h-full object-cover opacity-30" />
+            <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent"></div>
           </div>
-          
-          <h1 class="text-5xl sm:text-6xl lg:text-8xl font-display font-bold text-white mb-8 tracking-tighter animate-fade-in">
-            <span class="gradient-text">{{ t('home.hero.title') }}</span>
-          </h1>
-          
-          <p class="text-xl sm:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed animate-slide-up" style="animation-delay: 0.2s">
-            {{ t('home.hero.subtitle') }}
-          </p>
-          
-          <div class="flex flex-col sm:flex-row gap-6 justify-center animate-slide-up" style="animation-delay: 0.4s">
-            <RouterLink to="/courses" class="btn btn-primary text-lg px-10 py-5">
-              <i class="pi pi-play-circle text-xl"></i>
-              {{ t('home.hero.cta') }}
-            </RouterLink>
-            <a href="#features" class="btn btn-secondary text-lg px-10 py-5">
-              {{ t('home.hero.secondary') }}
-            </a>
-          </div>
-        </div>
 
-        <!-- Stats -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 mt-24 animate-slide-up" style="animation-delay: 0.6s">
-          <div v-for="stat in stats" :key="stat.key" class="glass-card p-10 rounded-3xl text-center group hover:border-primary-500/50 transition-all duration-500">
-            <div class="text-4xl sm:text-5xl font-black text-white mb-3 group-hover:scale-110 group-hover:text-glow transition-all">
-              {{ stat.value }}
+          <!-- Content -->
+          <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 w-full">
+            <div class="max-w-4xl">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-500/10 border border-primary-500/20 text-primary-400 text-xs font-bold tracking-widest uppercase mb-8 animate-fade-in">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-primary-500"></span>
+                </span>
+                MUV ACADEMY 2026
+              </div>
+              
+              <h1 class="text-5xl sm:text-7xl lg:text-8xl font-display font-bold text-white mb-8 tracking-tighter animate-fade-in leading-tight">
+                <span class="gradient-text">{{ banner.title?.[locale] || banner.title?.pt }}</span>
+              </h1>
+              
+              <p class="text-xl sm:text-2xl text-slate-400 mb-12 leading-relaxed animate-slide-up" style="animation-delay: 0.2s">
+                {{ banner.subtitle?.[locale] || banner.subtitle?.pt }}
+              </p>
+              
+              <div class="flex flex-col sm:flex-row gap-6 animate-slide-up" style="animation-delay: 0.4s">
+                <RouterLink :to="banner.ctaLink" class="btn btn-primary text-lg px-10 py-5">
+                  <i class="pi pi-bolt text-xl"></i>
+                  {{ banner.ctaText?.[locale] || banner.ctaText?.pt }}
+                </RouterLink>
+                <a href="#services" class="btn btn-secondary text-lg px-10 py-5">
+                  Saiba Mais
+                </a>
+              </div>
             </div>
-            <div class="text-slate-400 font-bold tracking-widest uppercase text-[10px]">{{ t(`home.stats.${stat.key}`) }}</div>
           </div>
         </div>
+      </transition-group>
+
+      <!-- Slider Controls -->
+      <div v-if="banners.length > 1" class="absolute bottom-10 left-12 z-20 flex gap-4">
+        <button @click="prevSlide" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
+          <i class="pi pi-chevron-left"></i>
+        </button>
+        <button @click="nextSlide" class="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
+          <i class="pi pi-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Indicators -->
+      <div v-if="banners.length > 1" class="absolute bottom-14 right-12 z-20 flex gap-2">
+        <button 
+          v-for="(b, i) in banners" :key="i"
+          @click="selectSlide(i)"
+          class="h-1.5 transition-all duration-500 rounded-full"
+          :class="currentSlide === i ? 'w-10 bg-primary-500' : 'w-4 bg-white/20 hover:bg-white/40'"
+        ></button>
       </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-32 relative overflow-hidden">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-24">
-          <h2 class="text-primary-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">Experiência de Aprendizagem</h2>
-          <h3 class="text-4xl sm:text-6xl font-display font-bold text-white">
-            {{ t('home.features.title') }}
-          </h3>
-        </div>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div
-            v-for="feature in features"
-            :key="feature.key"
-            class="card-premium p-10 group"
-          >
-            <div class="w-16 h-16 mb-8 rounded-2xl bg-white/5 flex items-center justify-center group-hover:bg-primary-500/20 group-hover:scale-110 transition-all duration-500 shadow-inner">
-              <i :class="feature.icon" class="text-2xl text-slate-400 group-hover:text-primary-400 transition-colors"></i>
-            </div>
-            <h3 class="text-2xl font-bold text-white mb-4">
-              {{ t(`home.features.${feature.key}.title`) }}
-            </h3>
-            <p class="text-slate-400 leading-relaxed">
-              {{ t(`home.features.${feature.key}.description`) }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Featured Courses -->
-    <section class="py-32 bg-slate-950/40 backdrop-blur-3xl border-y border-white/5">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col sm:flex-row justify-between items-end gap-8 mb-16">
-          <div class="max-w-2xl">
-            <h2 class="text-primary-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">Nossa Seleção</h2>
-            <h3 class="text-4xl sm:text-6xl font-display font-bold text-white">
-              {{ t('home.courses.title') }}
-            </h3>
-          </div>
-          <RouterLink to="/courses" class="btn btn-secondary group">
-            {{ t('home.courses.viewAll') }}
-            <i class="pi pi-arrow-right group-hover:translate-x-2 transition-transform"></i>
-          </RouterLink>
-        </div>
-
-        <div v-if="error" class="glass-card p-12 text-center text-red-400 border-red-500/20">
-          <i class="pi pi-exclamation-triangle text-4xl mb-4"></i>
-          <p class="text-lg font-bold">{{ error }}</p>
-        </div>
-
-        <div v-if="loading" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          <div v-for="i in 3" :key="i" class="glass-card h-[400px] animate-pulse"></div>
-        </div>
-
-        <div v-else-if="featuredCourses.length" class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-          <CourseCard v-for="course in featuredCourses" :key="course._id" :course="course" />
-        </div>
-
-        <div v-else class="text-center py-20 glass-card">
-          <p class="text-slate-500 italic">{{ t('common.noResults') }}</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Consulting Section -->
-    <section id="consulting" class="py-32">
+    <!-- Services Section -->
+    <section id="services" class="py-32 relative overflow-hidden bg-slate-950/20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-24 items-center">
-          <div class="animate-on-scroll">
-            <h2 class="text-accent-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">
-              {{ t('home.consulting.title') }}
-            </h2>
+          <div>
+            <h2 class="text-accent-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">MUV Além do Ensino</h2>
             <h3 class="text-4xl sm:text-6xl font-display font-bold mb-8 text-white leading-tight">
-              {{ t('home.consulting.subtitle') }}
+              Consultoria & Soluções em <span class="gradient-text">Engenharia</span>
             </h3>
             <p class="text-xl text-slate-400 mb-10 leading-relaxed">
-              {{ t('home.consulting.description') }}
+              Não somos apenas uma academia. Somos parceiros estratégicos para o desenvolvimento tecnológico de Moçambique, fornecendo sistemas de energia e inteligência técnica.
             </p>
             
-            <div class="space-y-6 mb-12">
-              <div v-for="(service, index) in tm('home.consulting.services')" :key="index" class="flex items-center gap-4 bg-white/5 p-4 rounded-2xl border border-white/5 hover:border-white/10 transition-colors">
-                <div class="w-10 h-10 rounded-full bg-accent-500/20 flex items-center justify-center">
-                  <i class="pi pi-check text-accent-400"></i>
+            <div class="grid sm:grid-cols-2 gap-4 mb-12">
+              <div v-for="service in services" :key="service._id || service.id" class="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-primary-500/30 group transition-all">
+                <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <i :class="service.icon" class="text-primary-400 text-xl"></i>
                 </div>
-                <span class="text-slate-300 font-medium">{{ service }}</span>
+                <h4 class="text-white font-bold mb-2">{{ service.title?.[locale] || service.title?.pt }}</h4>
+                <p class="text-slate-500 text-sm">{{ service.description?.[locale] || service.description?.pt }}</p>
               </div>
             </div>
 
             <div class="flex flex-wrap gap-6">
-              <button class="btn btn-accent px-10 py-5 shadow-2xl">
-                {{ t('home.consulting.ctaPrimary') }}
-              </button>
-              <button class="btn btn-secondary px-10 py-5">
-                {{ t('home.consulting.ctaSecondary') }}
+              <button class="btn btn-accent px-10 py-5">
+                Solicitar Consultoria
               </button>
             </div>
           </div>
@@ -208,7 +252,7 @@ const team = [
           <div class="relative group">
             <div class="absolute -inset-4 bg-gradient-to-r from-primary-500 to-accent-500 rounded-[40px] opacity-20 blur-2xl group-hover:opacity-40 transition-opacity duration-1000"></div>
             <div class="relative glass-card p-16 rounded-[40px] border-white/20 flex flex-col justify-center items-center text-center">
-              <div class="w-32 h-32 rounded-3xl bg-white/5 border border-white/10 shadow-2xl flex items-center justify-center mb-10 group-hover:rotate-6 transition-transform duration-500">
+              <div class="w-32 h-32 rounded-3xl bg-white/5 border border-white/10 shadow-2xl flex items-center justify-center mb-10">
                 <i class="pi pi-briefcase text-6xl text-accent-400"></i>
               </div>
               <h4 class="text-3xl font-bold mb-4 text-white">Parceria de Elite</h4>
@@ -219,8 +263,23 @@ const team = [
       </div>
     </section>
 
-    <!-- Team Section -->
-    <section id="team" class="py-32 bg-slate-950/20">
+    <!-- Features Section (Simplified for Focus) -->
+    <section id="features" class="py-24 border-y border-white/5">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between gap-12">
+         <div v-for="feat in [
+           { icon: 'pi pi-verified', text: 'Certificação Internacional' },
+           { icon: 'pi pi-sun', text: 'Soluções de Energia Verde' },
+           { icon: 'pi pi-users', text: 'Suporte Técnico 24/7' },
+           { icon: 'pi pi-book', text: 'Conteúdo de Elite' }
+         ]" :key="feat.text" class="flex items-center gap-4">
+           <i :class="feat.icon" class="text-primary-400 text-2xl"></i>
+           <span class="text-white font-bold tracking-wide uppercase text-xs">{{ feat.text }}</span>
+         </div>
+      </div>
+    </section>
+
+    <!-- Featured Courses -->
+    <section class="py-32">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-20">
           <h2 class="text-primary-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">

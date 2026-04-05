@@ -29,6 +29,23 @@ const levels = computed(() => [
   { value: 'avancado', label: t('courses.levels.avancado') }
 ])
 
+const selectedCategoryName = computed(() => {
+  if (!selectedCategory.value) return null
+  const cat = categories.value.find(c => c.id === selectedCategory.value)
+  return cat ? cat.name[locale.value] : null
+})
+
+const categoryIcon = computed(() => {
+  const icons = {
+    'engenharia-civil': 'pi-home',
+    'energia-sustentabilidade': 'pi-sun',
+    'gestao': 'pi-briefcase',
+    'software': 'pi-code',
+    'geoprocessamento': 'pi-map'
+  }
+  return icons[selectedCategory.value] || 'pi-book'
+})
+
 async function fetchCourses() {
   const params = {
     page: page.value,
@@ -69,17 +86,48 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <!-- Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-display font-bold text-foreground mb-4">
-          {{ t('courses.title') }}
-        </h1>
-        <p class="text-muted max-w-2xl mx-auto">
-          {{ t('courses.subtitle') }}
-        </p>
-      </div>
+      <!-- Category Hero Banner -->
+      <transition name="fade" mode="out-in">
+        <div 
+          :key="selectedCategory || 'all'"
+          class="relative h-64 rounded-[32px] overflow-hidden mb-12 flex items-center group shadow-2xl"
+        >
+          <!-- Background with dynamic gradient based on category -->
+          <div class="absolute inset-0 z-0 transition-all duration-700 bg-slate-900">
+             <div class="absolute inset-0 opacity-40 bg-[url('@/assets/mesh-bg.png')] bg-cover"></div>
+             <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent"></div>
+             <div 
+               class="absolute inset-0 opacity-30 animate-pulse-slow"
+               :class="{
+                 'bg-gradient-to-br from-primary-500 to-blue-600': !selectedCategory,
+                 'bg-gradient-to-br from-accent-500 to-red-600': selectedCategory === 'gestao',
+                 'bg-gradient-to-br from-blue-500 to-indigo-600': selectedCategory === 'software',
+                 'bg-gradient-to-br from-green-500 to-teal-600': selectedCategory === 'energia-sustentabilidade'
+               }"
+             ></div>
+          </div>
+          
+          <div class="relative z-10 px-12 max-w-3xl">
+             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/60 text-[10px] font-bold tracking-widest uppercase mb-4">
+                {{ selectedCategory ? 'Categoria' : 'Explorar' }}
+             </div>
+             <h1 class="text-4xl sm:text-5xl font-display font-bold text-white mb-4 tracking-tight">
+               {{ selectedCategoryName || t('courses.title') }}
+             </h1>
+             <p class="text-slate-400 text-lg max-w-xl">
+               {{ selectedCategory ? 'Especialize-se com os melhores instrutores do mercado nesta área técnica.' : t('courses.subtitle') }}
+             </p>
+          </div>
+
+          <!-- Decorative element -->
+          <div class="absolute right-12 top-1/2 -translate-y-1/2 opacity-20 group-hover:scale-110 transition-transform duration-1000 hidden lg:block">
+             <i 
+               class="text-[120px] text-white pi" 
+               :class="categoryIcon"
+             ></i>
+          </div>
+        </div>
+      </transition>
 
       <!-- Filters -->
       <div class="card p-6 mb-8">
