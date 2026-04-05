@@ -1,5 +1,6 @@
 import Service from '../models/Service.js';
 import Banner from '../models/Banner.js';
+import Setting from '../models/Setting.js';
 
 // Get all active banners for home
 export const getHomeBanners = async (req, res) => {
@@ -73,6 +74,31 @@ export const deleteService = async (req, res) => {
     try {
         await Service.findByIdAndDelete(req.params.id);
         res.json({ success: true, message: 'Serviço eliminado' });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+// Global Settings (Public & Admin)
+export const getSetting = async (req, res) => {
+    try {
+        const setting = await Setting.findOne({ key: req.params.key });
+        if (!setting) return res.json({ success: true, data: { setting: null } });
+        res.json({ success: true, data: { setting: setting.value } });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao buscar configuração' });
+    }
+};
+
+export const updateSetting = async (req, res) => {
+    try {
+        const { value } = req.body;
+        const setting = await Setting.findOneAndUpdate(
+            { key: req.params.key },
+            { value },
+            { new: true, upsert: true }
+        );
+        res.json({ success: true, data: { setting: setting.value } });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
     }

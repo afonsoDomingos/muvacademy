@@ -24,6 +24,12 @@ const showServiceDialog = ref(false)
 const showWorkshopDialog = ref(false)
 const editingItem = ref(null)
 
+const topAnnouncement = ref({
+    text: '',
+    link: '',
+    active: false
+})
+
 const bannerForm = ref({
   title: { pt: '', en: '' },
   subtitle: { pt: '', en: '' },
@@ -58,12 +64,27 @@ async function loadData() {
   banners.value = await contentStore.fetchHomeBanners()
   services.value = await contentStore.fetchServices()
   try {
-     const res = await api.get('/workshops')
-     workshops.value = res.data.data.workshops
+     const [wsRes, setRes] = await Promise.all([
+        api.get('/workshops'),
+        api.get('/settings/top_announcement')
+     ])
+     workshops.value = wsRes.data.data.workshops
+     if (setRes.data.data.setting) {
+         topAnnouncement.value = setRes.data.data.setting
+     }
   } catch (e) {
-     console.error('Error loading workshops:', e)
+     console.error('Error loading extra data:', e)
   }
   loading.value = false
+}
+
+async function saveAnnouncement() {
+  try {
+      await api.put('/settings/top_announcement', { value: topAnnouncement.value })
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Barra de Novidade atualizada', life: 3000 })
+  } catch (err) {
+      toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar novidade', life: 3000 })
+  }
 }
 
 function openNewBanner() {
@@ -247,9 +268,43 @@ onMounted(loadData)
     <div class="flex justify-between items-center mb-10">
       <div>
         <h1 class="text-3xl font-display font-bold text-white mb-2">Gestão de Conteúdo</h1>
-        <p class="text-slate-400">Gira os banners, workshops e serviços da MUV.</p>
+        <p class="text-slate-400">Gira os banners, workshops, serviços da MUV e configurações globais.</p>
       </div>
     </div>
+
+    <!-- Top Announcement Section -->
+    <section class="mb-16">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="pi pi-megaphone text-accent-400"></i>
+          Barra de Novidade (Topo)
+        </h2>
+        <button @click="saveAnnouncement" class="btn btn-accent !py-2 !px-6 text-sm shadow-[0_0_15px_rgba(234,179,8,0.3)]">
+          <i class="pi pi-save"></i> Guardar Divulgação
+        </button>
+      </div>
+      <div class="glass-card p-6 border-l-4 border-accent-500">
+          <div class="flex flex-col md:flex-row gap-6 items-end">
+              <div class="flex-1 field">
+                  <label class="block text-sm font-bold text-slate-300 mb-2">Mensagem a Apresentar</label>
+                  <InputText v-model="topAnnouncement.text" class="input w-full bg-slate-900 border-white/10" placeholder="Ex: 🔥 Promoção em Cursos de Engenharia!" />
+              </div>
+              <div class="flex-1 field">
+                  <label class="block text-sm font-bold text-slate-300 mb-2">Link do Botão (Opcional)</label>
+                  <InputText v-model="topAnnouncement.link" class="input w-full bg-slate-900 border-white/10" placeholder="Ex: /courses ou https://linkexterno.com" />
+              </div>
+              <div class="field pb-2">
+                  <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                      <div class="relative">
+                          <input type="checkbox" v-model="topAnnouncement.active" class="sr-only peer">
+                          <div class="w-11 h-6 bg-slate-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-500"></div>
+                      </div>
+                      <span class="text-sm font-bold text-white whitespace-nowrap">{{ topAnnouncement.active ? 'Ativado (Online)' : 'Desativado (Oculto)' }}</span>
+                  </label>
+              </div>
+          </div>
+      </div>
+    </section>
 
     <!-- Banners Section -->
     <section class="mb-16">
