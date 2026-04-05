@@ -8,6 +8,7 @@ import CourseCard from '@/components/courses/CourseCard.vue'
 import afonsoImg from '@/assets/team/afonso.jpg'
 import gilImg from '@/assets/team/gil.jpg'
 import antonioImg from '@/assets/team/antonio.jpg'
+import ServiceRequestModal from '@/components/services/ServiceRequestModal.vue'
 
 const { t, tm, locale } = useI18n()
 const courseStore = useCourseStore()
@@ -116,6 +117,13 @@ const team = [
 ]
 
 const error = ref(null)
+const showServiceModal = ref(false)
+const selectedService = ref(null)
+
+const openServiceModal = (service) => {
+  selectedService.value = service
+  showServiceModal.value = true
+}
 </script>
 
 <template>
@@ -218,17 +226,25 @@ const error = ref(null)
             </p>
             
             <div class="grid sm:grid-cols-2 gap-4 mb-12">
-              <div v-for="service in services" :key="service._id || service.id" class="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-primary-500/30 group transition-all">
+              <div 
+                v-for="service in services" 
+                :key="service._id || service.id" 
+                class="p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-primary-500/30 group transition-all cursor-pointer"
+                @click="openServiceModal(service)"
+              >
                 <div class="w-12 h-12 rounded-xl bg-primary-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                   <i :class="service.icon" class="text-primary-400 text-xl"></i>
                 </div>
                 <h4 class="text-white font-bold mb-2">{{ service.title?.[locale] || service.title?.pt }}</h4>
-                <p class="text-slate-500 text-sm">{{ service.description?.[locale] || service.description?.pt }}</p>
+                <p class="text-slate-500 text-sm mb-4">{{ service.description?.[locale] || service.description?.pt }}</p>
+                <span class="text-primary-400 text-xs font-bold uppercase tracking-widest flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  Solicitar <i class="pi pi-arrow-right text-[10px]"></i>
+                </span>
               </div>
             </div>
 
             <div class="flex flex-wrap gap-6">
-              <button class="btn btn-accent px-10 py-5">
+              <button @click="openServiceModal({title: {pt: 'Consultoria Geral', en: 'General Consultancy'}})" class="btn btn-accent px-10 py-5">
                 Solicitar Consultoria
               </button>
             </div>
@@ -321,6 +337,10 @@ const error = ref(null)
         </RouterLink>
       </div>
     </section>
+    <ServiceRequestModal 
+      v-model:visible="showServiceModal" 
+      :service="selectedService"
+    />
   </div>
 </template>
 

@@ -15,7 +15,8 @@ const menuItems = computed(() => {
     { path: '/admin', name: 'admin-dashboard', icon: 'pi pi-home', label: t('admin.dashboard') },
     { path: '/admin/courses', name: 'admin-courses', icon: 'pi pi-book', label: t('admin.courses') },
     { path: '/admin/enrollments', name: 'admin-enrollments', icon: 'pi pi-users', label: t('admin.enrollments') },
-    { path: '/admin/content', name: 'admin-content', icon: 'pi pi-images', label: 'Gerir Conteúdo' }
+    { path: '/admin/content', name: 'admin-content', icon: 'pi pi-images', label: 'Gerir Conteúdo' },
+    { path: '/admin/requests', name: 'admin-requests', icon: 'pi pi-envelope', label: 'Pedidos de Serviço' }
   ]
   if (isSuperAdmin.value) {
     items.push({ path: '/admin/users', name: 'admin-users', icon: 'pi pi-user-edit', label: t('admin.users') })
