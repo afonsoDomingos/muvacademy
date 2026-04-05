@@ -47,9 +47,10 @@ export default {
                 display: ['Outfit', 'Inter', 'system-ui', 'sans-serif'],
             },
             boxShadow: {
-                'glow': '0 0 20px rgba(34, 197, 94, 0.3)',
-                'glow-lg': '0 0 40px rgba(34, 197, 94, 0.4)',
+                'glow': '0 0 20px rgba(16, 185, 129, 0.3)',
+                'glow-lg': '0 0 40px rgba(16, 185, 129, 0.4)',
                 'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+                'premium': 'var(--shadow-premium)',
             },
             backdropBlur: {
                 xs: '2px',
