@@ -89,11 +89,11 @@ const socialLinks = [
             </li>
             <li class="flex items-center gap-2">
               <i class="pi pi-envelope text-primary-500"></i>
-              info@muv.co.mz
+              globalmuv@muv.co.mz
             </li>
             <li class="flex items-center gap-2">
               <i class="pi pi-phone text-primary-500"></i>
-              +258 84 000 0000
+              +258 83 480 2943
             </li>
           </ul>
         </div>

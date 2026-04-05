@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 
 const showTooltip = ref(false)
-const whatsappNumber = '258840000000' // TODO: Mudar para o número oficial da MUV
+const whatsappNumber = '258834802943'
 const message = encodeURIComponent('Olá MUV Academy! Gostaria de saber mais sobre os vossos cursos e serviços de engenharia.')
 </script>
 
