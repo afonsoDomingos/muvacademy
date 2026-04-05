@@ -8,6 +8,7 @@ import AppHeader from '@/components/layout/AppHeader.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import ScrollUp from '@/components/layout/ScrollUp.vue'
 import TopAnnouncement from '@/components/layout/TopAnnouncement.vue'
+import WhatsAppButton from '@/components/layout/WhatsAppButton.vue'
 
 const themeStore = useThemeStore()
 
@@ -29,6 +30,7 @@ watch(() => themeStore.isDark, (isDark) => {
     <TopAnnouncement />
     <AppHeader />
     <ScrollUp />
+    <WhatsAppButton />
     
     <main class="min-h-[calc(100vh-160px)]">
       <RouterView v-slot="{ Component }">
