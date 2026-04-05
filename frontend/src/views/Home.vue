@@ -330,14 +330,22 @@ const openServiceModal = (service) => {
     <section id="about" class="py-32 relative overflow-hidden bg-white/5 border-y border-white/5">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-20 items-center mb-24">
-          <div>
+          <div class="relative">
             <h3 class="text-primary-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">A Nossa Identidade</h3>
             <h2 class="text-4xl sm:text-6xl font-display font-bold text-white tracking-tighter leading-tight">
               MUV Educação e Engenharia
             </h2>
-            <p class="text-slate-400 text-lg mt-8 leading-relaxed">
+            <p class="text-slate-400 text-lg mt-8 leading-relaxed mb-12">
               A MUV é uma empresa moçambicana especializada em Educação, Engenharia e Transformação Digital, comprometida em impulsionar o desenvolvimento sustentável de pessoas e organizações. Acreditamos que educação e tecnologia são os motores do progresso — por isso, unimos formação de excelência e soluções tecnológicas práticas para preparar profissionais e empresas para os desafios do futuro.
             </p>
+            <div class="relative rounded-[2rem] overflow-hidden group aspect-video shadow-2xl border border-white/10">
+               <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1600" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+               <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
+               <div class="absolute bottom-6 left-6 flex items-center gap-2">
+                  <div class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></div>
+                  <span class="text-[10px] font-black uppercase tracking-[0.2em] text-white">Engenharia de Excelência</span>
+               </div>
+            </div>
           </div>
           <div class="grid sm:grid-cols-2 gap-6">
              <div class="glass-card p-8 group hover:bg-primary-500/10 transition-all duration-500 border-white/10 hover:border-primary-500/40">
