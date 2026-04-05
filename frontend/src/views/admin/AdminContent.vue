@@ -25,9 +25,8 @@ const showWorkshopDialog = ref(false)
 const editingItem = ref(null)
 
 const topAnnouncement = ref({
-    text: '',
-    link: '',
-    active: false
+    active: false,
+    messages: [ { text: '', link: '' } ]
 })
 
 const bannerForm = ref({
@@ -70,7 +69,16 @@ async function loadData() {
      ])
      workshops.value = wsRes.data.data.workshops
      if (setRes.data.data.setting) {
-         topAnnouncement.value = setRes.data.data.setting
+         const savedSetting = setRes.data.data.setting
+         if (savedSetting.messages && savedSetting.messages.length > 0) {
+             topAnnouncement.value = savedSetting
+         } else {
+             // Compatibilidade retroativa para converter a string única
+             topAnnouncement.value = {
+                 active: savedSetting.active,
+                 messages: [{ text: savedSetting.text || '', link: savedSetting.link || '' }]
+             }
+         }
      }
   } catch (e) {
      console.error('Error loading extra data:', e)
@@ -85,6 +93,16 @@ async function saveAnnouncement() {
   } catch (err) {
       toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar novidade', life: 3000 })
   }
+}
+
+function addAnnouncementMessage() {
+    topAnnouncement.value.messages.push({ text: '', link: '' })
+}
+
+function removeAnnouncementMessage(idx) {
+    if (topAnnouncement.value.messages.length > 1) {
+        topAnnouncement.value.messages.splice(idx, 1)
+    }
 }
 
 function openNewBanner() {
@@ -284,23 +302,34 @@ onMounted(loadData)
         </button>
       </div>
       <div class="glass-card p-6 border-l-4 border-accent-500">
-          <div class="flex flex-col md:flex-row gap-6 items-end">
-              <div class="flex-1 field">
-                  <label class="block text-sm font-bold text-slate-300 mb-2">Mensagem a Apresentar</label>
-                  <InputText v-model="topAnnouncement.text" class="input w-full bg-slate-900 border-white/10" placeholder="Ex: 🔥 Promoção em Cursos de Engenharia!" />
-              </div>
-              <div class="flex-1 field">
-                  <label class="block text-sm font-bold text-slate-300 mb-2">Link do Botão (Opcional)</label>
-                  <InputText v-model="topAnnouncement.link" class="input w-full bg-slate-900 border-white/10" placeholder="Ex: /courses ou https://linkexterno.com" />
-              </div>
-              <div class="field pb-2">
-                  <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-                      <div class="relative">
-                          <input type="checkbox" v-model="topAnnouncement.active" class="sr-only peer">
-                          <div class="w-11 h-6 bg-slate-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-500"></div>
+          <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/5">
+              <label class="flex items-center gap-3 cursor-pointer p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                  <div class="relative">
+                      <input type="checkbox" v-model="topAnnouncement.active" class="sr-only peer">
+                      <div class="w-11 h-6 bg-slate-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-500"></div>
+                  </div>
+                  <span class="text-sm font-bold text-white whitespace-nowrap">{{ topAnnouncement.active ? 'Ativado (Online)' : 'Desativado (Oculto)' }}</span>
+              </label>
+              <button @click="addAnnouncementMessage" class="btn btn-secondary !p-2 text-xs">
+                  <i class="pi pi-plus"></i> Adicionar Registo
+              </button>
+          </div>
+
+          <div class="space-y-4">
+              <div v-for="(msg, index) in topAnnouncement.messages" :key="index" class="flex flex-col md:flex-row gap-4 items-end bg-black/20 p-4 rounded-xl border border-white/5 relative group">
+                  <div class="flex-1 w-full">
+                      <label class="block text-xs font-bold text-slate-300 mb-1">Mensagem a Apresentar {{ index + 1 }}</label>
+                      <InputText v-model="msg.text" class="input w-full bg-slate-900 border-white/10 !text-sm" placeholder="Ex: 🔥 Promoção Especial de Verão!" />
+                  </div>
+                  <div class="flex-1 w-full relative">
+                      <label class="block text-xs font-bold text-slate-300 mb-1">Link do Botão (Opcional)</label>
+                      <div class="flex gap-2">
+                        <InputText v-model="msg.link" class="input w-full bg-slate-900 border-white/10 !text-sm flex-1" placeholder="Ex: /courses ou https://link.com" />
+                        <button v-if="topAnnouncement.messages.length > 1" @click="removeAnnouncementMessage(index)" class="btn bg-red-500/20 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white !p-2 w-10 flex items-center justify-center transition-all" title="Remover registo">
+                            <i class="pi pi-trash"></i>
+                        </button>
                       </div>
-                      <span class="text-sm font-bold text-white whitespace-nowrap">{{ topAnnouncement.active ? 'Ativado (Online)' : 'Desativado (Oculto)' }}</span>
-                  </label>
+                  </div>
               </div>
           </div>
       </div>
