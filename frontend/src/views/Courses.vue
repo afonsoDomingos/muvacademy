@@ -96,7 +96,6 @@ onMounted(async () => {
         >
           <!-- Background with dynamic gradient -->
           <div class="absolute inset-0 z-0 transition-all duration-700 bg-slate-900">
-             <div class="absolute inset-0 opacity-40 bg-[url('@/assets/mesh-bg.png')] bg-cover"></div>
              <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/40 to-transparent"></div>
              <div 
                class="absolute inset-0 opacity-30 animate-pulse-slow"
