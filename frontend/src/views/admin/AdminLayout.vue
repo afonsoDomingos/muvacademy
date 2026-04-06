@@ -33,7 +33,7 @@ function isActive(item) {
 <template>
   <div class="min-h-screen flex">
     <!-- Sidebar -->
-    <aside class="w-64 bg-surface-dark border-r border-white/10 fixed h-full">
+    <aside class="w-64 bg-white dark:bg-surface-dark border-r border-slate-200 dark:border-white/10 fixed h-full z-20">
       <div class="p-6">
         <RouterLink to="/admin" class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-accent-500 flex items-center justify-center">
@@ -48,8 +48,8 @@ function isActive(item) {
           v-for="item in menuItems"
           :key="item.path"
           :to="item.path"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all"
-          :class="isActive(item) ? 'bg-primary-500/20 text-primary-400' : 'text-gray-400 hover:text-white hover:bg-white/5'"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium"
+          :class="isActive(item) ? 'bg-primary-50 dark:bg-primary-500/20 text-primary-600 dark:text-primary-400' : 'text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5'"
         >
           <i :class="item.icon"></i>
           {{ item.label }}
@@ -57,7 +57,7 @@ function isActive(item) {
       </nav>
 
       <div class="absolute bottom-6 left-4 right-4">
-        <RouterLink to="/" class="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors">
+        <RouterLink to="/" class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-white/5 rounded-xl transition-colors font-medium">
           <i class="pi pi-arrow-left"></i>
           Voltar ao Site
         </RouterLink>

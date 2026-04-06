@@ -59,15 +59,15 @@ onMounted(async () => {
 
 <template>
   <div>
-    <h1 class="text-3xl font-display font-bold text-white mb-8">{{ t('admin.dashboard') }}</h1>
+    <h1 class="text-3xl font-display font-bold text-slate-900 dark:text-white mb-8">{{ t('admin.dashboard') }}</h1>
 
     <!-- Stats Cards -->
     <div class="grid md:grid-cols-4 gap-6 mb-8">
       <div class="card p-6">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-400 text-sm">Total Alunos</p>
-            <p class="text-3xl font-bold text-white">{{ stats?.summary?.totalUsers || 0 }}</p>
+            <p class="text-slate-500 dark:text-gray-400 text-sm">Total Alunos</p>
+            <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ stats?.summary?.totalUsers || 0 }}</p>
           </div>
           <div class="w-12 h-12 rounded-xl bg-primary-500/20 flex items-center justify-center">
             <i class="pi pi-users text-xl text-primary-400"></i>
@@ -78,8 +78,8 @@ onMounted(async () => {
       <div class="card p-6">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-400 text-sm">Total Cursos</p>
-            <p class="text-3xl font-bold text-white">{{ stats?.summary?.totalCourses || 0 }}</p>
+            <p class="text-slate-500 dark:text-gray-400 text-sm">Total Cursos</p>
+            <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ stats?.summary?.totalCourses || 0 }}</p>
           </div>
           <div class="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
             <i class="pi pi-book text-xl text-green-400"></i>
@@ -90,8 +90,8 @@ onMounted(async () => {
       <div class="card p-6">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-400 text-sm">Inscrições Pendentes</p>
-            <p class="text-3xl font-bold text-white">{{ stats?.summary?.pendingEnrollments || 0 }}</p>
+            <p class="text-slate-500 dark:text-gray-400 text-sm">Inscrições Pendentes</p>
+            <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ stats?.summary?.pendingEnrollments || 0 }}</p>
           </div>
           <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
             <i class="pi pi-clock text-xl text-yellow-400"></i>
@@ -102,8 +102,8 @@ onMounted(async () => {
       <div class="card p-6">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-gray-400 text-sm">Inscrições Aprovadas</p>
-            <p class="text-3xl font-bold text-white">{{ stats?.summary?.approvedEnrollments || 0 }}</p>
+            <p class="text-slate-500 dark:text-gray-400 text-sm">Inscrições Aprovadas</p>
+            <p class="text-3xl font-bold text-slate-900 dark:text-white">{{ stats?.summary?.approvedEnrollments || 0 }}</p>
           </div>
           <div class="w-12 h-12 rounded-xl bg-accent-500/20 flex items-center justify-center">
             <i class="pi pi-check-circle text-xl text-accent-400"></i>
@@ -115,8 +115,8 @@ onMounted(async () => {
     <div class="grid md:grid-cols-2 gap-6">
       <!-- Graphical Charts Area -->
       <div class="card">
-        <div class="p-6 border-b border-white/10">
-          <h2 class="text-xl font-bold text-white">Status das Inscrições</h2>
+        <div class="p-6 border-b border-slate-200 dark:border-white/10">
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">Status das Inscrições</h2>
         </div>
         <div class="p-6 flex items-center justify-center">
           <apexchart 
@@ -129,8 +129,8 @@ onMounted(async () => {
       </div>
 
       <div class="card">
-        <div class="p-6 border-b border-white/10">
-          <h2 class="text-xl font-bold text-white">Top 5 Cursos (Inscritos)</h2>
+        <div class="p-6 border-b border-slate-200 dark:border-white/10">
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">Top 5 Cursos (Inscritos)</h2>
         </div>
         <div class="p-6">
           <apexchart 
@@ -144,22 +144,22 @@ onMounted(async () => {
 
       <!-- Recent Activity -->
       <div class="card md:col-span-2">
-        <div class="p-6 border-b border-white/10">
-          <h2 class="text-xl font-bold text-white">Atividade Recente</h2>
+        <div class="p-6 border-b border-slate-200 dark:border-white/10">
+          <h2 class="text-xl font-bold text-slate-900 dark:text-white">Atividade Recente</h2>
         </div>
         <div class="p-6">
           <div v-if="stats?.recentLogs?.length" class="space-y-3">
             <div v-for="log in stats.recentLogs" :key="log._id" class="flex items-start gap-3 text-sm">
-              <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-                <i class="pi pi-history text-gray-400"></i>
+              <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center flex-shrink-0">
+                <i class="pi pi-history text-slate-400 dark:text-gray-400"></i>
               </div>
               <div>
-                <p class="text-gray-300">{{ log.description }}</p>
-                <p class="text-gray-500 text-xs">{{ new Date(log.createdAt).toLocaleString() }}</p>
+                <p class="text-slate-700 dark:text-gray-300">{{ log.description }}</p>
+                <p class="text-slate-500 dark:text-gray-500 text-xs">{{ new Date(log.createdAt).toLocaleString() }}</p>
               </div>
             </div>
           </div>
-          <p v-else class="text-gray-400 text-center py-4">Nenhuma atividade recente</p>
+          <p v-else class="text-slate-500 dark:text-gray-400 text-center py-4">Nenhuma atividade recente</p>
         </div>
       </div>
     </div>
