@@ -12,6 +12,7 @@ import ServiceRequestModal from '@/components/services/ServiceRequestModal.vue'
 import api from '@/services/api'
 import { useRoute } from 'vue-router'
 import { watch } from 'vue'
+import Dialog from 'primevue/dialog'
 
 const { t, tm, locale } = useI18n()
 const courseStore = useCourseStore()
@@ -22,6 +23,15 @@ const featuredCourses = ref([])
 const banners = ref([])
 const services = ref([])
 const workshops = ref([])
+const partners = ref([])
+const aboutUs = ref({
+   title: 'MUV Educação e Engenharia',
+   description: 'A MUV é uma empresa moçambicana especializada em Educação, Engenharia e Transformação Digital, comprometida em impulsionar o desenvolvimento sustentável de pessoas e organizações. Acreditamos que educação e tecnologia são os motores do progresso — por isso, unimos formação de excelência e soluções tecnológicas práticas para preparar profissionais e empresas para os desafios do futuro.',
+   image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1600',
+   mission: 'Contribuir para o avanço da educação e da engenharia, oferecendo formações de excelência e soluções consultivas inovadoras, atuando como um hub integrador de marcas, pessoas e conhecimentos que impulsionam o desenvolvimento sustentável.',
+   vision: 'Ser reconhecida como uma referência global em educação técnico-profissional e consultoria em engenharia, impulsionando a inovação, a formação de profissionais qualificados e o sucesso de projetos estratégicos em Moçambique e além-fronteiras.',
+   values: ['Excelência Educacional', 'Inovação', 'Colaboração', 'Integridade', 'Sustentabilidade']
+})
 const loading = ref(true)
 const currentSlide = ref(0)
 let sliderInterval = null
@@ -67,17 +77,27 @@ const selectSlide = (index) => {
 onMounted(async () => {
   try {
     loading.value = true
-    const [coursesData, bannersData, servicesData, workshopsRes] = await Promise.all([
+    const [coursesData, bannersData, servicesData, workshopsRes, aboutRes, partnersRes] = await Promise.all([
       courseStore.fetchFeaturedCourses().catch(e => { console.error('FeaturedCourses Error:', e); return [] }),
       contentStore.fetchHomeBanners().catch(e => { console.error('Banners Error:', e); return [] }),
       contentStore.fetchServices().catch(e => { console.error('Services Error:', e); return [] }),
-      api.get('/workshops').catch(e => { console.error('Workshops Error:', e); return { data: { data: { workshops: [] } } } })
+      api.get('/workshops').catch(e => { console.error('Workshops Error:', e); return { data: { data: { workshops: [] } } } }),
+      api.get('/content/settings/about_us').catch(e => { console.error('About Error:', e); return { data: { data: { setting: null } } } }),
+      api.get('/content/settings/partners').catch(e => { console.error('Partners Error:', e); return { data: { data: { setting: null } } } })
     ])
     
     featuredCourses.value = coursesData || []
     banners.value = bannersData || []
     services.value = servicesData || []
     workshops.value = workshopsRes.data?.data?.workshops || []
+    
+    if (aboutRes.data?.data?.setting) {
+      aboutUs.value = aboutRes.data.data.setting
+    }
+
+    if (partnersRes.data?.data?.setting?.value) {
+      partners.value = partnersRes.data.data.setting.value
+    }
     
     // Smooth scroll for pretty URLs
     setTimeout(handleAutoScroll, 300)
@@ -149,6 +169,14 @@ const selectedService = ref(null)
 const openServiceModal = (service) => {
   selectedService.value = service
   showServiceModal.value = true
+}
+
+const showWorkshopImageModal = ref(false)
+const selectedWorkshopImage = ref(null)
+
+const openWorkshopImage = (workshop) => {
+  selectedWorkshopImage.value = workshop
+  showWorkshopImageModal.value = true
 }
 </script>
 
@@ -239,9 +267,9 @@ const openServiceModal = (service) => {
     </section>
 
     <!-- Services Section -->
-    <section id="services" class="py-32 relative overflow-hidden bg-slate-950/20">
+    <section id="services" class="py-16 lg:py-32 relative overflow-hidden bg-slate-950/20">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-24 items-center">
+        <div class="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           <div>
             <h2 class="text-accent-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">MUV Além do Ensino</h2>
             <h3 class="text-4xl sm:text-6xl font-display font-bold mb-8 text-white leading-tight">
@@ -291,8 +319,8 @@ const openServiceModal = (service) => {
     </section>
 
     <!-- Features Section (Simplified for Focus) -->
-    <section id="features" class="py-24 border-y border-white/5">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap justify-between gap-12">
+    <section id="features" class="py-12 lg:py-24 border-y border-white/5">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row flex-wrap justify-between gap-8 md:gap-12">
          <div v-for="feat in [
            { icon: 'pi pi-verified', text: 'Certificação Internacional' },
            { icon: 'pi pi-sun', text: 'Soluções de Energia Verde' },
@@ -306,7 +334,7 @@ const openServiceModal = (service) => {
     </section>
 
     <!-- Workshops Section -->
-    <section v-if="workshops.length > 0" class="py-32 bg-slate-900/40 relative overflow-hidden">
+    <section v-if="workshops.length > 0" class="py-16 lg:py-32 bg-slate-900/40 relative overflow-hidden">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div class="max-w-2xl">
@@ -314,17 +342,21 @@ const openServiceModal = (service) => {
             <h2 class="text-4xl sm:text-6xl font-display font-bold text-white tracking-tighter">Workshops Semanais</h2>
             <p class="text-slate-400 text-lg mt-6">Promoção de inteligência técnica e networking de elite.</p>
           </div>
-          <RouterLink to="/courses" class="btn btn-secondary !py-3 !px-8 text-sm group">
+          <RouterLink to="/courses" class="btn btn-primary !py-3 !px-8 text-sm group shadow-[0_0_15px_rgba(16,185,129,0.3)] hover:shadow-[0_0_25px_rgba(16,185,129,0.5)] transition-shadow">
             Ver Todos Eventos <i class="pi pi-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
           </RouterLink>
         </div>
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div v-for="workshop in workshops" :key="workshop._id" class="glass-card group overflow-hidden hover:border-primary-500/30 transition-all duration-500">
-            <div class="relative h-56 overflow-hidden">
-              <img :src="workshop.image" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" loading="lazy" />
-              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
-              <div class="absolute top-6 left-6 px-4 py-2 bg-primary-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-2xl">
+          <div v-for="workshop in workshops" :key="workshop._id" class="glass-card group flex flex-col overflow-hidden hover:border-primary-500/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.2)]">
+            <div @click="openWorkshopImage(workshop)" class="cursor-pointer relative aspect-square w-full overflow-hidden bg-slate-950/60 flex items-center justify-center p-4">
+              <img :src="workshop.image" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 drop-shadow-2xl rounded-xl" loading="lazy" />
+              <!-- Hover Overlay -->
+              <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <i class="pi pi-search-plus text-4xl text-white"></i>
+              </div>
+              <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950 to-transparent opacity-90 pointer-events-none"></div>
+              <div class="absolute top-4 left-4 px-4 py-1.5 bg-primary-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-[0_0_20px_rgba(16,185,129,0.6)] border border-white/20">
                 {{ new Date(workshop.date).toLocaleDateString(locale, { day: 'numeric', month: 'long' }) }}
               </div>
             </div>
@@ -348,19 +380,19 @@ const openServiceModal = (service) => {
     </section>
 
     <!-- Mission / Vision / Values Section -->
-    <section id="about" class="py-32 relative overflow-hidden bg-white/5 border-y border-white/5">
+    <section id="about" class="py-16 lg:py-32 relative overflow-hidden bg-white/5 border-y border-white/5">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-20 items-center mb-24">
+        <div class="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center mb-16 lg:mb-24">
           <div class="relative">
             <h3 class="text-primary-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">A Nossa Identidade</h3>
             <h2 class="text-4xl sm:text-6xl font-display font-bold text-white tracking-tighter leading-tight">
-              MUV Educação e Engenharia
+              {{ aboutUs.title }}
             </h2>
-            <p class="text-slate-400 text-lg mt-8 leading-relaxed mb-12">
-              A MUV é uma empresa moçambicana especializada em Educação, Engenharia e Transformação Digital, comprometida em impulsionar o desenvolvimento sustentável de pessoas e organizações. Acreditamos que educação e tecnologia são os motores do progresso — por isso, unimos formação de excelência e soluções tecnológicas práticas para preparar profissionais e empresas para os desafios do futuro.
+            <p class="text-slate-400 text-lg mt-8 leading-relaxed mb-12 whitespace-pre-line">
+              {{ aboutUs.description }}
             </p>
             <div class="relative rounded-[2rem] overflow-hidden group aspect-video shadow-2xl border border-white/10">
-               <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1600" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
+               <img :src="aboutUs.image" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" />
                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 to-transparent"></div>
                <div class="absolute bottom-6 left-6 flex items-center gap-2">
                   <div class="w-1.5 h-1.5 rounded-full bg-primary-500 animate-pulse"></div>
@@ -374,14 +406,14 @@ const openServiceModal = (service) => {
                    <i class="pi pi-target text-xl"></i>
                 </div>
                 <h4 class="text-white font-bold mb-3">Missão</h4>
-                <p class="text-slate-500 text-[11px] leading-relaxed italic">Contribuir para o avanço da educação e da engenharia, oferecendo formações de excelência e soluções consultivas inovadoras, atuando como um hub integrador de marcas, pessoas e conhecimentos que impulsionam o desenvolvimento sustentável.</p>
+                <p class="text-slate-500 text-[11px] leading-relaxed italic whitespace-pre-line">{{ aboutUs.mission }}</p>
              </div>
              <div class="glass-card p-8 group hover:bg-accent-500/10 transition-all duration-500 border-white/10 hover:border-accent-500/40">
                 <div class="w-12 h-12 rounded-xl bg-accent-500/10 flex items-center justify-center text-accent-400 mb-6 group-hover:scale-110 transition-transform">
                    <i class="pi pi-eye text-xl"></i>
                 </div>
                 <h4 class="text-white font-bold mb-3">Visão</h4>
-                <p class="text-slate-500 text-[11px] leading-relaxed italic">Ser reconhecida como uma referência global em educação técnico-profissional e consultoria em engenharia, impulsionando a inovação, a formação de profissionais qualificados e o sucesso de projetos estratégicos em Moçambique e além-fronteiras.</p>
+                <p class="text-slate-500 text-[11px] leading-relaxed italic whitespace-pre-line">{{ aboutUs.vision }}</p>
              </div>
              <div class="glass-card p-8 sm:col-span-2 group hover:bg-white/10 transition-all duration-500 border-white/10 hover:border-white/20">
                 <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform">
@@ -389,7 +421,7 @@ const openServiceModal = (service) => {
                 </div>
                 <h4 class="text-white font-bold mb-3 uppercase tracking-tighter">Os Nossos Valores</h4>
                 <div class="flex flex-wrap gap-x-8 gap-y-4">
-                   <div v-for="val in ['Excelência Educacional', 'Inovação', 'Colaboração', 'Integridade', 'Sustentabilidade']" :key="val" class="flex items-center gap-2">
+                   <div v-for="val in aboutUs.values" :key="val" class="flex items-center gap-2">
                        <div class="w-1.5 h-1.5 rounded-full bg-primary-500"></div>
                        <span class="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">{{ val }}</span>
                    </div>
@@ -400,10 +432,36 @@ const openServiceModal = (service) => {
       </div>
     </section>
 
+    <!-- Partners Infinite Scroll -->
+    <section v-if="partners.length > 0" class="py-12 border-b border-white/5 bg-slate-950/40 relative overflow-hidden flex flex-col justify-center">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 text-center w-full z-10">
+        <h3 class="text-slate-500 font-bold tracking-[0.3em] uppercase text-xs">Os Nossos Parceiros e Clientes</h3>
+      </div>
+      
+      <!-- Gradient Masks -->
+      <div class="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-mesh to-transparent z-10 pointer-events-none"></div>
+      <div class="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-mesh to-transparent z-10 pointer-events-none"></div>
+
+      <div class="flex overflow-hidden group w-full">
+        <div class="animate-scroll shrink-0 flex gap-20 min-w-full items-center justify-around group-hover:[animation-play-state:paused] px-10">
+          <div v-for="(p, i) in partners" :key="'A'+i" class="w-40 h-16 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all flex items-center justify-center cursor-pointer">
+             <img v-if="p.image" :src="p.image" :alt="p.name" class="max-w-full max-h-full object-contain" />
+             <span v-else class="text-xl font-bold">{{ p.name }}</span>
+          </div>
+        </div>
+        <div class="animate-scroll shrink-0 flex gap-20 min-w-full items-center justify-around group-hover:[animation-play-state:paused] px-10" aria-hidden="true">
+          <div v-for="(p, i) in partners" :key="'B'+i" class="w-40 h-16 grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all flex items-center justify-center cursor-pointer">
+             <img v-if="p.image" :src="p.image" :alt="p.name" class="max-w-full max-h-full object-contain" />
+             <span v-else class="text-xl font-bold">{{ p.name }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Featured Team -->
-    <section class="py-32">
+    <section class="py-16 lg:py-32">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-20">
+        <div class="text-center mb-12 lg:mb-20">
           <h2 class="text-primary-400 font-bold tracking-[0.3em] uppercase text-xs mb-4">
             {{ t('home.team.title') }}
           </h2>
@@ -412,7 +470,7 @@ const openServiceModal = (service) => {
           </h3>
         </div>
 
-        <div class="grid md:grid-cols-3 gap-10">
+        <div class="grid md:grid-cols-3 gap-8 lg:gap-10">
           <div
             v-for="member in team"
             :key="member.id"
@@ -441,7 +499,7 @@ const openServiceModal = (service) => {
     </section>
 
     <!-- CTA Section -->
-    <section class="py-40 relative overflow-hidden">
+    <section class="py-20 lg:py-40 relative overflow-hidden">
       <div class="absolute inset-0 bg-primary-600"></div>
       <div class="absolute inset-0 bg-mesh opacity-40"></div>
       
@@ -462,6 +520,32 @@ const openServiceModal = (service) => {
       v-model:visible="showServiceModal" 
       :service="selectedService"
     />
+
+    <!-- Workshop Image Preview Modal -->
+    <Dialog 
+      v-model:visible="showWorkshopImageModal" 
+      modal 
+      :header="selectedWorkshopImage?.title?.[locale]"
+      class="p-fluid w-full max-w-4xl bg-surface-dark border-none"
+      :style="{ borderRadius: '24px', overflow: 'hidden' }"
+      contentClass="p-0 border-none bg-transparent"
+      headerClass="bg-surface-dark text-white border-b border-white/10 p-6"
+    >
+      <div v-if="selectedWorkshopImage" class="flex flex-col">
+        <div class="w-full bg-slate-950 flex items-center justify-center p-4 max-h-[70vh] overflow-y-auto">
+           <img :src="selectedWorkshopImage.image" class="max-w-full h-auto rounded-xl object-contain" />
+        </div>
+        <div class="p-6 bg-surface-dark border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+           <div>
+             <p class="text-white font-bold text-lg mb-1">{{ selectedWorkshopImage.title?.[locale] }}</p>
+             <p class="text-slate-400 text-sm">📍 {{ selectedWorkshopImage.location?.[locale] }} &nbsp;|&nbsp; 🗓️ {{ new Date(selectedWorkshopImage.date).toLocaleDateString() }}</p>
+           </div>
+           <a :href="selectedWorkshopImage.link" target="_blank" class="btn btn-primary !py-4 !px-8 text-lg font-bold shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-shadow whitespace-nowrap">
+             Inscrever-se Agora <i class="pi pi-arrow-up-right ml-2"></i>
+           </a>
+        </div>
+      </div>
+    </Dialog>
   </div>
 </template>
 
@@ -487,6 +571,15 @@ const openServiceModal = (service) => {
 
 .animate-mouse-scroll {
   animation: mouse-scroll 1.5s infinite;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-scroll {
+  animation: scroll 35s linear infinite;
 }
 </style>
 

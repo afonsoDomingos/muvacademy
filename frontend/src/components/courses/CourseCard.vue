@@ -33,8 +33,8 @@ const discountedPrice = computed(() => {
         :alt="title"
         class="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-all duration-700 opacity-80 group-hover:opacity-100"
       />
-      <div v-else class="w-full h-full bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center">
-        <i class="pi pi-book text-6xl text-white/10 group-hover:scale-125 transition-transform duration-700"></i>
+      <div v-else class="w-full h-full bg-gradient-to-br from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900 flex items-center justify-center">
+        <i class="pi pi-book text-6xl text-slate-400 dark:text-white/10 group-hover:scale-125 transition-transform duration-700"></i>
       </div>
       
       <!-- Overlays -->
@@ -51,14 +51,13 @@ const discountedPrice = computed(() => {
         </div>
       </div>
       
-      <!-- Price on image -->
       <div class="absolute bottom-4 right-4 text-right">
-        <div v-if="hasDiscount" class="text-[10px] text-slate-400 line-through mb-0.5">
-          {{ price.toLocaleString() }} {{ currency }}
+        <div v-if="hasDiscount" class="text-[10px] text-slate-300 dark:text-slate-400 line-through mb-0.5 shadow-sm">
+           <span class="bg-black/40 px-1 rounded">{{ price.toLocaleString() }} {{ currency }}</span>
         </div>
         <div class="text-xl font-black text-white text-glow">
           {{ (hasDiscount ? discountedPrice : price).toLocaleString() }}
-          <span class="text-[10px] font-medium opacity-70">{{ currency }}</span>
+          <span class="text-[10px] font-medium opacity-90">{{ currency }}</span>
         </div>
       </div>
     </div>
@@ -77,17 +76,17 @@ const discountedPrice = computed(() => {
       </div>
 
       <!-- Title -->
-      <h3 class="text-xl font-bold text-white mb-3 line-clamp-2 leading-tight group-hover:text-primary-400 transition-colors duration-300">
+      <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3 line-clamp-2 leading-tight group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
         {{ title }}
       </h3>
 
       <!-- Description -->
-      <p class="text-slate-400 text-sm line-clamp-2 mb-6 leading-relaxed flex-1">
+      <p class="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-6 leading-relaxed flex-1">
         {{ description }}
       </p>
 
       <!-- Bottom Meta -->
-      <div class="flex items-center justify-between mt-auto pt-6 border-t border-white/5">
+      <div class="flex items-center justify-between mt-auto pt-6 border-t border-slate-200 dark:border-white/5">
         <!-- Instructor -->
         <div v-if="course.instructor" class="flex items-center gap-3">
           <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 flex items-center justify-center border border-white/5 overflow-hidden">
@@ -99,7 +98,7 @@ const discountedPrice = computed(() => {
             <span v-else class="text-white text-[10px] font-bold">{{ course.instructor.name?.charAt(0) }}</span>
           </div>
           <div class="flex flex-col">
-            <span class="text-[11px] text-white font-bold truncate max-w-[100px]">{{ course.instructor.name }}</span>
+            <span class="text-[11px] text-slate-900 dark:text-white font-bold truncate max-w-[100px]">{{ course.instructor.name }}</span>
             <span class="text-[9px] text-slate-500 font-medium">Instrutor</span>
           </div>
         </div>
@@ -107,7 +106,7 @@ const discountedPrice = computed(() => {
         <!-- Action -->
         <RouterLink
           :to="`/courses/${course.slug || course._id}`"
-          class="btn btn-secondary !py-2.5 !px-5 text-[11px] font-black active:scale-95 group/btn"
+          class="btn btn-secondary dark:text-white !py-2.5 !px-5 text-[11px] font-black active:scale-95 group/btn"
         >
           {{ t('courses.card.view') }}
           <i class="pi pi-arrow-right group-hover/btn:translate-x-1 transition-transform"></i>

@@ -4,6 +4,7 @@ import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 import PrimeVue from 'primevue/config'
 import ToastService from 'primevue/toastservice'
 import ConfirmationService from 'primevue/confirmationservice'
+import VueApexCharts from 'vue3-apexcharts'
 
 import App from './App.vue'
 import router from './router'
@@ -28,6 +29,7 @@ app.use(i18n)
 app.use(PrimeVue, { ripple: true })
 app.use(ToastService)
 app.use(ConfirmationService)
+app.use(VueApexCharts)
 
 // Mount
 app.mount('#app')

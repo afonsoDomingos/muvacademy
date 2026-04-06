@@ -12,10 +12,10 @@ const quickLinks = [
 ]
 
 const socialLinks = [
-  { icon: 'pi pi-facebook', url: '#', label: 'Facebook' },
-  { icon: 'pi pi-instagram', url: '#', label: 'Instagram' },
-  { icon: 'pi pi-linkedin', url: '#', label: 'LinkedIn' },
-  { icon: 'pi pi-youtube', url: '#', label: 'YouTube' }
+  { icon: 'pi pi-facebook', url: 'https://web.facebook.com/profile.php?id=61576660135894&locale=pt_BR', label: 'Facebook' },
+  { icon: 'pi pi-instagram', url: 'https://www.instagram.com/muv_mz', label: 'Instagram' },
+  { icon: 'pi pi-linkedin', url: 'https://www.linkedin.com/company/muv-educa%C3%A7%C3%A3o-engenharia', label: 'LinkedIn' },
+  { icon: 'pi pi-youtube', url: 'https://www.youtube.com/@Muvmoza', label: 'YouTube' }
 ]
 </script>
 
@@ -39,6 +39,8 @@ const socialLinks = [
               v-for="social in socialLinks"
               :key="social.label"
               :href="social.url"
+              target="_blank"
+              rel="noopener noreferrer"
               :aria-label="social.label"
               class="w-10 h-10 rounded-lg bg-white/5 hover:bg-primary-500/20 flex items-center justify-center text-gray-400 hover:text-primary-400 transition-all"
             >

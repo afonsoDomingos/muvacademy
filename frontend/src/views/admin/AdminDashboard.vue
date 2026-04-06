@@ -8,10 +8,47 @@ const { t } = useI18n()
 const loading = ref(true)
 const stats = ref(null)
 
+const donutSeries = ref([])
+const donutOptions = ref({
+  chart: { type: 'donut', background: 'transparent' },
+  labels: ['Pendentes', 'Aprovadas'],
+  theme: { mode: 'dark' },
+  colors: ['#eab308', '#10b981'],
+  plotOptions: { pie: { donut: { size: '65%' } } },
+  dataLabels: { enabled: false },
+  stroke: { show: false },
+  legend: { position: 'bottom' }
+})
+
+const barSeries = ref([])
+const barOptions = ref({
+  chart: { type: 'bar', background: 'transparent', toolbar: { show: false } },
+  theme: { mode: 'dark' },
+  colors: ['#3b82f6'],
+  plotOptions: { bar: { horizontal: true, borderRadius: 4 } },
+  dataLabels: { enabled: false },
+  xaxis: { categories: [] }
+})
+
 onMounted(async () => {
   try {
     const response = await api.get('/stats/dashboard')
     stats.value = response.data.data
+
+    // Setup Donut
+    donutSeries.value = [
+      stats.value?.summary?.pendingEnrollments || 0,
+      stats.value?.summary?.approvedEnrollments || 0
+    ]
+
+    // Setup Bar
+    if (stats.value?.topCourses) {
+      barSeries.value = [{ name: 'Inscritos', data: stats.value.topCourses.map(c => c.count) }]
+      barOptions.value = {
+        ...barOptions.value,
+        xaxis: { categories: stats.value.topCourses.map(c => c.course?.title?.pt?.substring(0, 20) + '...' || 'Sem Título') }
+      }
+    }
   } catch (error) {
     console.error('Error fetching stats:', error)
   } finally {
@@ -76,28 +113,37 @@ onMounted(async () => {
     </div>
 
     <div class="grid md:grid-cols-2 gap-6">
-      <!-- Top Courses -->
+      <!-- Graphical Charts Area -->
       <div class="card">
         <div class="p-6 border-b border-white/10">
-          <h2 class="text-xl font-bold text-white">Cursos Mais Populares</h2>
+          <h2 class="text-xl font-bold text-white">Status das Inscrições</h2>
+        </div>
+        <div class="p-6 flex items-center justify-center">
+          <apexchart 
+            type="donut" 
+            height="320" 
+            :options="donutOptions" 
+            :series="donutSeries"
+          ></apexchart>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="p-6 border-b border-white/10">
+          <h2 class="text-xl font-bold text-white">Top 5 Cursos (Inscritos)</h2>
         </div>
         <div class="p-6">
-          <div v-if="stats?.topCourses?.length" class="space-y-4">
-            <div v-for="item in stats.topCourses" :key="item._id" class="flex items-center gap-4">
-              <img v-if="item.course?.image" :src="item.course.image" class="w-16 h-10 object-cover rounded-lg" />
-              <div v-else class="w-16 h-10 bg-gradient-to-br from-primary-600 to-accent-600 rounded-lg"></div>
-              <div class="flex-1">
-                <p class="text-white font-medium truncate">{{ item.course?.title?.pt }}</p>
-                <p class="text-sm text-gray-400">{{ item.count }} inscritos</p>
-              </div>
-            </div>
-          </div>
-          <p v-else class="text-gray-400 text-center py-4">Nenhum dado disponível</p>
+          <apexchart 
+            type="bar" 
+            height="320" 
+            :options="barOptions" 
+            :series="barSeries"
+          ></apexchart>
         </div>
       </div>
 
       <!-- Recent Activity -->
-      <div class="card">
+      <div class="card md:col-span-2">
         <div class="p-6 border-b border-white/10">
           <h2 class="text-xl font-bold text-white">Atividade Recente</h2>
         </div>

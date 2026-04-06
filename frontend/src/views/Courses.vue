@@ -131,12 +131,12 @@ onMounted(async () => {
       <div class="card p-6 mb-8">
         <div class="grid md:grid-cols-4 gap-4">
           <div class="md:col-span-2">
-            <span class="p-input-icon-left w-full">
-              <i class="pi pi-search" />
+            <span class="p-input-icon-left w-full h-full">
+              <i class="pi pi-search text-slate-400" />
               <InputText
                 v-model="search"
                 :placeholder="t('courses.search')"
-                class="w-full"
+                class="w-full !bg-white dark:!bg-slate-900 !text-slate-900 dark:!text-white border-slate-300 dark:border-slate-700"
                 @keyup.enter="handleSearch"
               />
             </span>
@@ -148,7 +148,8 @@ onMounted(async () => {
             :optionLabel="`name.${locale}`"
             optionValue="id"
             :placeholder="t('courses.filters.category')"
-            class="w-full"
+            class="w-full !bg-white dark:!bg-slate-900 !text-slate-900 dark:!text-white border-slate-300 dark:border-slate-700"
+            :pt="{ input: { class: '!text-slate-900 dark:!text-white' } }"
           />
 
           <Dropdown
@@ -157,7 +158,8 @@ onMounted(async () => {
             optionLabel="label"
             optionValue="value"
             :placeholder="t('courses.filters.level')"
-            class="w-full"
+            class="w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-slate-700"
+            :pt="{ input: { class: '!text-slate-900 dark:!text-white' } }"
           />
         </div>
       </div>

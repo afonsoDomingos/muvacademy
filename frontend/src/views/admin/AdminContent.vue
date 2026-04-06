@@ -29,6 +29,17 @@ const topAnnouncement = ref({
     messages: [ { text: '', link: '' } ]
 })
 
+const aboutUsSetting = ref({
+   title: 'MUV Educação e Engenharia',
+   description: 'A MUV é uma empresa moçambicana especializada em Educação...',
+   image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1600',
+   mission: 'Contribuir...',
+   vision: 'Ser reconhecida...',
+   values: 'Excelência Educacional, Inovação, Colaboração, Integridade, Sustentabilidade'
+})
+
+const partnersSetting = ref([])
+
 const bannerForm = ref({
   title: { pt: '', en: '' },
   subtitle: { pt: '', en: '' },
@@ -62,10 +73,12 @@ async function loadData() {
   loading.value = true
   banners.value = await contentStore.fetchHomeBanners()
   services.value = await contentStore.fetchServices()
-  try {
-     const [wsRes, setRes] = await Promise.all([
+   try {
+     const [wsRes, setRes, aboutRes, partnersRes] = await Promise.all([
         api.get('/workshops'),
-        api.get('/content/settings/top_announcement')
+        api.get('/content/settings/top_announcement'),
+        api.get('/content/settings/about_us').catch(() => ({ data: { data: { setting: null } } })),
+        api.get('/content/settings/partners').catch(() => ({ data: { data: { setting: null } } }))
      ])
      workshops.value = wsRes.data.data.workshops
      if (setRes.data.data.setting) {
@@ -73,12 +86,29 @@ async function loadData() {
          if (savedSetting.messages && savedSetting.messages.length > 0) {
              topAnnouncement.value = savedSetting
          } else {
-             // Compatibilidade retroativa para converter a string única
              topAnnouncement.value = {
                  active: savedSetting.active,
                  messages: [{ text: savedSetting.text || '', link: savedSetting.link || '' }]
              }
          }
+     }
+     
+     if (aboutRes.data.data.setting) {
+         const s = aboutRes.data.data.setting
+         aboutUsSetting.value = {
+             title: s.title || '',
+             description: s.description || '',
+             image: s.image || '',
+             mission: s.mission || '',
+             vision: s.vision || '',
+             values: Array.isArray(s.values) ? s.values.join(', ') : (s.values || '')
+         }
+     }
+
+     if (partnersRes.data.data.setting && partnersRes.data.data.setting.value) {
+         partnersSetting.value = partnersRes.data.data.setting.value;
+     } else {
+         partnersSetting.value = [];
      }
   } catch (e) {
      console.error('Error loading extra data:', e)
@@ -93,6 +123,36 @@ async function saveAnnouncement() {
   } catch (err) {
       toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar novidade', life: 3000 })
   }
+}
+
+async function saveAboutUs() {
+  try {
+      const payload = { 
+         ...aboutUsSetting.value, 
+         values: aboutUsSetting.value.values.split(',').map(v => v.trim()).filter(v => v) 
+      };
+      await api.put('/content/settings/about_us', { value: payload })
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Identidade atualizada', life: 3000 })
+  } catch (err) {
+      toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar identidade', life: 3000 })
+  }
+}
+
+async function savePartners() {
+  try {
+      await api.put('/content/settings/partners', { value: partnersSetting.value })
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Parceiros atualizados', life: 3000 })
+  } catch (err) {
+      toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar parceiros', life: 3000 })
+  }
+}
+
+function addPartner() {
+    partnersSetting.value.push({ name: '', image: '' })
+}
+
+function removePartner(idx) {
+    partnersSetting.value.splice(idx, 1)
 }
 
 function addAnnouncementMessage() {
@@ -260,13 +320,18 @@ async function handleFileUpload(event, type) {
   
   uploading.value = true
   try {
-    const endpoint = type === 'banner' ? '/upload/banner' : '/upload/workshop'
+    const endpoint = (type === 'workshop') ? '/upload/workshop' : '/upload/banner'
     const res = await api.post(endpoint, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
     
     if (type === 'banner') {
       bannerForm.value.image = res.data.data.url
+    } else if (type === 'about') {
+      aboutUsSetting.value.image = res.data.data.url
+    } else if (type.startsWith('partner-')) {
+      const idx = parseInt(type.split('-')[1])
+      partnersSetting.value[idx].image = res.data.data.url
     } else {
       workshopForm.value.image = res.data.data.url
     }
@@ -326,6 +391,114 @@ onMounted(loadData)
                       <div class="flex gap-2">
                         <InputText v-model="msg.link" class="input w-full bg-slate-900 border-white/10 !text-sm flex-1" placeholder="Ex: /courses ou https://link.com" />
                         <button v-if="topAnnouncement.messages.length > 1" @click="removeAnnouncementMessage(index)" class="btn bg-red-500/20 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white !p-2 w-10 flex items-center justify-center transition-all" title="Remover registo">
+                            <i class="pi pi-trash"></i>
+                        </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+
+    <!-- Nossa Identidade Section -->
+    <section class="mb-16">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="pi pi-id-card text-primary-400"></i>
+          A Nossa Identidade
+        </h2>
+        <button @click="saveAboutUs" class="btn btn-primary !py-2 !px-6 text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+          <i class="pi pi-save"></i> Guardar Alterações
+        </button>
+      </div>
+      <div class="glass-card p-6 border-l-4 border-primary-500">
+          <div class="grid sm:grid-cols-2 gap-6 mb-4">
+              <div class="field">
+                  <label class="block text-xs font-bold text-slate-300 mb-1">Título Principal</label>
+                  <InputText v-model="aboutUsSetting.title" class="input w-full bg-slate-900 border-white/10 !text-sm" placeholder="MUV Educação e Engenharia" />
+              </div>
+              <div class="field">
+                  <label class="block text-xs font-bold text-slate-300 mb-1">Imagem Representativa</label>
+                  <div class="flex gap-2">
+                      <InputText v-model="aboutUsSetting.image" class="input w-full bg-slate-900 border-white/10 !text-sm" placeholder="URL da Imagem..." disabled />
+                      <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center gap-2 border-white/10">
+                          <i v-if="uploading" class="pi pi-spin pi-spinner"></i>
+                          <i v-else class="pi pi-upload"></i>
+                          <input type="file" @change="handleFileUpload($event, 'about')" class="hidden" accept="image/*" />
+                      </label>
+                  </div>
+              </div>
+          </div>
+          <div class="field mb-4">
+              <label class="block text-xs font-bold text-slate-300 mb-1">Texto de Apresentação (descrição longa)</label>
+              <Textarea v-model="aboutUsSetting.description" rows="4" class="input w-full bg-slate-900 border-white/10 !text-sm" />
+          </div>
+          <div class="grid sm:grid-cols-2 gap-6 mb-4">
+              <div class="field">
+                  <label class="block text-xs font-bold text-slate-300 mb-1">Missão</label>
+                  <Textarea v-model="aboutUsSetting.mission" rows="3" class="input w-full bg-slate-900 border-white/10 !text-sm" />
+              </div>
+              <div class="field">
+                  <label class="block text-xs font-bold text-slate-300 mb-1">Visão</label>
+                  <Textarea v-model="aboutUsSetting.vision" rows="3" class="input w-full bg-slate-900 border-white/10 !text-sm" />
+              </div>
+          </div>
+          <div class="field">
+              <label class="block text-xs font-bold text-slate-300 mb-1">Valores (Separados por vírgula)</label>
+              <InputText v-model="aboutUsSetting.values" class="input w-full bg-slate-900 border-white/10 !text-sm" placeholder="Inovação, Qualidade, União..." />
+          </div>
+      </div>
+    </section>
+
+    <!-- Parceiros Section -->
+    <section class="mb-16">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-white flex items-center gap-2">
+          <i class="pi pi-star text-yellow-400"></i>
+          Parceiros (Scroll Infinito)
+        </h2>
+        <button @click="savePartners" class="btn btn-primary !py-2 !px-6 text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+          <i class="pi pi-save"></i> Guardar Parceiros
+        </button>
+      </div>
+      <div class="glass-card p-6 border-l-4 border-yellow-500">
+          <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/5">
+              <span class="text-sm text-slate-400">As imagens dos parceiros listados abaixo passarão num carrossel animado na página inicial.</span>
+              <button @click="addPartner" class="btn btn-secondary !p-2 text-xs">
+                  <i class="pi pi-plus"></i> Adicionar Parceiro
+              </button>
+          </div>
+
+          <div v-if="partnersSetting.length === 0" class="text-center py-6 text-slate-500">
+            Ainda não adicionaste parceiros. Clica no botão acima para adicionar.
+          </div>
+
+          <div class="space-y-4">
+              <div v-for="(partner, index) in partnersSetting" :key="index" class="flex flex-col md:flex-row gap-4 items-end bg-black/20 p-4 rounded-xl border border-white/5 relative group">
+                  
+                  <!-- Logo Preview -->
+                  <div class="w-24 h-16 bg-white rounded-lg flex items-center justify-center p-2 flex-shrink-0">
+                      <img v-if="partner.image" :src="partner.image" class="w-full h-full object-contain" />
+                      <i v-else class="pi pi-image text-slate-400 text-2xl"></i>
+                  </div>
+
+                  <div class="flex-1 w-full">
+                      <label class="block text-xs font-bold text-slate-300 mb-1">Nome da Empresa</label>
+                      <InputText v-model="partner.name" class="input w-full bg-slate-900 border-white/10 !text-sm" placeholder="MUV Academy..." />
+                  </div>
+                  
+                  <div class="flex-1 w-full relative">
+                      <label class="block text-xs font-bold text-slate-300 mb-1">Logotipo (URL ou Upload)</label>
+                      <div class="flex gap-2">
+                        <InputText v-model="partner.image" class="input w-full bg-slate-900 border-white/10 !text-sm flex-1" placeholder="Endereço da imagem..." disabled />
+                        
+                        <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center justify-center border border-white/10" title="Fazer Upload">
+                          <i v-if="uploading" class="pi pi-spin pi-spinner text-xs"></i>
+                          <i v-else class="pi pi-upload text-xs"></i>
+                          <input type="file" @change="handleFileUpload($event, `partner-${index}`)" class="hidden" accept="image/*" />
+                        </label>
+
+                        <button @click="removePartner(index)" class="btn bg-red-500/20 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white !p-2 w-10 flex items-center justify-center transition-all" title="Remover registo">
                             <i class="pi pi-trash"></i>
                         </button>
                       </div>
