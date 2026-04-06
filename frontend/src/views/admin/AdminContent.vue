@@ -350,16 +350,16 @@ onMounted(loadData)
   <div class="p-4 sm:p-8 max-w-7xl mx-auto pb-20">
     <div class="flex justify-between items-center mb-10">
       <div>
-        <h1 class="text-3xl font-display font-bold text-white mb-2">Gestão de Conteúdo</h1>
-        <p class="text-slate-400">Gira os banners, workshops, serviços da MUV e configurações globais.</p>
+        <h1 class="text-3xl font-display font-bold text-slate-900 dark:text-white mb-2">Gestão de Conteúdo</h1>
+        <p class="text-slate-600 dark:text-slate-400">Gira os banners, workshops, serviços da MUV e configurações globais.</p>
       </div>
     </div>
 
     <!-- Top Announcement Section -->
     <section class="mb-16">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-          <i class="pi pi-megaphone text-accent-400"></i>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-megaphone text-accent-500 dark:text-accent-400"></i>
           Barra de Novidade (Topo)
         </h2>
         <button @click="saveAnnouncement" class="btn btn-accent !py-2 !px-6 text-sm shadow-[0_0_15px_rgba(234,179,8,0.3)]">
@@ -367,13 +367,13 @@ onMounted(loadData)
         </button>
       </div>
       <div class="glass-card p-6 border-l-4 border-accent-500">
-          <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/5">
-              <label class="flex items-center gap-3 cursor-pointer p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+          <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-200 dark:border-white/5">
+              <label class="flex items-center gap-3 cursor-pointer p-2 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
                   <div class="relative">
                       <input type="checkbox" v-model="topAnnouncement.active" class="sr-only peer">
-                      <div class="w-11 h-6 bg-slate-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-500"></div>
+                      <div class="w-11 h-6 bg-slate-200 dark:bg-slate-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent-500"></div>
                   </div>
-                  <span class="text-sm font-bold text-white whitespace-nowrap">{{ topAnnouncement.active ? 'Ativado (Online)' : 'Desativado (Oculto)' }}</span>
+                  <span class="text-sm font-bold text-slate-900 dark:text-white whitespace-nowrap">{{ topAnnouncement.active ? 'Ativado (Online)' : 'Desativado (Oculto)' }}</span>
               </label>
               <button @click="addAnnouncementMessage" class="btn btn-secondary !p-2 text-xs">
                   <i class="pi pi-plus"></i> Adicionar Registo
@@ -381,16 +381,16 @@ onMounted(loadData)
           </div>
 
           <div class="space-y-4">
-              <div v-for="(msg, index) in topAnnouncement.messages" :key="index" class="flex flex-col md:flex-row gap-4 items-end bg-black/20 p-4 rounded-xl border border-white/5 relative group">
+              <div v-for="(msg, index) in topAnnouncement.messages" :key="index" class="flex flex-col md:flex-row gap-4 items-end bg-slate-50 dark:bg-black/20 p-4 rounded-xl border border-slate-200 dark:border-white/5 relative group">
                   <div class="flex-1 w-full">
-                      <label class="block text-xs font-bold text-slate-300 mb-1">Mensagem a Apresentar {{ index + 1 }}</label>
-                      <InputText v-model="msg.text" class="input w-full bg-slate-900 border-white/10 !text-sm" placeholder="Ex: 🔥 Promoção Especial de Verão!" />
+                      <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Mensagem a Apresentar {{ index + 1 }}</label>
+                      <InputText v-model="msg.text" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" placeholder="Ex: 🔥 Promoção Especial de Verão!" />
                   </div>
                   <div class="flex-1 w-full relative">
-                      <label class="block text-xs font-bold text-slate-300 mb-1">Link do Botão (Opcional)</label>
+                      <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Link do Botão (Opcional)</label>
                       <div class="flex gap-2">
-                        <InputText v-model="msg.link" class="input w-full bg-slate-900 border-white/10 !text-sm flex-1" placeholder="Ex: /courses ou https://link.com" />
-                        <button v-if="topAnnouncement.messages.length > 1" @click="removeAnnouncementMessage(index)" class="btn bg-red-500/20 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white !p-2 w-10 flex items-center justify-center transition-all" title="Remover registo">
+                        <InputText v-model="msg.link" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white flex-1" placeholder="Ex: /courses ou https://link.com" />
+                        <button v-if="topAnnouncement.messages.length > 1" @click="removeAnnouncementMessage(index)" class="btn bg-red-100 dark:bg-red-500/20 text-red-500 dark:text-red-400 border border-red-200 dark:border-red-500/20 hover:bg-red-500 hover:text-white !p-2 w-10 flex items-center justify-center transition-all" title="Remover registo">
                             <i class="pi pi-trash"></i>
                         </button>
                       </div>
@@ -403,8 +403,8 @@ onMounted(loadData)
     <!-- Nossa Identidade Section -->
     <section class="mb-16">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-          <i class="pi pi-id-card text-primary-400"></i>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-id-card text-primary-500 dark:text-primary-400"></i>
           A Nossa Identidade
         </h2>
         <button @click="saveAboutUs" class="btn btn-primary !py-2 !px-6 text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)]">
@@ -414,14 +414,14 @@ onMounted(loadData)
       <div class="glass-card p-6 border-l-4 border-primary-500">
           <div class="grid sm:grid-cols-2 gap-6 mb-4">
               <div class="field">
-                  <label class="block text-xs font-bold text-slate-300 mb-1">Título Principal</label>
-                  <InputText v-model="aboutUsSetting.title" class="input w-full bg-slate-900 border-white/10 !text-sm" placeholder="MUV Educação e Engenharia" />
+                  <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Título Principal</label>
+                  <InputText v-model="aboutUsSetting.title" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" placeholder="MUV Educação e Engenharia" />
               </div>
               <div class="field">
-                  <label class="block text-xs font-bold text-slate-300 mb-1">Imagem Representativa</label>
+                  <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Imagem Representativa</label>
                   <div class="flex gap-2">
-                      <InputText v-model="aboutUsSetting.image" class="input w-full bg-slate-900 border-white/10 !text-sm" placeholder="URL da Imagem..." disabled />
-                      <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center gap-2 border-white/10">
+                      <InputText v-model="aboutUsSetting.image" class="input w-full !bg-slate-50 dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white cursor-not-allowed" placeholder="URL da Imagem..." disabled />
+                      <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center gap-2 border-slate-300 dark:border-white/10 text-slate-700 dark:text-white">
                           <i v-if="uploading" class="pi pi-spin pi-spinner"></i>
                           <i v-else class="pi pi-upload"></i>
                           <input type="file" @change="handleFileUpload($event, 'about')" class="hidden" accept="image/*" />
@@ -430,22 +430,22 @@ onMounted(loadData)
               </div>
           </div>
           <div class="field mb-4">
-              <label class="block text-xs font-bold text-slate-300 mb-1">Texto de Apresentação (descrição longa)</label>
-              <Textarea v-model="aboutUsSetting.description" rows="4" class="input w-full bg-slate-900 border-white/10 !text-sm" />
+              <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Texto de Apresentação (descrição longa)</label>
+              <Textarea v-model="aboutUsSetting.description" rows="4" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" />
           </div>
           <div class="grid sm:grid-cols-2 gap-6 mb-4">
               <div class="field">
-                  <label class="block text-xs font-bold text-slate-300 mb-1">Missão</label>
-                  <Textarea v-model="aboutUsSetting.mission" rows="3" class="input w-full bg-slate-900 border-white/10 !text-sm" />
+                  <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Missão</label>
+                  <Textarea v-model="aboutUsSetting.mission" rows="3" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" />
               </div>
               <div class="field">
-                  <label class="block text-xs font-bold text-slate-300 mb-1">Visão</label>
-                  <Textarea v-model="aboutUsSetting.vision" rows="3" class="input w-full bg-slate-900 border-white/10 !text-sm" />
+                  <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Visão</label>
+                  <Textarea v-model="aboutUsSetting.vision" rows="3" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" />
               </div>
           </div>
           <div class="field">
-              <label class="block text-xs font-bold text-slate-300 mb-1">Valores (Separados por vírgula)</label>
-              <InputText v-model="aboutUsSetting.values" class="input w-full bg-slate-900 border-white/10 !text-sm" placeholder="Inovação, Qualidade, União..." />
+              <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Valores (Separados por vírgula)</label>
+              <InputText v-model="aboutUsSetting.values" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" placeholder="Inovação, Qualidade, União..." />
           </div>
       </div>
     </section>
@@ -453,8 +453,8 @@ onMounted(loadData)
     <!-- Parceiros Section -->
     <section class="mb-16">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-          <i class="pi pi-star text-yellow-400"></i>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-star text-yellow-500 dark:text-yellow-400"></i>
           Parceiros (Scroll Infinito)
         </h2>
         <button @click="savePartners" class="btn btn-primary !py-2 !px-6 text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)]">
@@ -462,8 +462,8 @@ onMounted(loadData)
         </button>
       </div>
       <div class="glass-card p-6 border-l-4 border-yellow-500">
-          <div class="flex items-center justify-between mb-4 pb-4 border-b border-white/5">
-              <span class="text-sm text-slate-400">As imagens dos parceiros listados abaixo passarão num carrossel animado na página inicial.</span>
+          <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-200 dark:border-white/5">
+              <span class="text-sm text-slate-600 dark:text-slate-400">As imagens dos parceiros listados abaixo passarão num carrossel animado na página inicial.</span>
               <button @click="addPartner" class="btn btn-secondary !p-2 text-xs">
                   <i class="pi pi-plus"></i> Adicionar Parceiro
               </button>
@@ -474,31 +474,31 @@ onMounted(loadData)
           </div>
 
           <div class="space-y-4">
-              <div v-for="(partner, index) in partnersSetting" :key="index" class="flex flex-col md:flex-row gap-4 items-end bg-black/20 p-4 rounded-xl border border-white/5 relative group">
+              <div v-for="(partner, index) in partnersSetting" :key="index" class="flex flex-col md:flex-row gap-4 items-end bg-slate-50 dark:bg-black/20 p-4 rounded-xl border border-slate-200 dark:border-white/5 relative group">
                   
                   <!-- Logo Preview -->
-                  <div class="w-24 h-16 bg-white rounded-lg flex items-center justify-center p-2 flex-shrink-0">
+                  <div class="w-24 h-16 bg-white border border-slate-200 dark:border-transparent rounded-lg flex items-center justify-center p-2 flex-shrink-0">
                       <img v-if="partner.image" :src="partner.image" class="w-full h-full object-contain" />
-                      <i v-else class="pi pi-image text-slate-400 text-2xl"></i>
+                      <i v-else class="pi pi-image text-slate-300 dark:text-slate-400 text-2xl"></i>
                   </div>
 
                   <div class="flex-1 w-full">
-                      <label class="block text-xs font-bold text-slate-300 mb-1">Nome da Empresa</label>
-                      <InputText v-model="partner.name" class="input w-full bg-slate-900 border-white/10 !text-sm" placeholder="MUV Academy..." />
+                      <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Nome da Empresa</label>
+                      <InputText v-model="partner.name" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" placeholder="MUV Academy..." />
                   </div>
                   
                   <div class="flex-1 w-full relative">
-                      <label class="block text-xs font-bold text-slate-300 mb-1">Logotipo (URL ou Upload)</label>
+                      <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Logotipo (URL ou Upload)</label>
                       <div class="flex gap-2">
-                        <InputText v-model="partner.image" class="input w-full bg-slate-900 border-white/10 !text-sm flex-1" placeholder="Endereço da imagem..." disabled />
+                        <InputText v-model="partner.image" class="input w-full !bg-slate-50 dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white flex-1 cursor-not-allowed" placeholder="Endereço da imagem..." disabled />
                         
-                        <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center justify-center border border-white/10" title="Fazer Upload">
+                        <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center justify-center border border-slate-300 dark:border-white/10 text-slate-700 dark:text-white" title="Fazer Upload">
                           <i v-if="uploading" class="pi pi-spin pi-spinner text-xs"></i>
                           <i v-else class="pi pi-upload text-xs"></i>
                           <input type="file" @change="handleFileUpload($event, `partner-${index}`)" class="hidden" accept="image/*" />
                         </label>
 
-                        <button @click="removePartner(index)" class="btn bg-red-500/20 text-red-400 border border-red-500/20 hover:bg-red-500 hover:text-white !p-2 w-10 flex items-center justify-center transition-all" title="Remover registo">
+                        <button @click="removePartner(index)" class="btn bg-red-100 dark:bg-red-500/20 text-red-500 dark:text-red-400 border border-red-200 dark:border-red-500/20 hover:bg-red-500 hover:text-white !p-2 w-10 flex items-center justify-center transition-all" title="Remover registo">
                             <i class="pi pi-trash"></i>
                         </button>
                       </div>
@@ -511,8 +511,8 @@ onMounted(loadData)
     <!-- Banners Section -->
     <section class="mb-16">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-          <i class="pi pi-images text-primary-400"></i>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-images text-primary-500 dark:text-primary-400"></i>
           Banners do Carrossel
         </h2>
         <button @click="openNewBanner" class="btn btn-primary !py-2 !px-4 text-sm">
@@ -530,11 +530,11 @@ onMounted(loadData)
             </div>
           </div>
           <div class="p-6">
-            <h3 class="text-white font-bold mb-2 truncate">{{ banner.title.pt }}</h3>
-            <p class="text-slate-400 text-sm mb-6 line-clamp-2">{{ banner.subtitle.pt }}</p>
+            <h3 class="text-slate-900 dark:text-white font-bold mb-2 truncate">{{ banner.title.pt }}</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mb-6 line-clamp-2">{{ banner.subtitle.pt }}</p>
             <div class="flex gap-2">
               <button @click="editBanner(banner)" class="btn btn-secondary !p-2 flex-1 text-xs">Editar</button>
-              <button @click="confirmDeleteBanner(banner)" class="btn bg-red-500/10 text-red-500 border border-red-500/20 !p-2 flex-1 text-xs hover:bg-red-500 hover:text-white transition-colors">Eliminar</button>
+              <button @click="confirmDeleteBanner(banner)" class="btn bg-red-100 dark:bg-red-500/10 text-red-500 border border-red-200 dark:border-red-500/20 !p-2 flex-1 text-xs hover:bg-red-500 hover:text-white transition-colors">Eliminar</button>
             </div>
           </div>
         </div>
@@ -544,8 +544,8 @@ onMounted(loadData)
     <!-- Workshops Section -->
     <section class="mb-16">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-          <i class="pi pi-calendar text-primary-400"></i>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-calendar text-primary-500 dark:text-primary-400"></i>
           Workshops Semanais
         </h2>
         <button @click="openNewWorkshop" class="btn btn-primary !py-2 !px-4 text-sm">
@@ -563,11 +563,11 @@ onMounted(loadData)
             </div>
           </div>
           <div class="p-6">
-            <h3 class="text-white font-bold mb-2 truncate">{{ workshop.title.pt }}</h3>
-            <p class="text-slate-400 text-sm mb-6 line-clamp-2">{{ workshop.description.pt }}</p>
+            <h3 class="text-slate-900 dark:text-white font-bold mb-2 truncate">{{ workshop.title.pt }}</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mb-6 line-clamp-2">{{ workshop.description.pt }}</p>
             <div class="flex gap-2">
               <button @click="editWorkshop(workshop)" class="btn btn-secondary !p-2 flex-1 text-xs">Editar</button>
-              <button @click="confirmDeleteWorkshop(workshop)" class="btn bg-red-500/10 text-red-500 border border-red-500/20 !p-2 flex-1 text-xs hover:bg-red-500 hover:text-white transition-colors">Eliminar</button>
+              <button @click="confirmDeleteWorkshop(workshop)" class="btn bg-red-100 dark:bg-red-500/10 text-red-500 border border-red-200 dark:border-red-500/20 !p-2 flex-1 text-xs hover:bg-red-500 hover:text-white transition-colors">Eliminar</button>
             </div>
           </div>
         </div>
@@ -577,8 +577,8 @@ onMounted(loadData)
     <!-- Services Section -->
     <section>
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-xl font-bold text-white flex items-center gap-2">
-          <i class="pi pi-briefcase text-accent-400"></i>
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-briefcase text-accent-500 dark:text-accent-400"></i>
           Áreas de Serviço
         </h2>
         <button @click="openNewService" class="btn btn-accent !py-2 !px-4 text-sm">
@@ -588,14 +588,14 @@ onMounted(loadData)
 
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="service in services" :key="service._id" class="glass-card p-6">
-          <div class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-4">
-            <i :class="service.icon" class="text-2xl text-accent-400"></i>
+          <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-white/5 flex items-center justify-center mb-4">
+            <i :class="service.icon" class="text-2xl text-accent-500 dark:text-accent-400"></i>
           </div>
-          <h3 class="text-white font-bold mb-2">{{ service.title.pt }}</h3>
-          <p class="text-slate-400 text-sm mb-6 line-clamp-2">{{ service.description.pt }}</p>
+          <h3 class="text-slate-900 dark:text-white font-bold mb-2">{{ service.title.pt }}</h3>
+          <p class="text-slate-600 dark:text-slate-400 text-sm mb-6 line-clamp-2">{{ service.description.pt }}</p>
           <div class="flex gap-2">
             <button @click="editService(service)" class="btn btn-secondary !p-2 flex-1 text-xs">Editar</button>
-            <button @click="confirmDeleteService(service)" class="btn bg-red-500/10 text-red-500 border border-red-500/20 !p-2 flex-1 text-xs hover:bg-red-500 hover:text-white transition-colors">Eliminar</button>
+            <button @click="confirmDeleteService(service)" class="btn bg-red-100 dark:bg-red-500/10 text-red-500 border border-red-200 dark:border-red-500/20 !p-2 flex-1 text-xs hover:bg-red-500 hover:text-white transition-colors">Eliminar</button>
           </div>
         </div>
       </div>
