@@ -78,10 +78,10 @@ onMounted(async () => {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Welcome -->
       <div class="mb-8">
-        <h1 class="text-3xl font-display font-bold text-white">
+        <h1 class="text-3xl font-display font-bold text-slate-900 dark:text-white">
           {{ t('dashboard.welcome') }}, {{ user?.name?.split(' ')[0] }}! 👋
         </h1>
-        <p class="text-gray-400 mt-2">Gerencie seus cursos e acompanhe seu progresso</p>
+        <p class="text-slate-600 dark:text-gray-400 mt-2">Gerencie seus cursos e acompanhe seu progresso</p>
       </div>
 
       <div class="grid lg:grid-cols-3 gap-8">
@@ -90,31 +90,31 @@ onMounted(async () => {
           <!-- Stats Cards -->
           <div class="grid grid-cols-3 gap-4 mb-8">
             <div class="card p-4 text-center">
-              <div class="text-2xl font-bold text-primary-400">{{ inProgressCourses.length }}</div>
-              <div class="text-sm text-gray-400">{{ t('dashboard.inProgress') }}</div>
+              <div class="text-2xl font-bold text-primary-500 dark:text-primary-400">{{ inProgressCourses.length }}</div>
+              <div class="text-sm text-slate-500 dark:text-gray-400">{{ t('dashboard.inProgress') }}</div>
             </div>
             <div class="card p-4 text-center">
-              <div class="text-2xl font-bold text-green-400">{{ completedCourses.length }}</div>
-              <div class="text-sm text-gray-400">{{ t('dashboard.completed') }}</div>
+              <div class="text-2xl font-bold text-green-500 dark:text-green-400">{{ completedCourses.length }}</div>
+              <div class="text-sm text-slate-500 dark:text-gray-400">{{ t('dashboard.completed') }}</div>
             </div>
             <div class="card p-4 text-center">
-              <div class="text-2xl font-bold text-yellow-400">{{ pendingEnrollments.length }}</div>
-              <div class="text-sm text-gray-400">{{ t('dashboard.pending') }}</div>
+              <div class="text-2xl font-bold text-yellow-500 dark:text-yellow-400">{{ pendingEnrollments.length }}</div>
+              <div class="text-sm text-slate-500 dark:text-gray-400">{{ t('dashboard.pending') }}</div>
             </div>
           </div>
 
           <!-- Tabs -->
           <div class="card">
-            <div class="flex border-b border-white/10">
+            <div class="flex border-b border-slate-200 dark:border-white/10">
               <button
                 v-for="tab in tabs"
                 :key="tab.id"
                 @click="activeTab = tab.id"
                 class="flex-1 px-4 py-4 text-center transition-colors relative"
-                :class="activeTab === tab.id ? 'text-white' : 'text-gray-400 hover:text-white'"
+                :class="activeTab === tab.id ? 'text-slate-900 dark:text-white font-bold' : 'text-slate-500 hover:text-slate-900 dark:text-gray-400 dark:hover:text-white'"
               >
                 {{ t(tab.label) }}
-                <span class="ml-2 px-2 py-0.5 rounded-full text-xs" :class="activeTab === tab.id ? 'bg-primary-500' : 'bg-white/10'">
+                <span class="ml-2 px-2 py-0.5 rounded-full text-xs" :class="activeTab === tab.id ? 'bg-primary-500 text-white' : 'bg-slate-200 dark:bg-white/10 text-slate-600 dark:text-gray-300'">
                   {{ tab.count() }}
                 </span>
                 <span v-if="activeTab === tab.id" class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-500"></span>
@@ -125,10 +125,10 @@ onMounted(async () => {
               <!-- Loading -->
               <div v-if="loading" class="space-y-4">
                 <div v-for="i in 3" :key="i" class="flex gap-4 animate-pulse">
-                  <div class="w-24 h-16 bg-white/10 rounded-lg"></div>
+                  <div class="w-24 h-16 bg-slate-200 dark:bg-white/10 rounded-lg"></div>
                   <div class="flex-1">
-                    <div class="h-4 bg-white/10 rounded w-3/4 mb-2"></div>
-                    <div class="h-3 bg-white/10 rounded w-1/2"></div>
+                    <div class="h-4 bg-slate-200 dark:bg-white/10 rounded w-3/4 mb-2"></div>
+                    <div class="h-3 bg-slate-200 dark:bg-white/10 rounded w-1/2"></div>
                   </div>
                 </div>
               </div>
@@ -136,22 +136,22 @@ onMounted(async () => {
               <!-- In Progress -->
               <div v-else-if="activeTab === 'inProgress'">
                 <div v-if="inProgressCourses.length === 0" class="text-center py-12">
-                  <i class="pi pi-book text-4xl text-gray-600 mb-4"></i>
-                  <p class="text-gray-400">{{ t('dashboard.noCourses') }}</p>
+                  <i class="pi pi-book text-4xl text-slate-400 dark:text-gray-600 mb-4"></i>
+                  <p class="text-slate-500 dark:text-gray-400">{{ t('dashboard.noCourses') }}</p>
                   <RouterLink to="/courses" class="btn btn-primary mt-4">{{ t('dashboard.exploreCourses') }}</RouterLink>
                 </div>
                 <div v-else class="space-y-4">
-                  <div v-for="enrollment in inProgressCourses" :key="enrollment._id" class="flex gap-4 p-4 bg-white/5 rounded-xl hover:bg-white/10 transition-colors">
+                  <div v-for="enrollment in inProgressCourses" :key="enrollment._id" class="flex gap-4 p-4 bg-slate-50 dark:bg-white/5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors border border-transparent dark:border-white/5">
                     <img v-if="enrollment.courseId?.image" :src="enrollment.courseId.image" class="w-24 h-16 object-cover rounded-lg" />
                     <div v-else class="w-24 h-16 bg-gradient-to-br from-primary-600 to-accent-600 rounded-lg flex items-center justify-center">
                       <i class="pi pi-book text-white"></i>
                     </div>
                     <div class="flex-1">
-                      <h3 class="text-white font-medium mb-1">{{ getTitle(enrollment) }}</h3>
-                      <div class="flex items-center gap-2 text-sm text-gray-400 mb-2">
-                        <span>{{ enrollment.overallProgress }}% concluído</span>
+                      <h3 class="text-slate-900 dark:text-white font-bold mb-1">{{ getTitle(enrollment) }}</h3>
+                      <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-gray-400 mb-2">
+                        <span>{{ enrollment.overallProgress || 0 }}% concluído</span>
                       </div>
-                      <ProgressBar :value="enrollment.overallProgress" :showValue="false" class="h-2" />
+                      <ProgressBar :value="enrollment.overallProgress || 0" :showValue="false" class="h-2" />
                     </div>
                     <RouterLink :to="{ name: 'lesson-player', params: { courseId: enrollment.courseId?._id } }" class="btn btn-primary !py-2 !px-4 text-sm self-center">
                       {{ t('dashboard.continue') }}
@@ -163,14 +163,14 @@ onMounted(async () => {
               <!-- Completed -->
               <div v-else-if="activeTab === 'completed'">
                 <div v-if="completedCourses.length === 0" class="text-center py-12">
-                  <i class="pi pi-check-circle text-4xl text-gray-600 mb-4"></i>
-                  <p class="text-gray-400">Nenhum curso concluído ainda</p>
+                  <i class="pi pi-check-circle text-4xl text-slate-400 dark:text-gray-600 mb-4"></i>
+                  <p class="text-slate-500 dark:text-gray-400">Nenhum curso concluído ainda</p>
                 </div>
                 <div v-else class="space-y-4">
-                  <div v-for="enrollment in completedCourses" :key="enrollment._id" class="flex gap-4 p-4 bg-white/5 rounded-xl">
+                  <div v-for="enrollment in completedCourses" :key="enrollment._id" class="flex gap-4 p-4 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl">
                     <img v-if="enrollment.courseId?.image" :src="enrollment.courseId.image" class="w-24 h-16 object-cover rounded-lg" />
                     <div class="flex-1">
-                      <h3 class="text-white font-medium">{{ getTitle(enrollment) }}</h3>
+                      <h3 class="text-slate-900 dark:text-white font-bold">{{ getTitle(enrollment) }}</h3>
                       <span class="badge badge-success mt-2">✓ Concluído</span>
                     </div>
                   </div>
@@ -180,14 +180,14 @@ onMounted(async () => {
               <!-- Pending -->
               <div v-else-if="activeTab === 'pending'">
                 <div v-if="pendingEnrollments.length === 0" class="text-center py-12">
-                  <i class="pi pi-clock text-4xl text-gray-600 mb-4"></i>
-                  <p class="text-gray-400">Nenhuma inscrição pendente</p>
+                  <i class="pi pi-clock text-4xl text-slate-400 dark:text-gray-600 mb-4"></i>
+                  <p class="text-slate-500 dark:text-gray-400">Nenhuma inscrição pendente</p>
                 </div>
                 <div v-else class="space-y-4">
-                  <div v-for="enrollment in pendingEnrollments" :key="enrollment._id" class="flex gap-4 p-4 bg-white/5 rounded-xl">
+                  <div v-for="enrollment in pendingEnrollments" :key="enrollment._id" class="flex gap-4 p-4 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-xl">
                     <img v-if="enrollment.courseId?.image" :src="enrollment.courseId.image" class="w-24 h-16 object-cover rounded-lg" />
                     <div class="flex-1">
-                      <h3 class="text-white font-medium">{{ getTitle(enrollment) }}</h3>
+                      <h3 class="text-slate-900 dark:text-white font-bold">{{ getTitle(enrollment) }}</h3>
                       <span class="badge badge-warning mt-2">⏳ Aguardando aprovação</span>
                     </div>
                   </div>
@@ -197,18 +197,18 @@ onMounted(async () => {
               <!-- My Requests -->
               <div v-else-if="activeTab === 'requests'">
                 <div v-if="myRequests.length === 0" class="text-center py-12">
-                  <i class="pi pi-briefcase text-4xl text-gray-600 mb-4"></i>
-                  <p class="text-gray-400">Ainda não solicitou nenhum serviço.</p>
+                  <i class="pi pi-briefcase text-4xl text-slate-400 dark:text-gray-600 mb-4"></i>
+                  <p class="text-slate-500 dark:text-gray-400">Ainda não solicitou nenhum serviço.</p>
                   <a href="/#services" class="btn btn-primary mt-4">Explorar Serviços</a>
                 </div>
                 <div v-else class="space-y-4">
-                  <div v-for="req in myRequests" :key="req._id" class="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/5 hover:border-white/10 transition-colors">
-                    <div class="w-12 h-12 rounded-lg bg-primary-500/10 flex items-center justify-center text-primary-400">
+                  <div v-for="req in myRequests" :key="req._id" class="flex items-center gap-4 p-4 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/10 transition-colors">
+                    <div class="w-12 h-12 rounded-lg bg-primary-500/10 flex items-center justify-center text-primary-500 dark:text-primary-400">
                       <i class="pi pi-envelope text-xl"></i>
                     </div>
                     <div class="flex-1">
-                      <h4 class="text-white font-bold leading-tight">{{ req.service }}</h4>
-                      <p class="text-[10px] text-gray-500 mt-1 uppercase tracking-wider">{{ new Date(req.createdAt).toLocaleDateString() }}</p>
+                      <h4 class="text-slate-900 dark:text-white font-bold leading-tight">{{ req.service }}</h4>
+                      <p class="text-[10px] text-slate-500 dark:text-gray-500 mt-1 uppercase tracking-wider">{{ new Date(req.createdAt).toLocaleDateString() }}</p>
                     </div>
                     <div class="text-right">
                       <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap" 
@@ -232,16 +232,16 @@ onMounted(async () => {
         <div class="space-y-6">
           <!-- Notifications -->
           <div class="card">
-            <div class="p-4 border-b border-white/10 flex justify-between items-center">
-              <h3 class="text-white font-semibold">{{ t('dashboard.notifications') }}</h3>
-              <button v-if="notifications.length" @click="notificationStore.markAllAsRead" class="text-sm text-primary-400 hover:text-primary-300">
+            <div class="p-4 border-b border-slate-200 dark:border-white/10 flex justify-between items-center">
+              <h3 class="text-slate-900 dark:text-white font-semibold">{{ t('dashboard.notifications') }}</h3>
+              <button v-if="notifications.length" @click="notificationStore.markAllAsRead" class="text-sm text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300">
                 {{ t('dashboard.markAllRead') }}
               </button>
             </div>
             <div class="p-4">
               <div v-if="notifications.length === 0" class="text-center py-4">
-                <i class="pi pi-bell-slash text-2xl text-gray-600 mb-2"></i>
-                <p class="text-gray-400 text-sm">{{ t('dashboard.noNotifications') }}</p>
+                <i class="pi pi-bell-slash text-2xl text-slate-300 dark:text-gray-600 mb-2"></i>
+                <p class="text-slate-500 dark:text-gray-400 text-sm">{{ t('dashboard.noNotifications') }}</p>
               </div>
               <div v-else class="space-y-3">
                 <div
@@ -249,10 +249,10 @@ onMounted(async () => {
                   :key="notif._id"
                   @click="markNotificationRead(notif._id)"
                   class="p-3 rounded-lg cursor-pointer transition-colors"
-                  :class="notif.read ? 'bg-white/5' : 'bg-primary-500/10 border border-primary-500/30'"
+                  :class="notif.read ? 'bg-slate-50 dark:bg-white/5' : 'bg-primary-50 dark:bg-primary-500/10 border border-primary-200 dark:border-primary-500/30'"
                 >
-                  <p class="text-sm text-white font-medium">{{ notif.title?.[locale] || notif.title?.pt }}</p>
-                  <p class="text-xs text-gray-400 mt-1 line-clamp-2">{{ notif.message?.[locale] || notif.message?.pt }}</p>
+                  <p class="text-sm text-slate-900 dark:text-white font-medium">{{ notif.title?.[locale] || notif.title?.pt }}</p>
+                  <p class="text-xs text-slate-600 dark:text-gray-400 mt-1 line-clamp-2">{{ notif.message?.[locale] || notif.message?.pt }}</p>
                 </div>
               </div>
             </div>
@@ -260,14 +260,14 @@ onMounted(async () => {
 
           <!-- Quick Actions -->
           <div class="card p-4">
-            <h3 class="text-white font-semibold mb-4">Ações Rápidas</h3>
+            <h3 class="text-slate-900 dark:text-white font-semibold mb-4">Ações Rápidas</h3>
             <div class="space-y-2">
-              <RouterLink to="/courses" class="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-gray-300">
-                <i class="pi pi-search text-primary-400"></i>
+              <RouterLink to="/courses" class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors text-slate-700 dark:text-gray-300">
+                <i class="pi pi-search text-primary-500 dark:text-primary-400"></i>
                 Explorar Cursos
               </RouterLink>
-              <RouterLink to="/profile" class="flex items-center gap-3 p-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-gray-300">
-                <i class="pi pi-user text-primary-400"></i>
+              <RouterLink to="/profile" class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors text-slate-700 dark:text-gray-300">
+                <i class="pi pi-user text-primary-500 dark:text-primary-400"></i>
                 Editar Perfil
               </RouterLink>
             </div>

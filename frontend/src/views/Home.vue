@@ -349,22 +349,21 @@ const openWorkshopImage = (workshop) => {
 
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div v-for="workshop in workshops" :key="workshop._id" class="glass-card group flex flex-col overflow-hidden hover:border-primary-500/50 transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_10px_40px_-10px_rgba(16,185,129,0.2)]">
-            <div @click="openWorkshopImage(workshop)" class="cursor-pointer relative aspect-square w-full overflow-hidden bg-slate-950/60 flex items-center justify-center p-4">
-              <img :src="workshop.image" class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 drop-shadow-2xl rounded-xl" loading="lazy" />
+            <div @click="openWorkshopImage(workshop)" class="cursor-pointer relative aspect-square w-full overflow-hidden bg-white/5 flex items-center justify-center p-2">
+              <img :src="workshop.image" class="w-full h-full object-contain transition-transform duration-700 drop-shadow-xl" loading="lazy" />
               <!-- Hover Overlay -->
-              <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <i class="pi pi-search-plus text-4xl text-white"></i>
-              </div>
-              <div class="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-slate-950 to-transparent opacity-90 pointer-events-none"></div>
-              <div class="absolute top-4 left-4 px-4 py-1.5 bg-primary-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-[0_0_20px_rgba(16,185,129,0.6)] border border-white/20">
-                {{ new Date(workshop.date).toLocaleDateString(locale, { day: 'numeric', month: 'long' }) }}
+              <div class="absolute inset-0 bg-slate-900/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+                <i class="pi pi-search-plus text-5xl text-white"></i>
               </div>
             </div>
-            <div class="p-8">
+            <div class="p-8 flex-1 flex flex-col">
+              <div class="mb-4 self-start px-4 py-1.5 bg-primary-500/20 text-primary-400 text-[10px] font-black uppercase tracking-widest rounded-md border border-primary-500/30">
+                {{ new Date(workshop.date).toLocaleDateString(locale, { day: 'numeric', month: 'long' }) }}
+              </div>
               <h4 class="text-2xl font-bold text-white mb-4 group-hover:text-primary-400 transition-colors">{{ workshop.title[locale] }}</h4>
               <p class="text-slate-400 text-sm leading-relaxed mb-8 line-clamp-2">{{ workshop.description[locale] }}</p>
               
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between mt-auto">
                  <div class="flex items-center gap-2 text-slate-500">
                     <i class="pi pi-map-marker text-xs"></i>
                     <span class="text-[10px] font-bold uppercase tracking-widest">{{ workshop.location[locale] }}</span>
@@ -528,12 +527,12 @@ const openWorkshopImage = (workshop) => {
       :header="selectedWorkshopImage?.title?.[locale]"
       class="p-fluid w-full max-w-4xl bg-surface-dark border-none"
       :style="{ borderRadius: '24px', overflow: 'hidden' }"
-      contentClass="p-0 border-none bg-transparent"
+      contentClass="p-0 border-none bg-transparent flex flex-col"
       headerClass="bg-surface-dark text-white border-b border-white/10 p-6"
     >
-      <div v-if="selectedWorkshopImage" class="flex flex-col">
-        <div class="w-full bg-slate-950 flex items-center justify-center p-4 max-h-[70vh] overflow-y-auto">
-           <img :src="selectedWorkshopImage.image" class="max-w-full h-auto rounded-xl object-contain" />
+      <div v-if="selectedWorkshopImage" class="flex flex-col h-full">
+        <div class="w-full bg-slate-950 flex items-center justify-center p-4 h-[70vh]">
+           <img :src="selectedWorkshopImage.image" class="w-full h-full object-contain drop-shadow-2xl" />
         </div>
         <div class="p-6 bg-surface-dark border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4">
            <div>
