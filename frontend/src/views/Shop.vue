@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { contentService } from '@/services/content.service'
+import Dialog from 'primevue/dialog'
 
 const products = ref([])
 const loading = ref(true)

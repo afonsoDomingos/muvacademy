@@ -12,7 +12,7 @@ import ConfirmDialog from 'primevue/confirmdialog'
 
 const contentStore = useContentStore()
 const toast = useToast()
-const confirm = useConfirm()
+const confirmation = useConfirm()
 
 const banners = ref([])
 const services = ref([])
@@ -167,7 +167,7 @@ function addImpactStat() {
 }
 
 function removeImpactStat(idx) {
-  confirm.require({
+  confirmation.require({
     message: 'Deseja remover esta estatística de impacto?',
     header: 'Confirmar Remoção',
     icon: 'pi pi-info-circle',
@@ -207,7 +207,7 @@ async function saveProduct() {
 }
 
 function confirmDeleteProduct(id) {
-  confirm.require({
+  confirmation.require({
     message: 'Tem a certeza que deseja eliminar este produto? Esta ação não pode ser desfeita.',
     header: 'Confirmação de Eliminação',
     icon: 'pi pi-exclamation-triangle',
@@ -264,7 +264,7 @@ function addPartner() {
 }
 
 function removePartner(idx) {
-  confirm.require({
+  confirmation.require({
     message: 'Deseja remover este parceiro da lista?',
     header: 'Confirmar Remoção',
     icon: 'pi pi-info-circle',
@@ -280,7 +280,7 @@ function addAnnouncementMessage() {
 
 function removeAnnouncementMessage(idx) {
     if (topAnnouncement.value.messages.length > 1) {
-        confirm.require({
+        confirmation.require({
             message: 'Deseja remover esta mensagem do anúncio?',
             header: 'Confirmar Remoção',
             icon: 'pi pi-info-circle',
@@ -397,7 +397,7 @@ function editWorkshop(workshop) {
 }
 
 function confirmDeleteWorkshop(workshop) {
-  confirm.require({
+  confirmation.require({
     message: 'Tem a certeza que deseja eliminar este workshop?',
     header: 'Confirmação',
     icon: 'pi pi-exclamation-triangle',
@@ -410,7 +410,7 @@ function confirmDeleteWorkshop(workshop) {
 }
 
 function confirmDeleteBanner(banner) {
-  confirm.require({
+  confirmation.require({
     message: 'Tem a certeza que deseja eliminar este banner?',
     header: 'Confirmação',
     icon: 'pi pi-exclamation-triangle',
@@ -423,7 +423,7 @@ function confirmDeleteBanner(banner) {
 }
 
 function confirmDeleteService(service) {
-  confirm.require({
+  confirmation.require({
     message: 'Tem a certeza que deseja eliminar este serviço?',
     header: 'Confirmação',
     icon: 'pi pi-exclamation-triangle',
@@ -482,7 +482,7 @@ function editProject(project) {
 }
 
 function confirmDeleteProject(project) {
-  confirm.require({
+  confirmation.require({
     message: 'Tem a certeza que deseja eliminar este projeto do portfólio?',
     header: 'Confirmação',
     icon: 'pi pi-exclamation-triangle',
