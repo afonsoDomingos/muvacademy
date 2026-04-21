@@ -620,8 +620,6 @@ onMounted(loadData)
       </div>
     </section>
 
-    </section>
-
     <!-- MUV Shop Section -->
     <section class="mb-16">
       <div class="flex justify-between items-center mb-6">
