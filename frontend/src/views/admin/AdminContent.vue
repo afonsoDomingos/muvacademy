@@ -622,17 +622,47 @@ onMounted(loadData)
       <div class="flex justify-between items-center mb-6">
         <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
           <i class="pi pi-shopping-bag text-primary-500 dark:text-primary-400"></i>
-          MUV Shop (Produtos à Venda)
+          MUV Shop (Produtos & Estatísticas)
         </h2>
         <button @click="openNewProduct" class="btn btn-primary !py-2 !px-6 text-sm">
           <i class="pi pi-plus"></i> Novo Produto
         </button>
       </div>
 
+      <!-- Quick Stats -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="glass-card p-6 border-l-4 border-primary-500">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-widest block mb-2">Total de Cliques (Interesse)</span>
+          <div class="text-3xl font-display font-bold text-slate-900 dark:text-white">
+            {{ products.reduce((acc, p) => acc + (p.stats?.clicks || 0), 0) }}
+          </div>
+          <p class="text-[10px] text-slate-500 mt-2">Número total de vezes que clientes clicaram em "Comprar via WhatsApp"</p>
+        </div>
+        <div class="glass-card p-6 border-l-4 border-accent-500">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-widest block mb-2">Produto Mais Clicado</span>
+          <div class="text-xl font-bold text-slate-900 dark:text-white truncate">
+            {{ products.length ? [...products].sort((a,b) => (b.stats?.clicks||0) - (a.stats?.clicks||0))[0].name : '---' }}
+          </div>
+          <p class="text-[10px] text-slate-500 mt-2">O seu produto campeão em interesse de compra.</p>
+        </div>
+        <div class="glass-card p-6 border-l-4 border-blue-500">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-widest block mb-2">Valor Estimado em Conversão</span>
+          <div class="text-xl font-bold text-slate-900 dark:text-white">
+            {{ new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(products.reduce((acc, p) => acc + (p.price * (p.stats?.clicks || 0)), 0)) }}
+          </div>
+          <p class="text-[10px] text-slate-500 mt-2">Valor potencial se todos os cliques resultassem em venda (1 Qtd).</p>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div v-for="product in products" :key="product._id" class="glass-card overflow-hidden group">
           <div class="relative h-40 overflow-hidden">
-            <img :src="product.image" :alt="product.name" class="w-full h-full object-cover group-hover:scale-110 transition-all" />
+            <img :src="product.images?.[0] || 'https://images.unsplash.com/photo-1509391366360-fe19a78e729b?auto=format&fit=crop&w=800&q=80'" :alt="product.name" class="w-full h-full object-cover group-hover:scale-110 transition-all" />
+            <div class="absolute top-2 right-2">
+               <span class="badge badge-success text-[8px] !px-2 flex items-center gap-1">
+                 <i class="pi pi-eye text-[8px]"></i> {{ product.stats?.clicks || 0 }} Cliques
+               </span>
+            </div>
             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-2">
               <button @click="editProduct(product)" class="btn btn-secondary !p-2 rounded-full"><i class="pi pi-pencil"></i></button>
               <button @click="confirmDeleteProduct(product._id)" class="btn bg-red-500 text-white border-none !p-2 rounded-full"><i class="pi pi-trash"></i></button>
@@ -640,8 +670,10 @@ onMounted(loadData)
           </div>
           <div class="p-4">
             <h3 class="font-bold text-slate-900 dark:text-white truncate">{{ product.name }}</h3>
-            <p class="text-xs text-primary-500 font-bold mt-1">{{ product.price }} MT</p>
-            <p class="text-[10px] text-slate-500 mt-2 line-clamp-1">{{ product.description }}</p>
+            <div class="flex justify-between items-center mt-1">
+              <p class="text-xs text-primary-500 font-bold">{{ product.price }} MT</p>
+              <p class="text-[10px] text-slate-400">Stock: {{ product.stock }}</p>
+            </div>
           </div>
         </div>
       </div>

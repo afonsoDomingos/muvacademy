@@ -27,5 +27,6 @@ export const contentService = {
     getProducts: () => api.get('/content/products'),
     createProduct: (data) => api.post('/content/products', data),
     updateProduct: (id, data) => api.put(`/content/products/${id}`, data),
-    deleteProduct: (id) => api.delete(`/content/products/${id}`)
+    deleteProduct: (id) => api.delete(`/content/products/${id}`),
+    trackProductClick: (id) => api.post(`/content/products/${id}/track-click`)
 }

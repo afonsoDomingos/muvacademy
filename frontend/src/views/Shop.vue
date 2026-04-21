@@ -56,7 +56,12 @@ const openProductDetails = (product) => {
   showDetailDialog.value = true
 }
 
-const buyViaWhatsApp = (product, qty = 1) => {
+const buyViaWhatsApp = async (product, qty = 1) => {
+  try {
+     await contentService.trackProductClick(product._id)
+  } catch (err) {
+     console.error('Falha ao registar clique:', err)
+  }
   const total = product.price * qty
   const message = encodeURIComponent(`Olá MUV! Gostaria de adquirir o produto: ${product.name}\nQuantidade: ${qty}\nPreço Unitário: ${formatPrice(product.price)}\nTotal: ${formatPrice(total)}`)
   window.open(`https://wa.me/258834802943?text=${message}`, '_blank')

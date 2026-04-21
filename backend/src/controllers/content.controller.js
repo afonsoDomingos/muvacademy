@@ -181,3 +181,14 @@ export const deleteProduct = async (req, res) => {
         res.status(400).json({ success: false, message: error.message });
     }
 };
+
+// Track product click (intent to buy)
+export const trackProductClick = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await Product.findByIdAndUpdate(id, { $inc: { 'stats.clicks': 1 } });
+        res.json({ success: true });
+    } catch (error) {
+        res.status(400).json({ success: false, error: error.message });
+    }
+};

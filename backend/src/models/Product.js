@@ -31,6 +31,9 @@ const productSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  stats: {
+    clicks: { type: Number, default: 0 }
+  },
   order: {
     type: Number,
     default: 0

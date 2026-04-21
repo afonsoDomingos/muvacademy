@@ -4,7 +4,7 @@ import {
     getAllServices, createService, updateService, deleteService,
     getSetting, updateSetting,
     getAllProjects, createProject, updateProject, deleteProject,
-    getAllProducts, createProduct, updateProduct, deleteProduct
+    getAllProducts, createProduct, updateProduct, deleteProduct, trackProductClick
 } from '../controllers/content.controller.js';
 import { authenticate as protect } from '../middleware/auth.middleware.js';
 import { requireAdmin as admin } from '../middleware/rbac.middleware.js';
@@ -18,6 +18,7 @@ router.get('/services', getAllServices);
 router.get('/settings/:key', getSetting);
 router.get('/projects', getAllProjects);
 router.get('/products', getAllProducts);
+router.post('/products/:id/track-click', trackProductClick);
 
 // Admin routes
 router.post('/banners', protect, admin, createBanner);
