@@ -13,14 +13,16 @@ const categories = [
 const activeCategory = ref('all')
 const projects = ref([])
 const impactStats = ref([])
+const aboutMuv = ref(null)
 const loading = ref(true)
 
 const fetchProjects = async () => {
   try {
     loading.value = true
-    const [projRes, statsRes] = await Promise.all([
+    const [projRes, statsRes, aboutRes] = await Promise.all([
       contentService.getProjects(),
-      contentService.getSetting('impact_stats')
+      contentService.getSetting('impact_stats'),
+      contentService.getSetting('about_us')
     ])
     
     if (projRes.data.success) {
@@ -29,12 +31,10 @@ const fetchProjects = async () => {
 
     if (statsRes.data.success && statsRes.data.data.setting) {
       impactStats.value = statsRes.data.data.setting
-    } else {
-      impactStats.value = [
-        { label: 'Empresas Transformadas', value: '50', icon: 'pi pi-building' },
-        { label: 'Projetos GIS Concluídos', value: '100', icon: 'pi pi-map' },
-        { label: 'Países Atendidos', value: '10', icon: 'pi pi-globe' }
-      ]
+    }
+
+    if (aboutRes.data.success && aboutRes.data.data.setting) {
+      aboutMuv.value = aboutRes.data.data.setting
     }
   } catch (error) {
     console.error('Erro ao buscar dados do portfólio:', error)
@@ -72,6 +72,64 @@ const filteredProjects = computed(() => {
         Transformamos ideias complexas em plataformas digitais elegantes. Conheça as nossas 
         soluções de destaque criadas sob medida para nossos clientes.
       </p>
+    </section>
+
+    <!-- Quem Somos & Informação Histórica -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 transition-all duration-700">
+      <div class="grid lg:grid-cols-2 gap-12 items-start">
+        <!-- Quem Somos -->
+        <div class="glass-card p-8 md:p-10 border-l-4 border-primary-500 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-primary-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+          <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+            <span class="w-8 h-8 bg-primary-500/10 rounded-lg flex items-center justify-center">
+              <i class="pi pi-users text-primary-500 text-sm"></i>
+            </span>
+            Quem Somos
+          </h2>
+          <div class="space-y-4 text-gray-600 dark:text-gray-400 leading-relaxed text-[15px]">
+            <p>
+              A **MUV – EDUCAÇÃO & ENGENHARIA** é uma empresa moçambicana, fundada em 2005 e sediada na província de Maputo, 
+              especializada no fornecimento de materiais elétricos, soluções para geração local e armazenamento de energia.
+            </p>
+            <p>
+              Trazemos soluções tecnológicas que reduzem a forte dependência da rede elétrica nacional, melhoram a eficiência 
+              e reduzem o custo da energia. Prestamos consultoria financeira e técnica, realizando estudos de viabilidade 
+              de projetos de energias renováveis e centrais solares ligadas à rede.
+            </p>
+            <p class="font-semibold text-primary-600 dark:text-primary-400">
+              Nossa estratégia foca-se em uso produtivo, iluminação pública, sistemas domésticos e indústrias de pequeno e médio porte.
+            </p>
+          </div>
+        </div>
+
+        <!-- Informação Histórica -->
+        <div class="glass-card p-8 md:p-10 border-l-4 border-accent-500 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-accent-500/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-700"></div>
+          <h2 class="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+            <span class="w-8 h-8 bg-accent-500/10 rounded-lg flex items-center justify-center">
+              <i class="pi pi-history text-accent-500 text-sm"></i>
+            </span>
+            Informação Histórica
+          </h2>
+          <div class="space-y-4 text-gray-600 dark:text-gray-400 leading-relaxed text-[15px]">
+            <p>
+              Fundada em 2005 com a missão de ser referência de excelência no setor energético moçambicano, a MUV opera há 
+              **16 anos** no fornecimento de materiais e formação profissional.
+            </p>
+            <p>
+              Atualmente em todas as províncias de Moçambique, expandimos para mercados internacionais com parcerias globais 
+              em tecnologias de armazenamento de energia. Nosso modelo baseia-se em melhorar competências técnicas e 
+              eficiência energética (B2C).
+            </p>
+          </div>
+          
+          <!-- Badge de Tempo -->
+          <div class="mt-8 flex items-center gap-4 py-3 px-4 bg-accent-500/10 rounded-2xl w-fit border border-accent-500/20">
+            <div class="text-3xl font-bold text-accent-600 dark:text-accent-400">+16</div>
+            <div class="text-xs font-bold uppercase tracking-widest leading-tight text-gray-500 dark:text-gray-400">Anos de<br/>Experiência</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Impact Stats Bar -->
