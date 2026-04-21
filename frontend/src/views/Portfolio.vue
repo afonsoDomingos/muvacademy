@@ -46,10 +46,9 @@ const fetchData = async () => {
     } else {
       categories.value = [
         { id: 'all', label: 'Todos' },
-        { id: 'web', label: 'Web Apps' },
-        { id: 'mobile', label: 'Mobile' },
-        { id: 'system', label: 'Sistemas & ERP' },
-        { id: 'design', label: 'UI/UX Design' }
+        { id: 'web', label: 'WEB / APPS' },
+        { id: 'consultoria', label: 'CONSULTORIA' },
+        { id: 'manutencao', label: 'Montagem e Manutenção' }
       ]
     }
   } catch (error) {
@@ -215,7 +214,7 @@ const openProjectDetails = (project) => {
           <div class="relative h-64 overflow-hidden mask-image">
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-10"></div>
             <img 
-              :src="project.images?.[0] || 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1600'" 
+              :src="project.images?.[0] || project.image || 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1600'" 
               :alt="project.title"
               class="w-full h-full object-cover transform group-hover:scale-110 group-hover:rotate-1 transition-all duration-700"
               loading="lazy"
@@ -337,7 +336,7 @@ const openProjectDetails = (project) => {
              <transition name="fade" mode="out-in">
                <img 
                  :key="activeThumbIndex"
-                 :src="selectedProject.images?.[activeThumbIndex] || selectedProject.images?.[0]" 
+                 :src="selectedProject.images?.[activeThumbIndex] || selectedProject.images?.[0] || selectedProject.image" 
                  class="w-full h-full object-contain"
                />
              </transition>

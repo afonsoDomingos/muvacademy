@@ -168,10 +168,9 @@ async function loadData() {
          projectCategoriesSetting.value = projCatsRes.data.data.setting.value;
      } else {
          projectCategoriesSetting.value = [
-           { id: 'web', label: 'Web Apps' },
-           { id: 'mobile', label: 'Mobile' },
-           { id: 'system', label: 'Sistemas & ERP' },
-           { id: 'design', label: 'UI/UX Design' }
+           { id: 'web', label: 'WEB / APPS' },
+           { id: 'consultoria', label: 'CONSULTORIA' },
+           { id: 'manutencao', label: 'Montagem e Manutenção' }
          ];
      }
   } catch (e) {
@@ -762,7 +761,7 @@ onMounted(loadData)
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div v-for="product in products" :key="product._id" class="glass-card overflow-hidden group">
           <div class="relative h-40 overflow-hidden">
-            <img :src="product.images?.[0] || 'https://images.unsplash.com/photo-1509391366360-fe19a78e729b?auto=format&fit=crop&w=800&q=80'" :alt="product.name" class="w-full h-full object-cover group-hover:scale-110 transition-all" />
+            <img :src="product.images?.[0] || product.image || 'https://images.unsplash.com/photo-1509391366360-fe19a78e729b?auto=format&fit=crop&w=800&q=80'" :alt="product.name" class="w-full h-full object-cover group-hover:scale-110 transition-all" />
             <div class="absolute top-2 right-2">
                <span class="badge badge-success text-[8px] !px-2 flex items-center gap-1">
                  <i class="pi pi-eye text-[8px]"></i> {{ product.stats?.clicks || 0 }} Cliques
