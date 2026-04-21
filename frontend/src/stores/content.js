@@ -5,6 +5,7 @@ import api from '@/services/api'
 export const useContentStore = defineStore('content', () => {
     const banners = ref([])
     const services = ref([])
+    const projects = ref([])
     const loading = ref(false)
 
     async function fetchHomeBanners() {
@@ -25,6 +26,17 @@ export const useContentStore = defineStore('content', () => {
             return services.value
         } catch (err) {
             console.error('Error fetching services:', err)
+            return []
+        }
+    }
+
+    async function fetchProjects() {
+        try {
+            const response = await api.get('/content/projects')
+            projects.value = response.data.data.projects
+            return projects.value
+        } catch (err) {
+            console.error('Error fetching projects:', err)
             return []
         }
     }
@@ -50,10 +62,21 @@ export const useContentStore = defineStore('content', () => {
         return await api.delete(`/content/services/${id}`)
     }
 
+    async function createProject(data) {
+        return await api.post('/content/projects', data)
+    }
+    async function updateProject(id, data) {
+        return await api.put(`/content/projects/${id}`, data)
+    }
+    async function deleteProject(id) {
+        return await api.delete(`/content/projects/${id}`)
+    }
+
     return {
-        banners, services, loading,
-        fetchHomeBanners, fetchServices,
+        banners, services, projects, loading,
+        fetchHomeBanners, fetchServices, fetchProjects,
         createBanner, updateBanner, deleteBanner,
-        createService, updateService, deleteService
+        createService, updateService, deleteService,
+        createProject, updateProject, deleteProject
     }
 })

@@ -1,6 +1,7 @@
 import Service from '../models/Service.js';
 import Banner from '../models/Banner.js';
 import Setting from '../models/Setting.js';
+import Project from '../models/Project.js';
 
 // Get all active banners for home
 export const getHomeBanners = async (req, res) => {
@@ -99,6 +100,44 @@ export const updateSetting = async (req, res) => {
             { new: true, upsert: true }
         );
         res.json({ success: true, data: { setting: setting.value } });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+// Portfolio Projects
+export const getAllProjects = async (req, res) => {
+    try {
+        const projects = await Project.find().sort({ order: 1, createdAt: -1 });
+        res.json({ success: true, data: { projects } });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao buscar projetos' });
+    }
+};
+
+export const createProject = async (req, res) => {
+    try {
+        const project = new Project(req.body);
+        await project.save();
+        res.status(201).json({ success: true, data: { project } });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+export const updateProject = async (req, res) => {
+    try {
+        const project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json({ success: true, data: { project } });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+export const deleteProject = async (req, res) => {
+    try {
+        await Project.findByIdAndDelete(req.params.id);
+        res.json({ success: true, message: 'Projeto eliminado' });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
     }

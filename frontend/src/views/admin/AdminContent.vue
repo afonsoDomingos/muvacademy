@@ -17,11 +17,13 @@ const confirm = useConfirm()
 const banners = ref([])
 const services = ref([])
 const workshops = ref([])
+const projects = ref([])
 const loading = ref(false)
 
 const showBannerDialog = ref(false)
 const showServiceDialog = ref(false)
 const showWorkshopDialog = ref(false)
+const showProjectDialog = ref(false)
 const editingItem = ref(null)
 
 const topAnnouncement = ref({
@@ -67,12 +69,23 @@ const workshopForm = ref({
   isActive: true
 })
 
+const projectForm = ref({
+  title: '',
+  category: 'web',
+  description: '',
+  image: '',
+  tags: '',
+  link: '#',
+  order: 0
+})
+
 import api from '@/services/api'
 
 async function loadData() {
   loading.value = true
   banners.value = await contentStore.fetchHomeBanners()
   services.value = await contentStore.fetchServices()
+  projects.value = await contentStore.fetchProjects()
    try {
      const [wsRes, setRes, aboutRes, partnersRes] = await Promise.all([
         api.get('/workshops'),
@@ -309,6 +322,65 @@ function confirmDeleteService(service) {
   })
 }
 
+function openNewProject() {
+  editingItem.value = null
+  projectForm.value = {
+    title: '',
+    category: 'web',
+    description: '',
+    image: '',
+    tags: '',
+    link: '#',
+    order: 0
+  }
+  showProjectDialog.value = true
+}
+
+async function saveProject() {
+  try {
+    const payload = {
+      ...projectForm.value,
+      tags: typeof projectForm.value.tags === 'string' 
+        ? projectForm.value.tags.split(',').map(t => t.trim()).filter(t => t)
+        : projectForm.value.tags
+    }
+    
+    if (editingItem.value) {
+      await contentStore.updateProject(editingItem.value._id, payload)
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Projeto atualizado', life: 3000 })
+    } else {
+      await contentStore.createProject(payload)
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Projeto criado', life: 3000 })
+    }
+    showProjectDialog.value = false
+    loadData()
+  } catch (err) {
+    toast.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao guardar projeto', life: 3000 })
+  }
+}
+
+function editProject(project) {
+  editingItem.value = project
+  projectForm.value = { 
+    ...project,
+    tags: Array.isArray(project.tags) ? project.tags.join(', ') : project.tags
+  }
+  showProjectDialog.value = true
+}
+
+function confirmDeleteProject(project) {
+  confirm.require({
+    message: 'Tem a certeza que deseja eliminar este projeto do portfólio?',
+    header: 'Confirmação',
+    icon: 'pi pi-exclamation-triangle',
+    accept: async () => {
+      await contentStore.deleteProject(project._id)
+      loadData()
+      toast.add({ severity: 'success', summary: 'Eliminado', detail: 'Projeto removido', life: 3000 })
+    }
+  })
+}
+
 const uploading = ref(false)
 
 async function handleFileUpload(event, type) {
@@ -329,6 +401,8 @@ async function handleFileUpload(event, type) {
       bannerForm.value.image = res.data.data.url
     } else if (type === 'about') {
       aboutUsSetting.value.image = res.data.data.url
+    } else if (type === 'project') {
+      projectForm.value.image = res.data.data.url
     } else if (type.startsWith('partner-')) {
       const idx = parseInt(type.split('-')[1])
       partnersSetting.value[idx].image = res.data.data.url
@@ -601,6 +675,44 @@ onMounted(loadData)
       </div>
     </section>
 
+    <!-- Portfolio Section -->
+    <section class="mt-16">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-briefcase text-primary-500 dark:text-primary-400"></i>
+          Portfólio & Cases
+        </h2>
+        <button @click="openNewProject" class="btn btn-primary !py-2 !px-4 text-sm">
+          <i class="pi pi-plus"></i> Novo Projeto
+        </button>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div v-for="project in projects" :key="project._id" class="glass-card overflow-hidden group">
+          <div class="h-40 relative">
+            <img :src="project.image" class="w-full h-full object-cover opacity-80" />
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
+            <div class="absolute top-2 right-2">
+              <span class="text-[10px] bg-primary-500/80 text-white px-2 py-1 rounded-full uppercase font-bold">{{ project.category }}</span>
+            </div>
+          </div>
+          <div class="p-6">
+            <h3 class="text-slate-900 dark:text-white font-bold mb-2 truncate">{{ project.title }}</h3>
+            <p class="text-slate-600 dark:text-slate-400 text-sm mb-4 line-clamp-2">{{ project.description }}</p>
+            <div class="flex flex-wrap gap-1 mb-6">
+              <span v-for="tag in project.tags" :key="tag" class="text-[10px] bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded">
+                {{ tag }}
+              </span>
+            </div>
+            <div class="flex gap-2">
+              <button @click="editProject(project)" class="btn btn-secondary !p-2 flex-1 text-xs">Editar</button>
+              <button @click="confirmDeleteProject(project)" class="btn bg-red-100 dark:bg-red-500/10 text-red-500 border border-red-200 dark:border-red-500/20 !p-2 flex-1 text-xs hover:bg-red-500 hover:text-white transition-colors">Eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Banner Dialog -->
     <Dialog v-model:visible="showBannerDialog" :header="editingItem ? 'Editar Banner' : 'Novo Banner'" modal class="p-fluid w-full max-w-2xl bg-surface-dark text-white">
       <div class="grid gap-6 py-4">
@@ -735,6 +847,52 @@ onMounted(loadData)
       <template #footer>
         <button @click="showWorkshopDialog = false" class="btn btn-secondary !py-2 !px-4">Cancelar</button>
         <button @click="saveWorkshop" class="btn btn-primary !py-2 !px-4">Guardar</button>
+      </template>
+    </Dialog>
+
+    <!-- Project Dialog -->
+    <Dialog v-model:visible="showProjectDialog" :header="editingItem ? 'Editar Projeto' : 'Novo Projeto'" modal class="p-fluid w-full max-w-2xl bg-surface-dark text-white">
+      <div class="grid gap-6 py-4">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Título do Projeto</label>
+            <InputText v-model="projectForm.title" class="input" placeholder="Ex: OtakuZoneFlix" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Categoria</label>
+            <Dropdown v-model="projectForm.category" :options="['web', 'mobile', 'system', 'design']" class="input" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="block text-sm font-bold mb-2">Descrição</label>
+          <Textarea v-model="projectForm.description" rows="3" class="input w-full" placeholder="Descrição curta do projeto..." />
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Imagem de Capa</label>
+            <div class="flex gap-2">
+               <InputText v-model="projectForm.image" class="input flex-1" placeholder="URL da imagem..." disabled />
+               <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center gap-2">
+                  <i v-if="uploading" class="pi pi-spin pi-spinner"></i>
+                  <i v-else class="pi pi-upload"></i>
+                  <span>Alterar</span>
+                  <input type="file" @change="handleFileUpload($event, 'project')" class="hidden" accept="image/*" />
+               </label>
+            </div>
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Link do Projeto</label>
+            <InputText v-model="projectForm.link" class="input" placeholder="#" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="block text-sm font-bold mb-2">Tags (Separadas por vírgula)</label>
+          <InputText v-model="projectForm.tags" class="input" placeholder="Vue 3, Node.js, MongoDB" />
+        </div>
+      </div>
+      <template #footer>
+        <button @click="showProjectDialog = false" class="btn btn-secondary !py-2 !px-4">Cancelar</button>
+        <button @click="saveProject" class="btn btn-primary !py-2 !px-4">Guardar Projeto</button>
       </template>
     </Dialog>
     <Toast />
