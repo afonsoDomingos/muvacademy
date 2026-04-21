@@ -91,7 +91,7 @@ const projectForm = ref({
   title: '',
   category: 'web',
   description: '',
-  image: '',
+  images: [],
   tags: '',
   link: '#',
   order: 0
@@ -476,6 +476,7 @@ function editProject(project) {
   editingItem.value = project
   projectForm.value = { 
     ...project,
+    images: project.images || [],
     tags: Array.isArray(project.tags) ? project.tags.join(', ') : project.tags
   }
   showProjectDialog.value = true
@@ -492,6 +493,10 @@ function confirmDeleteProject(project) {
       toast.add({ severity: 'success', summary: 'Eliminado', detail: 'Projeto removido', life: 3000 })
     }
   })
+}
+
+function removeProjectImage(idx) {
+  projectForm.value.images.splice(idx, 1)
 }
 
 const uploading = ref(false)
@@ -524,7 +529,8 @@ async function handleFileUpload(event, type) {
     } else if (type === 'about') {
       aboutUsSetting.value.image = res.data.data.url
     } else if (type === 'project') {
-      projectForm.value.image = res.data.data.url
+      if (!projectForm.value.images) projectForm.value.images = []
+      projectForm.value.images.push(res.data.data.url)
     } else if (type === 'product') {
       if (!productForm.value.images) productForm.value.images = []
       productForm.value.images.push(res.data.data.url)
@@ -1099,19 +1105,32 @@ onMounted(loadData)
           <label class="block text-sm font-bold mb-2">Descrição</label>
           <Textarea v-model="projectForm.description" rows="3" class="input w-full" placeholder="Descrição curta do projeto..." />
         </div>
-        <div class="grid sm:grid-cols-2 gap-4">
-          <div class="field">
-            <label class="block text-sm font-bold mb-2">Imagem de Capa</label>
-            <div class="flex gap-2">
-               <InputText v-model="projectForm.image" class="input flex-1" placeholder="URL da imagem..." disabled />
-               <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center gap-2">
-                  <i v-if="uploading" class="pi pi-spin pi-spinner"></i>
-                  <i v-else class="pi pi-upload"></i>
-                  <span>Alterar</span>
-                  <input type="file" @change="handleFileUpload($event, 'project')" class="hidden" accept="image/*" />
-               </label>
+        <div class="field">
+          <label class="block text-sm font-bold mb-4">Galeria de Imagens do Projeto ({{ projectForm.images?.length || 0 }})</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+            <div 
+              v-for="(img, idx) in projectForm.images" 
+              :key="idx" 
+              class="relative aspect-video rounded-xl overflow-hidden group border border-white/10 shadow-lg"
+            >
+              <img :src="img" class="w-full h-full object-cover" />
+              <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
+                <button @click="removeProjectImage(idx)" class="w-8 h-8 rounded-full bg-red-500 text-white flex items-center justify-center hover:scale-110 transition-transform">
+                  <i class="pi pi-times"></i>
+                </button>
+              </div>
             </div>
+            
+            <!-- Upload Trigger -->
+            <label class="aspect-video rounded-xl border-2 border-dashed border-white/10 hover:border-primary-500/50 hover:bg-white/5 transition-all flex flex-col items-center justify-center cursor-pointer group">
+              <i class="pi pi-plus text-2xl text-slate-500 group-hover:text-primary-500 group-hover:scale-110 transition-all"></i>
+              <span class="text-[10px] uppercase font-bold text-slate-500 mt-2">Adicionar</span>
+              <input type="file" @change="handleFileUpload($event, 'project')" class="hidden" accept="image/*" />
+            </label>
           </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4">
           <div class="field">
             <label class="block text-sm font-bold mb-2">Link do Projeto</label>
             <InputText v-model="projectForm.link" class="input" placeholder="#" />

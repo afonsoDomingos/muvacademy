@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { contentService } from '@/services/content.service'
+import Dialog from 'primevue/dialog'
 
 const categories = [
   { id: 'all', label: 'Todos' },
@@ -15,6 +16,9 @@ const projects = ref([])
 const impactStats = ref([])
 const aboutMuv = ref(null)
 const loading = ref(true)
+const showProjectDetail = ref(false)
+const selectedProject = ref(null)
+const activeThumbIndex = ref(0)
 
 const fetchProjects = async () => {
   try {
@@ -51,6 +55,12 @@ const filteredProjects = computed(() => {
   if (activeCategory.value === 'all') return projects.value
   return projects.value.filter(p => p.category === activeCategory.value)
 })
+
+const openProjectDetails = (project) => {
+  selectedProject.value = project
+  activeThumbIndex.value = 0
+  showProjectDetail.value = true
+}
 </script>
 
 <template>
@@ -182,8 +192,9 @@ const filteredProjects = computed(() => {
       >
         <div 
           v-for="project in filteredProjects" 
-          :key="project.id"
-          class="group bg-white dark:bg-surface-dark border border-gray-100 dark:border-white/5 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col hover:-translate-y-2 relative isolate"
+          :key="project._id"
+          @click="openProjectDetails(project)"
+          class="group bg-white dark:bg-surface-dark border border-gray-100 dark:border-white/5 rounded-3xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex flex-col hover:-translate-y-2 cursor-pointer relative isolate"
         >
           <!-- Hover Highlight -->
           <div class="absolute inset-0 bg-gradient-to-b from-primary-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none -z-10"></div>
@@ -192,26 +203,31 @@ const filteredProjects = computed(() => {
           <div class="relative h-64 overflow-hidden mask-image">
             <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent z-10"></div>
             <img 
-              :src="project.image" 
+              :src="project.images?.[0] || 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=1600'" 
               :alt="project.title"
               class="w-full h-full object-cover transform group-hover:scale-110 group-hover:rotate-1 transition-all duration-700"
               loading="lazy"
             />
             
-            <div class="absolute top-4 right-4 z-20">
+            <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20">
+               <span class="px-6 py-2 bg-white text-gray-900 rounded-full font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                 Ver Detalhes
+               </span>
+            </div>
+
+            <div class="absolute top-4 right-4 z-30">
               <a 
                 :href="project.link" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-gray-900 transition-colors tooltip" 
-                data-tip="Ver Link"
+                class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-gray-900 transition-colors" 
                 @click.stop
               >
                 <i class="pi pi-arrow-up-right text-sm"></i>
               </a>
             </div>
 
-            <div class="absolute bottom-4 left-4 z-20 flex flex-wrap gap-2 pr-4">
+            <div class="absolute bottom-4 left-4 z-30 flex flex-wrap gap-2 pr-4">
               <span 
                 v-for="(tag, index) in project.tags" 
                 :key="index"
@@ -232,24 +248,20 @@ const filteredProjects = computed(() => {
             </div>
 
             <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors">
-              <a :href="project.link" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
+              {{ project.title }}
             </h3>
             
-            <p class="text-gray-600 dark:text-gray-400 text-[15px] mb-8 flex-grow leading-relaxed">
+            <p class="text-gray-600 dark:text-gray-400 text-[15px] mb-8 flex-grow line-clamp-3 leading-relaxed">
               {{ project.description }}
             </p>
 
             <!-- Divider -->
             <div class="h-px w-full bg-gradient-to-r from-gray-200 dark:from-white/10 to-transparent mb-6"></div>
 
-            <a 
-              :href="project.link" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white hover:text-primary-500 dark:hover:text-primary-400 transition-colors mt-auto w-fit group/link"
-            >
-              Explorar Case <i class="pi pi-arrow-right text-xs transform group-hover/link:translate-x-1 transition-transform"></i>
-            </a>
+            <div class="flex items-center justify-between text-sm font-bold text-gray-900 dark:text-white">
+               <span>Ver Case Study</span>
+               <i class="pi pi-arrow-right text-xs transform group-hover:translate-x-1 transition-transform text-primary-500"></i>
+            </div>
           </div>
         </div>
       </transition-group>
@@ -292,6 +304,94 @@ const filteredProjects = computed(() => {
         </div>
       </div>
     </section>
+    <!-- Project Detail Dialog -->
+    <Dialog 
+      v-model:visible="showProjectDetail" 
+      modal 
+      dismissableMask
+      class="p-0 overflow-hidden bg-surface-dark border-none w-full max-w-5xl mx-4"
+      contentClass="p-0 overflow-hidden"
+      :showHeader="false"
+    >
+      <div v-if="selectedProject" class="flex flex-col lg:flex-row h-auto lg:h-[80vh]">
+        <!-- Gallery Side -->
+        <div class="w-full lg:w-3/5 bg-black flex flex-col relative h-[40vh] lg:h-full">
+           <button @click="showProjectDetail = false" class="absolute top-4 left-4 z-50 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black transition-colors lg:hidden">
+              <i class="pi pi-times"></i>
+           </button>
+
+           <!-- Main Image -->
+           <div class="flex-1 w-full h-full relative overflow-hidden">
+             <transition name="fade" mode="out-in">
+               <img 
+                 :key="activeThumbIndex"
+                 :src="selectedProject.images?.[activeThumbIndex] || selectedProject.images?.[0]" 
+                 class="w-full h-full object-contain"
+               />
+             </transition>
+           </div>
+
+           <!-- Thumbnails -->
+           <div v-if="selectedProject.images?.length > 1" class="absolute bottom-6 left-0 right-0 flex justify-center gap-3 px-4 z-20">
+             <div 
+               v-for="(img, idx) in selectedProject.images" 
+               :key="idx"
+               @click="activeThumbIndex = idx"
+               class="w-16 h-12 rounded-lg overflow-hidden cursor-pointer border-2 transition-all shadow-xl"
+               :class="activeThumbIndex === idx ? 'border-primary-500 scale-110 shadow-primary-500/20' : 'border-white/20 opacity-60 hover:opacity-100'"
+             >
+               <img :src="img" class="w-full h-full object-cover" />
+             </div>
+           </div>
+        </div>
+
+        <!-- Info Side -->
+        <div class="w-full lg:w-2/5 p-8 md:p-12 bg-surface-dark flex flex-col overflow-y-auto">
+          <div class="flex justify-between items-start mb-8">
+            <span class="text-xs font-bold tracking-widest uppercase text-primary-500 bg-primary-500/10 px-3 py-1 rounded-full">
+              {{ categories.find(c => c.id === selectedProject.category)?.label }}
+            </span>
+            <button @click="showProjectDetail = false" class="hidden lg:flex w-8 h-8 rounded-full hover:bg-white/5 items-center justify-center text-slate-400 hover:text-white transition-colors">
+              <i class="pi pi-times"></i>
+            </button>
+          </div>
+
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-white mb-6 leading-tight">
+            {{ selectedProject.title }}
+          </h2>
+
+          <div class="flex flex-wrap gap-2 mb-8">
+            <span v-for="tag in selectedProject.tags" :key="tag" class="px-3 py-1 bg-white/5 text-slate-400 text-xs font-semibold rounded-lg border border-white/5">
+              {{ tag }}
+            </span>
+          </div>
+
+          <div class="space-y-6 text-slate-400 leading-relaxed text-lg mb-12">
+            <p v-for="(p, i) in selectedProject.description.split('\n')" :key="i">
+              {{ p }}
+            </p>
+          </div>
+
+          <div class="mt-auto pt-8 border-t border-white/5 flex gap-4">
+            <a 
+              v-if="selectedProject.link && selectedProject.link !== '#'"
+              :href="selectedProject.link" 
+              target="_blank" 
+              class="flex-1 btn btn-primary !py-4 rounded-xl flex items-center justify-center gap-2 font-bold shadow-xl shadow-primary-500/20"
+            >
+              <i class="pi pi-external-link"></i>
+              Visitar Projeto
+            </a>
+            <button 
+              @click="showProjectDetail = false"
+              class="flex-1 lg:hidden btn bg-white/5 hover:bg-white/10 !py-4 rounded-xl text-white font-bold transition-all"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    </Dialog>
   </div>
 </template>
 

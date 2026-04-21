@@ -16,9 +16,9 @@ const projectSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A descrição é obrigatória']
   },
-  image: {
-    type: String,
-    required: [true, 'A imagem é obrigatória']
+  images: {
+    type: [String],
+    default: []
   },
   tags: [String],
   link: {
