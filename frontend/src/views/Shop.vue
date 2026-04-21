@@ -192,6 +192,8 @@ const buyViaWhatsApp = async (product, qty = 1) => {
           </a>
         </div>
       </div>
+    </section>
+
     <!-- Product Detail Dialog -->
     <Dialog 
       v-model:visible="showDetailDialog" 
