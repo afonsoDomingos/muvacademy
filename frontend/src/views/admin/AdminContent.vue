@@ -495,6 +495,7 @@ function confirmDeleteProject(project) {
 }
 
 const uploading = ref(false)
+const uploadProgress = ref(0)
 
 async function handleFileUpload(event, type) {
   const file = event.target.files[0]
@@ -511,7 +512,11 @@ async function handleFileUpload(event, type) {
     if (type === 'project') endpoint = '/upload/course-image' // Reuse course image for projects
 
     const res = await api.post(endpoint, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' }
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        uploadProgress.value = percentCompleted
+      }
     })
     
     if (type === 'banner') {
@@ -1194,5 +1199,27 @@ onMounted(loadData)
 
     <Toast />
     <ConfirmDialog />
+
+    <!-- Upload Progress Overlay -->
+    <transition name="fade">
+      <div v-if="uploading" class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
+        <div class="glass-card max-w-sm w-full p-8 text-center animate-scale-in">
+          <i class="pi pi-cloud-upload text-4xl text-primary-500 mb-4 animate-bounce"></i>
+          <h3 class="text-xl font-bold text-white mb-2">A carregar imagem...</h3>
+          <p class="text-slate-400 text-sm mb-6">Por favor aguarde enquanto processamos o ficheiro.</p>
+          
+          <div class="w-full bg-white/5 rounded-full h-3 mb-2 overflow-hidden border border-white/5">
+            <div 
+              class="bg-gradient-to-r from-primary-500 to-accent-500 h-full transition-all duration-300 shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+              :style="{ width: uploadProgress + '%' }"
+            ></div>
+          </div>
+          <div class="flex justify-between text-[10px] font-bold uppercase tracking-widest text-slate-500">
+            <span>Progresso</span>
+            <span>{{ uploadProgress }}%</span>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
