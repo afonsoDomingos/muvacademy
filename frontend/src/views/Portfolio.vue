@@ -199,9 +199,16 @@ const filteredProjects = computed(() => {
             />
             
             <div class="absolute top-4 right-4 z-20">
-              <button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-gray-900 transition-colors tooltip" data-tip="Ver detalhes">
+              <a 
+                :href="project.link" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white hover:text-gray-900 transition-colors tooltip" 
+                data-tip="Ver Link"
+                @click.stop
+              >
                 <i class="pi pi-arrow-up-right text-sm"></i>
-              </button>
+              </a>
             </div>
 
             <div class="absolute bottom-4 left-4 z-20 flex flex-wrap gap-2 pr-4">
@@ -225,7 +232,7 @@ const filteredProjects = computed(() => {
             </div>
 
             <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary-500 dark:group-hover:text-primary-400 transition-colors">
-              {{ project.title }}
+              <a :href="project.link" target="_blank" rel="noopener noreferrer">{{ project.title }}</a>
             </h3>
             
             <p class="text-gray-600 dark:text-gray-400 text-[15px] mb-8 flex-grow leading-relaxed">
@@ -237,6 +244,8 @@ const filteredProjects = computed(() => {
 
             <a 
               :href="project.link" 
+              target="_blank" 
+              rel="noopener noreferrer"
               class="inline-flex items-center gap-2 text-sm font-bold text-gray-900 dark:text-white hover:text-primary-500 dark:hover:text-primary-400 transition-colors mt-auto w-fit group/link"
             >
               Explorar Case <i class="pi pi-arrow-right text-xs transform group-hover/link:translate-x-1 transition-transform"></i>
