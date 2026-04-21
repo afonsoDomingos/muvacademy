@@ -1,7 +1,7 @@
 import express from 'express';
 import { 
     uploadCourseImageHandler, uploadAvatarHandler, uploadProofHandler, uploadMaterialHandler, deleteFile,
-    uploadBannerHandler, uploadWorkshopHandler
+    uploadBannerHandler, uploadWorkshopHandler, uploadProductHandler
 } from '../controllers/upload.controller.js';
 import { authenticate as protect } from '../middleware/auth.middleware.js';
 import { requireAdmin as admin } from '../middleware/rbac.middleware.js';
@@ -19,6 +19,7 @@ router.post('/proof', uploadProofHandler);
 router.post('/course-image', admin, uploadCourseImageHandler);
 router.post('/banner', admin, uploadBannerHandler);
 router.post('/workshop', admin, uploadWorkshopHandler);
+router.post('/product', admin, uploadProductHandler);
 router.post('/material', admin, uploadMaterialHandler);
 router.delete('/', admin, deleteFile);
 

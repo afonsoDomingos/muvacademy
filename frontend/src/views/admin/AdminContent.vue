@@ -488,7 +488,11 @@ async function handleFileUpload(event, type) {
   
   uploading.value = true
   try {
-    const endpoint = (type === 'workshop') ? '/upload/workshop' : '/upload/banner'
+    let endpoint = '/upload/banner'
+    if (type === 'workshop') endpoint = '/upload/workshop'
+    if (type === 'product') endpoint = '/upload/product'
+    if (type === 'project') endpoint = '/upload/course-image' // Reuse course image for projects
+
     const res = await api.post(endpoint, formData, {
       headers: { 'Content-Type': 'multipart/form-data' }
     })
