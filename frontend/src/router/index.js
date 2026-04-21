@@ -13,6 +13,7 @@ const Dashboard = () => import('@/views/Dashboard.vue')
 const Enrollment = () => import('@/views/Enrollment.vue')
 const Profile = () => import('@/views/Profile.vue')
 const LessonPlayer = () => import('@/views/LessonPlayer.vue')
+const Portfolio = () => import('@/views/Portfolio.vue')
 
 // Admin views
 const AdminLayout = () => import('@/views/admin/AdminLayout.vue')
@@ -36,6 +37,7 @@ const routes = [
     { path: '/', name: 'home', component: Home, meta: { title: 'MUV Academy - Início' } },
     { path: '/about', name: 'about', component: About, meta: { title: 'Sobre Nós' } },
     { path: '/services', name: 'services', component: Services, meta: { title: 'Serviços' } },
+    { path: '/portifolio', name: 'portfolio', component: Portfolio, meta: { title: 'Nosso Portfólio' } },
     { path: '/courses', name: 'courses', component: Courses, meta: { title: 'Cursos' } },
     { path: '/courses/:identifier', name: 'course-detail', component: CourseDetail, meta: { title: 'Detalhes do Curso' } },
     { path: '/login', name: 'login', component: Login, meta: { title: 'Entrar', guest: true } },
