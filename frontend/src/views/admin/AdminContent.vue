@@ -119,8 +119,9 @@ async function loadData() {
         api.get('/content/settings/project_categories').catch(() => ({ data: { data: { setting: null } } }))
      ])
      workshops.value = wsRes.data.data.workshops
-     if (setRes.data.data.setting) {
-         const savedSetting = setRes.data.data.setting
+     
+     if (setRes.data.data.setting && setRes.data.data.setting.value) {
+         const savedSetting = setRes.data.data.setting.value
          if (savedSetting.messages && savedSetting.messages.length > 0) {
              topAnnouncement.value = savedSetting
          } else {
@@ -131,8 +132,8 @@ async function loadData() {
          }
      }
      
-     if (aboutRes.data.data.setting) {
-         const s = aboutRes.data.data.setting
+     if (aboutRes.data.data.setting && aboutRes.data.data.setting.value) {
+         const s = aboutRes.data.data.setting.value
          aboutUsSetting.value = {
              title: s.title || '',
              description: s.description || '',

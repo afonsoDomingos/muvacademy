@@ -91,8 +91,8 @@ onMounted(async () => {
     services.value = servicesData || []
     workshops.value = workshopsRes.data?.data?.workshops || []
     
-    if (aboutRes.data?.data?.setting) {
-      aboutUs.value = aboutRes.data.data.setting
+    if (aboutRes.data?.data?.setting?.value) {
+      aboutUs.value = aboutRes.data.data.setting.value
     }
 
     if (partnersRes.data?.data?.setting?.value) {
