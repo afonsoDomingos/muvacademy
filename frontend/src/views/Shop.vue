@@ -42,11 +42,13 @@ const filteredProducts = computed(() => {
 })
 
 const formatPrice = (price) => {
+  if (!price || price === 0) return 'Sob Consulta'
   return new Intl.NumberFormat('pt-MZ', { style: 'currency', currency: 'MZN' }).format(price)
 }
 
 const totalPrice = computed(() => {
   if (!selectedProduct.value) return 0
+  if (!selectedProduct.value.price || selectedProduct.value.price === 0) return null
   return selectedProduct.value.price * quantity.value
 })
 
@@ -63,8 +65,11 @@ const buyViaWhatsApp = async (product, qty = 1) => {
   } catch (err) {
      console.error('Falha ao registar clique:', err)
   }
-  const total = product.price * qty
-  const message = encodeURIComponent(`Olá MUV! Gostaria de adquirir o produto: ${product.name}\nQuantidade: ${qty}\nPreço Unitário: ${formatPrice(product.price)}\nTotal: ${formatPrice(total)}`)
+  
+  const priceDisplay = (!product.price || product.price === 0) ? 'Sob Consulta' : formatPrice(product.price)
+  const totalDisplay = (!product.price || product.price === 0) ? 'Sob Consulta' : formatPrice(product.price * qty)
+  
+  const message = encodeURIComponent(`Olá MUV! Gostaria de consultar/adquirir o produto: ${product.name}\nQuantidade: ${qty}\nPreço: ${priceDisplay}\nTotal: ${totalDisplay}`)
   window.open(`https://wa.me/258834802943?text=${message}`, '_blank')
 }
 </script>

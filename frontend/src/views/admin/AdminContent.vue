@@ -1136,7 +1136,7 @@ onMounted(loadData)
             <InputText v-model="productForm.name" class="input" placeholder="Ex: Painel Solar 300W" />
           </div>
           <div class="field">
-            <label class="block text-sm font-bold mb-2">Preço (MT)</label>
+            <label class="block text-sm font-bold mb-2">Preço (0 = Sob Consulta)</label>
             <InputText v-model.number="productForm.price" type="number" class="input" placeholder="0.00" />
           </div>
         </div>
