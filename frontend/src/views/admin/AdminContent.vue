@@ -1076,7 +1076,7 @@ onMounted(loadData)
           </div>
           <div class="field">
             <label class="block text-sm font-bold mb-2">Preço (MT)</label>
-            <InputNumber v-model="productForm.price" class="input" mode="currency" currency="MZN" locale="pt-MZ" />
+            <InputText v-model.number="productForm.price" type="number" class="input" placeholder="0.00" />
           </div>
         </div>
         <div class="field">
@@ -1109,11 +1109,11 @@ onMounted(loadData)
         <div class="grid sm:grid-cols-2 gap-4">
           <div class="field">
             <label class="block text-sm font-bold mb-2">Stock</label>
-            <InputNumber v-model="productForm.stock" class="input" />
+            <InputText v-model.number="productForm.stock" type="number" class="input" />
           </div>
           <div class="field">
             <label class="block text-sm font-bold mb-2">Ordem de Exibição</label>
-            <InputNumber v-model="productForm.order" class="input" />
+            <InputText v-model.number="productForm.order" type="number" class="input" />
           </div>
         </div>
       </div>
