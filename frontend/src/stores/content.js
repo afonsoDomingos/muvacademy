@@ -6,6 +6,7 @@ export const useContentStore = defineStore('content', () => {
     const banners = ref([])
     const services = ref([])
     const projects = ref([])
+    const products = ref([])
     const loading = ref(false)
 
     async function fetchHomeBanners() {
@@ -41,6 +42,17 @@ export const useContentStore = defineStore('content', () => {
         }
     }
 
+    async function fetchProducts() {
+        try {
+            const response = await api.get('/content/products')
+            products.value = response.data.data.products
+            return products.value
+        } catch (err) {
+            console.error('Error fetching products:', err)
+            return []
+        }
+    }
+
     // Admin CRUD
     async function createBanner(data) {
         return await api.post('/content/banners', data)
@@ -72,11 +84,22 @@ export const useContentStore = defineStore('content', () => {
         return await api.delete(`/content/projects/${id}`)
     }
 
+    async function createProduct(data) {
+        return await api.post('/content/products', data)
+    }
+    async function updateProduct(id, data) {
+        return await api.put(`/content/products/${id}`, data)
+    }
+    async function deleteProduct(id) {
+        return await api.delete(`/content/products/${id}`)
+    }
+
     return {
         banners, services, projects, loading,
         fetchHomeBanners, fetchServices, fetchProjects,
         createBanner, updateBanner, deleteBanner,
         createService, updateService, deleteService,
-        createProject, updateProject, deleteProject
+        createProject, updateProject, deleteProject,
+        products, fetchProducts, createProduct, updateProduct, deleteProduct
     }
 })

@@ -3,7 +3,8 @@ import {
     getHomeBanners, createBanner, updateBanner, deleteBanner,
     getAllServices, createService, updateService, deleteService,
     getSetting, updateSetting,
-    getAllProjects, createProject, updateProject, deleteProject
+    getAllProjects, createProject, updateProject, deleteProject,
+    getAllProducts, createProduct, updateProduct, deleteProduct
 } from '../controllers/content.controller.js';
 import { authenticate as protect } from '../middleware/auth.middleware.js';
 import { requireAdmin as admin } from '../middleware/rbac.middleware.js';
@@ -16,6 +17,7 @@ router.get('/banners', getHomeBanners);
 router.get('/services', getAllServices);
 router.get('/settings/:key', getSetting);
 router.get('/projects', getAllProjects);
+router.get('/products', getAllProducts);
 
 // Admin routes
 router.post('/banners', protect, admin, createBanner);
@@ -29,6 +31,10 @@ router.delete('/services/:id', protect, admin, deleteService);
 router.post('/projects', protect, admin, createProject);
 router.put('/projects/:id', protect, admin, updateProject);
 router.delete('/projects/:id', protect, admin, deleteProject);
+
+router.post('/products', protect, admin, createProduct);
+router.put('/products/:id', protect, admin, updateProduct);
+router.delete('/products/:id', protect, admin, deleteProduct);
 
 router.put('/settings/:key', protect, admin, updateSetting);
 

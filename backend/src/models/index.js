@@ -6,4 +6,6 @@ export { default as Lesson } from './Lesson.js';
 export { default as Enrollment } from './Enrollment.js';
 export { default as Notification } from './Notification.js';
 export { default as Log } from './Log.js';
+export { default as Setting } from './Setting.js';
 export { default as Project } from './Project.js';
+export { default as Product } from './Product.js';

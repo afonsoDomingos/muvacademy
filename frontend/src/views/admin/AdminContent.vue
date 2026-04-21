@@ -18,13 +18,26 @@ const banners = ref([])
 const services = ref([])
 const workshops = ref([])
 const projects = ref([])
-const loading = ref(false)
+const products = ref([])
+const loading = ref(true)
 
 const showBannerDialog = ref(false)
 const showServiceDialog = ref(false)
 const showWorkshopDialog = ref(false)
 const showProjectDialog = ref(false)
+const productDialog = ref(false)
 const editingItem = ref(null)
+const editingProduct = ref(null)
+
+const productForm = ref({
+  name: '',
+  description: '',
+  price: 0,
+  category: 'other',
+  image: '',
+  stock: 0,
+  order: 0
+})
 
 const topAnnouncement = ref({
     active: false,
@@ -91,6 +104,7 @@ async function loadData() {
   banners.value = await contentStore.fetchHomeBanners()
   services.value = await contentStore.fetchServices()
   projects.value = await contentStore.fetchProjects()
+  products.value = await contentStore.fetchProducts()
    try {
      const [wsRes, setRes, aboutRes, partnersRes, impactStatsRes] = await Promise.all([
         api.get('/workshops'),
@@ -154,6 +168,61 @@ function addImpactStat() {
 
 function removeImpactStat(idx) {
     impactStatsSetting.value.splice(idx, 1)
+}
+
+// Product Actions
+function openNewProduct() {
+  editingProduct.value = null
+  productForm.value = { name: '', description: '', price: 0, category: 'other', image: '', stock: 0, order: 0 }
+  productDialog.value = true
+}
+
+function editProduct(product) {
+  editingProduct.value = product
+  productForm.value = { ...product }
+  productDialog.value = true
+}
+
+async function saveProduct() {
+  try {
+    if (editingProduct.value) {
+      await contentStore.updateProduct(editingProduct.value._id, productForm.value)
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Produto atualizado', life: 3000 })
+    } else {
+      await contentStore.createProduct(productForm.value)
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Produto criado', life: 3000 })
+    }
+    productDialog.value = false
+    products.value = await contentStore.fetchProducts()
+  } catch (err) {
+    toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar produto', life: 3000 })
+  }
+}
+
+async function confirmDeleteProduct(id) {
+  if (confirm('Tem a certeza que deseja eliminar este produto?')) {
+    try {
+      await contentStore.deleteProduct(id)
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Produto removido', life: 3000 })
+      products.value = await contentStore.fetchProducts()
+    } catch (err) {
+      toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao eliminar produto', life: 3000 })
+    }
+  }
+}
+
+async function uploadProductImage(event) {
+  const file = event.files[0]
+  const formData = new FormData()
+  formData.append('image', file)
+  
+  try {
+    const res = await api.post('/upload/course-image', formData)
+    productForm.value.image = res.data.data.url
+    toast.add({ severity: 'info', summary: 'Sucesso', detail: 'Imagem carregada', life: 2000 })
+  } catch (err) {
+    toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha no upload', life: 3000 })
+  }
 }
 
 async function saveAnnouncement() {
@@ -548,6 +617,38 @@ onMounted(loadData)
               <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Valores (Separados por vírgula)</label>
               <InputText v-model="aboutUsSetting.values" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" placeholder="Inovação, Qualidade, União..." />
           </div>
+      </div>
+    </section>
+
+    </section>
+
+    <!-- MUV Shop Section -->
+    <section class="mb-16">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-shopping-bag text-primary-500 dark:text-primary-400"></i>
+          MUV Shop (Produtos à Venda)
+        </h2>
+        <button @click="openNewProduct" class="btn btn-primary !py-2 !px-6 text-sm">
+          <i class="pi pi-plus"></i> Novo Produto
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div v-for="product in products" :key="product._id" class="glass-card overflow-hidden group">
+          <div class="relative h-40 overflow-hidden">
+            <img :src="product.image" :alt="product.name" class="w-full h-full object-cover group-hover:scale-110 transition-all" />
+            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-2">
+              <button @click="editProduct(product)" class="btn btn-secondary !p-2 rounded-full"><i class="pi pi-pencil"></i></button>
+              <button @click="confirmDeleteProduct(product._id)" class="btn bg-red-500 text-white border-none !p-2 rounded-full"><i class="pi pi-trash"></i></button>
+            </div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-bold text-slate-900 dark:text-white truncate">{{ product.name }}</h3>
+            <p class="text-xs text-primary-500 font-bold mt-1">{{ product.price }} MT</p>
+            <p class="text-[10px] text-slate-500 mt-2 line-clamp-1">{{ product.description }}</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -967,6 +1068,63 @@ onMounted(loadData)
         <button @click="saveProject" class="btn btn-primary !py-2 !px-4">Guardar Projeto</button>
       </template>
     </Dialog>
+    <!-- Product Dialog -->
+    <Dialog v-model:visible="productDialog" :header="editingProduct ? 'Editar Produto' : 'Novo Produto'" modal class="p-fluid w-full max-w-2xl bg-surface-dark text-white">
+      <div class="grid gap-6 py-4">
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Nome do Produto</label>
+            <InputText v-model="productForm.name" class="input" placeholder="Ex: Painel Solar 300W" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Preço (MT)</label>
+            <InputNumber v-model="productForm.price" class="input" mode="currency" currency="MZN" locale="pt-MZ" />
+          </div>
+        </div>
+        <div class="field">
+          <label class="block text-sm font-bold mb-2">Descrição</label>
+          <Textarea v-model="productForm.description" rows="3" class="input w-full" placeholder="Descrição comercial do produto..." />
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Imagem</label>
+            <div class="flex gap-2">
+               <InputText v-model="productForm.image" class="input flex-1" placeholder="URL da imagem..." disabled />
+               <FileUpload mode="basic" name="image" url="/api/upload/course-image" accept="image/*" :maxFileSize="1000000" @upload="uploadProductImage" auto class="hidden" />
+               <label class="btn btn-secondary !py-2 !px-4 cursor-pointer flex items-center gap-2">
+                  <i class="pi pi-upload"></i>
+                  <span>Alterar</span>
+                  <input type="file" @change="handleFileUpload($event, 'product')" class="hidden" accept="image/*" />
+               </label>
+            </div>
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Categoria</label>
+            <Dropdown v-model="productForm.category" :options="[
+              {label: 'Solar', value: 'solar'},
+              {label: 'Iluminação', value: 'lighting'},
+              {label: 'Acessórios', value: 'accessories'},
+              {label: 'Outros', value: 'other'}
+            ]" optionLabel="label" optionValue="value" class="input" />
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Stock</label>
+            <InputNumber v-model="productForm.stock" class="input" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Ordem de Exibição</label>
+            <InputNumber v-model="productForm.order" class="input" />
+          </div>
+        </div>
+      </div>
+      <template #footer>
+        <button @click="productDialog = false" class="btn btn-secondary !py-2 !px-4">Cancelar</button>
+        <button @click="saveProduct" class="btn btn-primary !py-2 !px-4">Guardar Produto</button>
+      </template>
+    </Dialog>
+
     <Toast />
     <ConfirmDialog />
   </div>

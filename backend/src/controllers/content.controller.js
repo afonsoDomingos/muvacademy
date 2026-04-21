@@ -2,6 +2,7 @@ import Service from '../models/Service.js';
 import Banner from '../models/Banner.js';
 import Setting from '../models/Setting.js';
 import Project from '../models/Project.js';
+import Product from '../models/Product.js';
 
 // Get all active banners for home
 export const getHomeBanners = async (req, res) => {
@@ -138,6 +139,44 @@ export const deleteProject = async (req, res) => {
     try {
         await Project.findByIdAndDelete(req.params.id);
         res.json({ success: true, message: 'Projeto eliminado' });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+// Shop Products
+export const getAllProducts = async (req, res) => {
+    try {
+        const products = await Product.find().sort({ order: 1, createdAt: -1 });
+        res.json({ success: true, data: { products } });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Erro ao buscar produtos' });
+    }
+};
+
+export const createProduct = async (req, res) => {
+    try {
+        const product = new Product(req.body);
+        await product.save();
+        res.status(201).json({ success: true, data: { product } });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+export const updateProduct = async (req, res) => {
+    try {
+        const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json({ success: true, data: { product } });
+    } catch (error) {
+        res.status(400).json({ success: false, message: error.message });
+    }
+};
+
+export const deleteProduct = async (req, res) => {
+    try {
+        await Product.findByIdAndDelete(req.params.id);
+        res.json({ success: true, message: 'Produto eliminado' });
     } catch (error) {
         res.status(400).json({ success: false, message: error.message });
     }

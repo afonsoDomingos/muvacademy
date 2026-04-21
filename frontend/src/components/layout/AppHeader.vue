@@ -30,7 +30,8 @@ const navLinks = computed(() => {
     { name: 'about', path: '/about', label: 'Sobre Nós' },
     { name: 'portfolio', path: '/portifolio', label: 'Portfólio' },
     { name: 'courses', path: '/courses', label: t('nav.courses') },
-    { name: 'services', path: '/services', label: 'Serviços' }
+    { name: 'services', path: '/services', label: 'Serviços' },
+    { name: 'shop', path: '/vendas', label: ' Shop' }
   ]
   
   if (isCollaborator.value) {

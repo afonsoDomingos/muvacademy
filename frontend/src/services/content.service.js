@@ -21,5 +21,11 @@ export const contentService = {
     getProjects: () => api.get('/content/projects'),
     createProject: (data) => api.post('/content/projects', data),
     updateProject: (id, data) => api.put(`/content/projects/${id}`, data),
-    deleteProject: (id) => api.delete(`/content/projects/${id}`)
+    deleteProject: (id) => api.delete(`/content/projects/${id}`),
+    
+    // Products (Shop)
+    getProducts: () => api.get('/content/products'),
+    createProduct: (data) => api.post('/content/products', data),
+    updateProduct: (id, data) => api.put(`/content/products/${id}`, data),
+    deleteProduct: (id) => api.delete(`/content/products/${id}`)
 }
