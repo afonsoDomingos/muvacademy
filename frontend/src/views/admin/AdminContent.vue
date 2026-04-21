@@ -167,7 +167,14 @@ function addImpactStat() {
 }
 
 function removeImpactStat(idx) {
-    impactStatsSetting.value.splice(idx, 1)
+  confirm.require({
+    message: 'Deseja remover esta estatística de impacto?',
+    header: 'Confirmar Remoção',
+    icon: 'pi pi-info-circle',
+    accept: () => {
+      impactStatsSetting.value.splice(idx, 1)
+    }
+  })
 }
 
 // Product Actions
@@ -199,16 +206,22 @@ async function saveProduct() {
   }
 }
 
-async function confirmDeleteProduct(id) {
-  if (confirm('Tem a certeza que deseja eliminar este produto?')) {
-    try {
-      await contentStore.deleteProduct(id)
-      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Produto removido', life: 3000 })
-      products.value = await contentStore.fetchProducts()
-    } catch (err) {
-      toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao eliminar produto', life: 3000 })
+function confirmDeleteProduct(id) {
+  confirm.require({
+    message: 'Tem a certeza que deseja eliminar este produto? Esta ação não pode ser desfeita.',
+    header: 'Confirmação de Eliminação',
+    icon: 'pi pi-exclamation-triangle',
+    acceptClass: 'p-button-danger',
+    accept: async () => {
+      try {
+        await contentStore.deleteProduct(id)
+        toast.add({ severity: 'success', summary: 'Removido', detail: 'Produto eliminado com sucesso', life: 3000 })
+        products.value = await contentStore.fetchProducts()
+      } catch (err) {
+        toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao eliminar produto', life: 3000 })
+      }
     }
-  }
+  })
 }
 
 function removeProductImage(idx) {
@@ -251,7 +264,14 @@ function addPartner() {
 }
 
 function removePartner(idx) {
-    partnersSetting.value.splice(idx, 1)
+  confirm.require({
+    message: 'Deseja remover este parceiro da lista?',
+    header: 'Confirmar Remoção',
+    icon: 'pi pi-info-circle',
+    accept: () => {
+      partnersSetting.value.splice(idx, 1)
+    }
+  })
 }
 
 function addAnnouncementMessage() {
@@ -260,7 +280,14 @@ function addAnnouncementMessage() {
 
 function removeAnnouncementMessage(idx) {
     if (topAnnouncement.value.messages.length > 1) {
-        topAnnouncement.value.messages.splice(idx, 1)
+        confirm.require({
+            message: 'Deseja remover esta mensagem do anúncio?',
+            header: 'Confirmar Remoção',
+            icon: 'pi pi-info-circle',
+            accept: () => {
+                topAnnouncement.value.messages.splice(idx, 1)
+            }
+        })
     }
 }
 
