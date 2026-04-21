@@ -40,6 +40,51 @@ const projects = [
     tags: ['IoT', 'Agricultura', 'Sensores', 'AquaTech'],
     link: 'https://sistema-de-monitoramento-de-umidade.vercel.app/',
     order: 4
+  },
+  {
+    title: 'MUV SAP Excellence',
+    category: 'system',
+    description: 'Implementação e personalização de soluções SAP para gestão empresarial de alto nível, adaptadas ao mercado moçambicano.',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
+    tags: ['SAP', 'ERP', 'Gestão Financeira', 'Enterprise'],
+    link: '#',
+    order: 5
+  },
+  {
+    title: 'MUV GIS Explorer',
+    category: 'system',
+    description: 'Sistema de Informação Geográfica avançado para planeamento urbano, monitoramento de territórios e gestão de recursos naturais.',
+    image: 'https://images.unsplash.com/photo-1548345666-a5aa716f4e6a?auto=format&fit=crop&w=800&q=80',
+    tags: ['GIS', 'Geolocalização', 'Mapeamento', 'Cartografia'],
+    link: '#',
+    order: 6
+  },
+  {
+    title: 'SolarInsight MUV',
+    category: 'system',
+    description: 'Monitoramento inteligente de parques solares e sistemas de energia renovável com análise de performance em tempo real.',
+    image: 'https://images.unsplash.com/photo-1509391366360-fe19a78e729b?auto=format&fit=crop&w=800&q=80',
+    tags: ['Energia Solar', 'Sustentabilidade', 'CleanTech', 'IoT'],
+    link: '#',
+    order: 7
+  },
+  {
+    title: 'MUV AI Strategy',
+    category: 'design',
+    description: 'Consultoria e implementação de Inteligência Artificial Generativa e Machine Learning para otimização de processos industriais.',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80',
+    tags: ['AI', 'Machine Learning', 'Inovação', 'Transformação Digital'],
+    link: '#',
+    order: 8
+  },
+  {
+    title: 'MUV Consulting 360',
+    category: 'design',
+    description: 'Serviços especializados de consultoria técnica em engenharia e gestão de projetos complexos de infraestrutura.',
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=800&q=80',
+    tags: ['Consultoria', 'Engenharia', 'Gestão de Projetos', 'Estratégia'],
+    link: '#',
+    order: 9
   }
 ];
 
