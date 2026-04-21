@@ -6,58 +6,40 @@ dotenv.config();
 
 const projects = [
   {
-    title: 'OtakuZoneFlix',
+    title: 'OCRMUV',
     category: 'web',
-    description: 'Plataforma de streaming on-demand com arquitetura robusta para entrega eficiente de vídeos e gestão de assinaturas.',
-    image: 'https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    tags: ['React', 'Node.js', 'MongoDB', 'Cloudinary'],
-    link: '#',
+    description: 'Plataforma inteligente de Digitalização de Documentos (OCR) que transforma imagens em texto estruturado com alta precisão.',
+    image: 'https://images.unsplash.com/photo-1568667256549-094345857637?auto=format&fit=crop&w=800&q=80',
+    tags: ['OCR', 'AI', 'Digitalização', 'Vercel'],
+    link: 'https://ocrmuv.vercel.app/',
     order: 1
   },
   {
-    title: 'Motiva Contests',
+    title: 'PredictAI',
     category: 'system',
-    description: 'Sistema completo de gestão de concursos criativos com pipelines de fases automatizadas e submissões.',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    tags: ['Vue 3', 'Express', 'PostgreSQL'],
-    link: '#',
+    description: 'Sistema avançado de planeamento de manutenção industrial, focado em gestão de recursos e redução de downtime.',
+    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80',
+    tags: ['Manutenção', 'ERP', 'Predictive', 'Node.js'],
+    link: 'https://planeador-de-manuntencao.vercel.app/',
     order: 2
   },
   {
-    title: 'SmartGym App',
-    category: 'mobile',
-    description: 'Aplicativo móvel focado no acompanhamento de treinos, evolução física e interação via comunidade.',
-    image: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    tags: ['React Native', 'Firebase'],
-    link: '#',
+    title: 'EcoGuard',
+    category: 'system',
+    description: 'Sistema completo de controlo e monitoramento de actividades ambientais para conformidade e sustentabilidade.',
+    image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80',
+    tags: ['Ambiente', 'Monitorização', 'Gestão', 'Sustentabilidade'],
+    link: 'https://ecoguardmuv.vercel.app/',
     order: 3
   },
   {
-    title: 'MUV Nexus ERP',
+    title: 'AquaFlow',
     category: 'system',
-    description: 'Painel e gestor completo de finanças, projetos e tarefas, com insights inteligentes usando IA.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    tags: ['Vue 3', 'TailwindCSS', 'Node.js'],
-    link: '#',
+    description: 'Sistema IoT de monitoramento de humidade do solo em tempo real, permitindo uma gestão hídrica inteligente e eficiente.',
+    image: 'https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=800&q=80',
+    tags: ['IoT', 'Agricultura', 'Sensores', 'AquaTech'],
+    link: 'https://sistema-de-monitoramento-de-umidade.vercel.app/',
     order: 4
-  },
-  {
-    title: 'BrandIdentity - Lumi',
-    category: 'design',
-    description: 'Reformulação de marca completa, design system e documentação UI/UX moderna e fluida.',
-    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    tags: ['Figma', 'Illustrator'],
-    link: '#',
-    order: 5
-  },
-  {
-    title: 'Aura E-Commerce',
-    category: 'web',
-    description: 'Solução moderna de e-commerce de alta conversão, totalmente responsiva e agradável.',
-    image: 'https://images.unsplash.com/photo-1661956602116-aa6865609028?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    tags: ['Next.js', 'Stripe', 'TailwindCSS'],
-    link: '#',
-    order: 6
   }
 ];
 
