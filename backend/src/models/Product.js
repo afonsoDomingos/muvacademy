@@ -14,9 +14,9 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  image: {
-    type: String,
-    default: 'https://images.unsplash.com/photo-1509391366360-fe19a78e729b?auto=format&fit=crop&w=800&q=80'
+  images: {
+    type: [String],
+    default: ['https://images.unsplash.com/photo-1509391366360-fe19a78e729b?auto=format&fit=crop&w=800&q=80']
   },
   category: {
     type: String,
