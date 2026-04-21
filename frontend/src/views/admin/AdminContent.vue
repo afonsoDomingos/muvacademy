@@ -268,7 +268,9 @@ async function saveProduct() {
     productDialog.value = false
     products.value = await contentStore.fetchProducts()
   } catch (err) {
-    toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar produto', life: 3000 })
+    console.error('Save product error:', err)
+    const errorMsg = err.response?.data?.message || 'Falha ao guardar produto'
+    toast.add({ severity: 'error', summary: 'Erro', detail: errorMsg, life: 5000 })
   }
 }
 
@@ -534,7 +536,9 @@ async function saveProject() {
     showProjectDialog.value = false
     loadData()
   } catch (err) {
-    toast.add({ severity: 'error', summary: 'Erro', detail: 'Erro ao guardar projeto', life: 3000 })
+    console.error('Save project error:', err)
+    const errorMsg = err.response?.data?.message || 'Falha ao guardar projeto'
+    toast.add({ severity: 'error', summary: 'Erro', detail: errorMsg, life: 5000 })
   }
 }
 
