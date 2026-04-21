@@ -499,6 +499,8 @@ async function handleFileUpload(event, type) {
       aboutUsSetting.value.image = res.data.data.url
     } else if (type === 'project') {
       projectForm.value.image = res.data.data.url
+    } else if (type === 'product') {
+      productForm.value.image = res.data.data.url
     } else if (type.startsWith('partner-')) {
       const idx = parseInt(type.split('-')[1])
       partnersSetting.value[idx].image = res.data.data.url
