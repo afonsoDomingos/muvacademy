@@ -60,6 +60,9 @@ const impactStatsSetting = ref([
     { label: 'Países Atendidos', value: '10', icon: 'pi pi-globe' }
 ])
 
+const productCategoriesSetting = ref([])
+const projectCategoriesSetting = ref([])
+
 const bannerForm = ref({
   title: { pt: '', en: '' },
   subtitle: { pt: '', en: '' },
@@ -106,12 +109,14 @@ async function loadData() {
   projects.value = await contentStore.fetchProjects()
   products.value = await contentStore.fetchProducts()
    try {
-     const [wsRes, setRes, aboutRes, partnersRes, impactStatsRes] = await Promise.all([
+     const [wsRes, setRes, aboutRes, partnersRes, impactStatsRes, prodCatsRes, projCatsRes] = await Promise.all([
         api.get('/workshops'),
         api.get('/content/settings/top_announcement'),
         api.get('/content/settings/about_us').catch(() => ({ data: { data: { setting: null } } })),
         api.get('/content/settings/partners').catch(() => ({ data: { data: { setting: null } } })),
-        api.get('/content/settings/impact_stats').catch(() => ({ data: { data: { setting: null } } }))
+        api.get('/content/settings/impact_stats').catch(() => ({ data: { data: { setting: null } } })),
+        api.get('/content/settings/product_categories').catch(() => ({ data: { data: { setting: null } } })),
+        api.get('/content/settings/project_categories').catch(() => ({ data: { data: { setting: null } } }))
      ])
      workshops.value = wsRes.data.data.workshops
      if (setRes.data.data.setting) {
@@ -147,10 +152,72 @@ async function loadData() {
      if (impactStatsRes.data.data.setting && impactStatsRes.data.data.setting.value) {
          impactStatsSetting.value = impactStatsRes.data.data.setting.value;
      }
+
+     if (prodCatsRes.data.data.setting && prodCatsRes.data.data.setting.value) {
+         productCategoriesSetting.value = prodCatsRes.data.data.setting.value;
+     } else {
+         productCategoriesSetting.value = [
+           { id: 'solar', label: 'Solar' },
+           { id: 'lighting', label: 'Iluminação' },
+           { id: 'accessories', label: 'Acessórios' },
+           { id: 'other', label: 'Outros' }
+         ];
+     }
+
+     if (projCatsRes.data.data.setting && projCatsRes.data.data.setting.value) {
+         projectCategoriesSetting.value = projCatsRes.data.data.setting.value;
+     } else {
+         projectCategoriesSetting.value = [
+           { id: 'web', label: 'Web Apps' },
+           { id: 'mobile', label: 'Mobile' },
+           { id: 'system', label: 'Sistemas & ERP' },
+           { id: 'design', label: 'UI/UX Design' }
+         ];
+     }
   } catch (e) {
      console.error('Error loading extra data:', e)
   }
   loading.value = false
+}
+
+async function saveCategories() {
+  try {
+      await Promise.all([
+          api.put('/content/settings/product_categories', { value: productCategoriesSetting.value }),
+          api.put('/content/settings/project_categories', { value: projectCategoriesSetting.value })
+      ])
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Categorias atualizadas', life: 3000 })
+  } catch (err) {
+      toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar categorias', life: 3000 })
+  }
+}
+
+function addProductCategory() {
+    productCategoriesSetting.value.push({ id: '', label: '' })
+}
+function removeProductCategory(idx) {
+  confirmation.require({
+    message: 'Deseja remover esta categoria de produtos?',
+    header: 'Confirmar Remoção',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+      productCategoriesSetting.value.splice(idx, 1)
+    }
+  })
+}
+
+function addProjectCategory() {
+    projectCategoriesSetting.value.push({ id: '', label: '' })
+}
+function removeProjectCategory(idx) {
+  confirmation.require({
+    message: 'Deseja remover esta categoria de projetos?',
+    header: 'Confirmar Remoção',
+    icon: 'pi pi-exclamation-triangle',
+    accept: () => {
+      projectCategoriesSetting.value.splice(idx, 1)
+    }
+  })
 }
 
 async function saveImpactStats() {
@@ -761,6 +828,72 @@ onMounted(loadData)
           </div>
       </div>
     </section>
+    <!-- Gestão de Categorias Section -->
+    <section class="mb-16">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-tags text-indigo-500"></i>
+          Gestão de Categorias Dinâmicas
+        </h2>
+        <button @click="saveCategories" class="btn btn-primary !py-2 !px-6 text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+          <i class="pi pi-save"></i> Guardar Categorias
+        </button>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Categorias de Loja -->
+        <div class="glass-card p-6 border-l-4 border-emerald-500">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <i class="pi pi-shopping-cart text-emerald-500"></i>
+              Categorias da Loja (Shop)
+            </h3>
+            <button @click="addProductCategory" class="btn btn-secondary !p-1.5 !px-3 text-[10px]">
+              <i class="pi pi-plus"></i> Novo
+            </button>
+          </div>
+          <div class="space-y-3">
+            <div v-for="(cat, idx) in productCategoriesSetting" :key="idx" class="flex gap-2 items-center bg-slate-50 dark:bg-white/5 p-2 rounded-lg border border-slate-200 dark:border-white/5">
+              <div class="flex-1 min-w-0">
+                <InputText v-model="cat.id" class="input w-full !text-[10px] !py-1 !p-2 !bg-transparent border-slate-200 dark:border-white/10" placeholder="ID (ex: solar)" />
+              </div>
+              <div class="flex-[2] min-w-0">
+                <InputText v-model="cat.label" class="input w-full !text-xs !py-1 !p-2 !bg-transparent border-slate-200 dark:border-white/10" placeholder="Etiqueta (ex: Solar)" />
+              </div>
+              <button @click="removeProductCategory(idx)" class="btn bg-red-100 dark:bg-red-500/10 text-red-500 !p-1.5 rounded-lg hover:bg-red-500 hover:text-white transition-all text-xs">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Categorias de Portfólio -->
+        <div class="glass-card p-6 border-l-4 border-indigo-500">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <i class="pi pi-briefcase text-indigo-500"></i>
+              Categorias do Portfólio
+            </h3>
+            <button @click="addProjectCategory" class="btn btn-secondary !p-1.5 !px-3 text-[10px]">
+              <i class="pi pi-plus"></i> Novo
+            </button>
+          </div>
+          <div class="space-y-3">
+            <div v-for="(cat, idx) in projectCategoriesSetting" :key="idx" class="flex gap-2 items-center bg-slate-50 dark:bg-white/5 p-2 rounded-lg border border-slate-200 dark:border-white/5">
+              <div class="flex-1 min-w-0">
+                <InputText v-model="cat.id" class="input w-full !text-[10px] !py-1 !p-2 !bg-transparent border-slate-200 dark:border-white/10" placeholder="ID (ex: web)" />
+              </div>
+              <div class="flex-[2] min-w-0">
+                <InputText v-model="cat.label" class="input w-full !text-xs !py-1 !p-2 !bg-transparent border-slate-200 dark:border-white/10" placeholder="Etiqueta (ex: Web Apps)" />
+              </div>
+              <button @click="removeProjectCategory(idx)" class="btn bg-red-100 dark:bg-red-500/10 text-red-500 !p-1.5 rounded-lg hover:bg-red-500 hover:text-white transition-all text-xs">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Parceiros Section -->
     <section class="mb-16">
@@ -1098,7 +1231,7 @@ onMounted(loadData)
           </div>
           <div class="field">
             <label class="block text-sm font-bold mb-2">Categoria</label>
-            <Dropdown v-model="projectForm.category" :options="['web', 'mobile', 'system', 'design']" class="input" />
+            <Dropdown v-model="projectForm.category" :options="projectCategoriesSetting" optionLabel="label" optionValue="id" class="input" />
           </div>
         </div>
         <div class="field">
@@ -1191,12 +1324,7 @@ onMounted(loadData)
         <div class="grid sm:grid-cols-2 gap-4">
           <div class="field">
             <label class="block text-sm font-bold mb-2">Categoria</label>
-            <Dropdown v-model="productForm.category" :options="[
-              {label: 'Solar', value: 'solar'},
-              {label: 'Iluminação', value: 'lighting'},
-              {label: 'Acessórios', value: 'accessories'},
-              {label: 'Outros', value: 'other'}
-            ]" optionLabel="label" optionValue="value" class="input" />
+            <Dropdown v-model="productForm.category" :options="productCategoriesSetting" optionLabel="label" optionValue="id" class="input" />
           </div>
         </div>
         <div class="grid sm:grid-cols-2 gap-4">

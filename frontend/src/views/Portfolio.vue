@@ -3,13 +3,9 @@ import { ref, computed, onMounted } from 'vue'
 import { contentService } from '@/services/content.service'
 import Dialog from 'primevue/dialog'
 
-const categories = [
-  { id: 'all', label: 'Todos' },
-  { id: 'web', label: 'Web Apps' },
-  { id: 'mobile', label: 'Mobile' },
-  { id: 'system', label: 'Sistemas & ERP' },
-  { id: 'design', label: 'UI/UX Design' }
-]
+const categories = ref([
+  { id: 'all', label: 'Todos' }
+])
 
 const activeCategory = ref('all')
 const projects = ref([])
@@ -20,13 +16,14 @@ const showProjectDetail = ref(false)
 const selectedProject = ref(null)
 const activeThumbIndex = ref(0)
 
-const fetchProjects = async () => {
+const fetchData = async () => {
   try {
     loading.value = true
-    const [projRes, statsRes, aboutRes] = await Promise.all([
+    const [projRes, statsRes, aboutRes, catRes] = await Promise.all([
       contentService.getProjects(),
       contentService.getSetting('impact_stats'),
-      contentService.getSetting('about_us')
+      contentService.getSetting('about_us'),
+      contentService.getSetting('project_categories')
     ])
     
     if (projRes.data.success) {
@@ -34,11 +31,26 @@ const fetchProjects = async () => {
     }
 
     if (statsRes.data.success && statsRes.data.data.setting) {
-      impactStats.value = statsRes.data.data.setting
+      impactStats.value = statsRes.data.data.setting.value
     }
 
     if (aboutRes.data.success && aboutRes.data.data.setting) {
       aboutMuv.value = aboutRes.data.data.setting
+    }
+
+    if (catRes.data.success && catRes.data.data.setting) {
+      categories.value = [
+        { id: 'all', label: 'Todos' },
+        ...catRes.data.data.setting.value
+      ]
+    } else {
+      categories.value = [
+        { id: 'all', label: 'Todos' },
+        { id: 'web', label: 'Web Apps' },
+        { id: 'mobile', label: 'Mobile' },
+        { id: 'system', label: 'Sistemas & ERP' },
+        { id: 'design', label: 'UI/UX Design' }
+      ]
     }
   } catch (error) {
     console.error('Erro ao buscar dados do portfólio:', error)
@@ -48,7 +60,7 @@ const fetchProjects = async () => {
 }
 
 onMounted(() => {
-  fetchProjects()
+  fetchData()
 })
 
 const filteredProjects = computed(() => {

@@ -11,29 +11,45 @@ const selectedProduct = ref(null)
 const quantity = ref(1)
 const activeThumbIndex = ref(0)
 
-const categories = [
-  { id: 'all', label: 'Todos' },
-  { id: 'solar', label: 'Painéis & Solar' },
-  { id: 'lighting', label: 'Iluminação LED' },
-  { id: 'accessories', label: 'Acessórios' }
-]
+const categories = ref([
+  { id: 'all', label: 'Todos' }
+])
 
-const fetchProducts = async () => {
+const fetchData = async () => {
   try {
     loading.value = true
-    const response = await contentService.getProducts()
-    if (response.data.success) {
-      products.value = response.data.data.products
+    const [prodRes, catRes] = await Promise.all([
+      contentService.getProducts(),
+      contentService.getSetting('product_categories')
+    ])
+    
+    if (prodRes.data.success) {
+      products.value = prodRes.data.data.products
+    }
+    
+    if (catRes.data.success && catRes.data.data.setting) {
+      categories.value = [
+        { id: 'all', label: 'Todos' },
+        ...catRes.data.data.setting.value
+      ]
+    } else {
+      // Fallback
+      categories.value = [
+        { id: 'all', label: 'Todos' },
+        { id: 'solar', label: 'Solar' },
+        { id: 'lighting', label: 'Iluminação' },
+        { id: 'accessories', label: 'Acessórios' }
+      ]
     }
   } catch (error) {
-    console.error('Erro ao buscar produtos:', error)
+    console.error('Erro ao buscar dados:', error)
   } finally {
     loading.value = false
   }
 }
 
 onMounted(() => {
-  fetchProducts()
+  fetchData()
 })
 
 const filteredProducts = computed(() => {
