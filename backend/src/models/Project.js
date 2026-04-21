@@ -9,7 +9,6 @@ const projectSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'A categoria é obrigatória'],
-    enum: ['web', 'mobile', 'system', 'design'],
     default: 'web'
   },
   description: {

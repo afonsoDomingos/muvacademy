@@ -21,7 +21,6 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ['solar', 'lighting', 'accessories', 'other'],
     default: 'other'
   },
   stock: {
