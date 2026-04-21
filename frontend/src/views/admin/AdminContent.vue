@@ -41,6 +41,11 @@ const aboutUsSetting = ref({
 })
 
 const partnersSetting = ref([])
+const impactStatsSetting = ref([
+    { label: 'Empresas Transformadas', value: '50', icon: 'pi pi-building' },
+    { label: 'Projetos GIS Concluídos', value: '100', icon: 'pi pi-map' },
+    { label: 'Países Atendidos', value: '10', icon: 'pi pi-globe' }
+])
 
 const bannerForm = ref({
   title: { pt: '', en: '' },
@@ -87,11 +92,12 @@ async function loadData() {
   services.value = await contentStore.fetchServices()
   projects.value = await contentStore.fetchProjects()
    try {
-     const [wsRes, setRes, aboutRes, partnersRes] = await Promise.all([
+     const [wsRes, setRes, aboutRes, partnersRes, impactStatsRes] = await Promise.all([
         api.get('/workshops'),
         api.get('/content/settings/top_announcement'),
         api.get('/content/settings/about_us').catch(() => ({ data: { data: { setting: null } } })),
-        api.get('/content/settings/partners').catch(() => ({ data: { data: { setting: null } } }))
+        api.get('/content/settings/partners').catch(() => ({ data: { data: { setting: null } } })),
+        api.get('/content/settings/impact_stats').catch(() => ({ data: { data: { setting: null } } }))
      ])
      workshops.value = wsRes.data.data.workshops
      if (setRes.data.data.setting) {
@@ -123,10 +129,31 @@ async function loadData() {
      } else {
          partnersSetting.value = [];
      }
+
+     if (impactStatsRes.data.data.setting && impactStatsRes.data.data.setting.value) {
+         impactStatsSetting.value = impactStatsRes.data.data.setting.value;
+     }
   } catch (e) {
      console.error('Error loading extra data:', e)
   }
   loading.value = false
+}
+
+async function saveImpactStats() {
+  try {
+      await api.put('/content/settings/impact_stats', { value: impactStatsSetting.value })
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Números de impacto atualizados', life: 3000 })
+  } catch (err) {
+      toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar números', life: 3000 })
+  }
+}
+
+function addImpactStat() {
+    impactStatsSetting.value.push({ label: '', value: '', icon: 'pi pi-chart-bar' })
+}
+
+function removeImpactStat(idx) {
+    impactStatsSetting.value.splice(idx, 1)
 }
 
 async function saveAnnouncement() {
@@ -520,6 +547,51 @@ onMounted(loadData)
           <div class="field">
               <label class="block text-xs font-bold text-slate-600 dark:text-slate-300 mb-1">Valores (Separados por vírgula)</label>
               <InputText v-model="aboutUsSetting.values" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" placeholder="Inovação, Qualidade, União..." />
+          </div>
+      </div>
+    </section>
+
+    <!-- Contador de Impacto Section -->
+    <section class="mb-16">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-chart-bar text-primary-500 dark:text-primary-400"></i>
+          Contador de Impacto (Números Reais)
+        </h2>
+        <button @click="saveImpactStats" class="btn btn-primary !py-2 !px-6 text-sm shadow-[0_0_15px_rgba(16,185,129,0.3)]">
+          <i class="pi pi-save"></i> Guardar Números
+        </button>
+      </div>
+      <div class="glass-card p-6 border-l-4 border-primary-500">
+          <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-200 dark:border-white/5">
+              <span class="text-sm text-slate-600 dark:text-slate-400">Estes números serão animados na página de portfólio para mostrar o impacto da MUV.</span>
+              <button @click="addImpactStat" class="btn btn-secondary !p-2 text-xs">
+                  <i class="pi pi-plus"></i> Adicionar Estatística
+              </button>
+          </div>
+
+          <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div v-for="(stat, index) in impactStatsSetting" :key="index" class="bg-slate-50 dark:bg-black/20 p-4 rounded-xl border border-slate-200 dark:border-white/5 relative group">
+                  <div class="field mb-3">
+                      <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Rótulo / Descrição</label>
+                      <InputText v-model="stat.label" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" placeholder="Ex: Projetos GIS" />
+                  </div>
+                  <div class="flex gap-2">
+                      <div class="flex-1">
+                          <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Valor (Número)</label>
+                          <InputText v-model="stat.value" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" placeholder="Ex: 100" />
+                      </div>
+                      <div class="w-16">
+                          <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Ícone</label>
+                          <InputText v-model="stat.icon" class="input w-full !bg-white dark:!bg-slate-900 border-slate-300 dark:border-white/10 !text-sm text-slate-900 dark:text-white" placeholder="pi-..." />
+                      </div>
+                      <div class="pt-5">
+                          <button @click="removeImpactStat(index)" class="btn bg-red-100 dark:bg-red-500/20 text-red-500 dark:text-red-400 border border-red-200 dark:border-red-500/20 hover:bg-red-500 hover:text-white !p-2 transition-all">
+                              <i class="pi pi-trash"></i>
+                          </button>
+                      </div>
+                  </div>
+              </div>
           </div>
       </div>
     </section>

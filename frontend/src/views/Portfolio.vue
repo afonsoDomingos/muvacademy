@@ -12,17 +12,32 @@ const categories = [
 
 const activeCategory = ref('all')
 const projects = ref([])
+const impactStats = ref([])
 const loading = ref(true)
 
 const fetchProjects = async () => {
   try {
     loading.value = true
-    const response = await contentService.getProjects()
-    if (response.data.success) {
-      projects.value = response.data.data.projects
+    const [projRes, statsRes] = await Promise.all([
+      contentService.getProjects(),
+      contentService.getSetting('impact_stats')
+    ])
+    
+    if (projRes.data.success) {
+      projects.value = projRes.data.data.projects
+    }
+
+    if (statsRes.data.success && statsRes.data.data.setting) {
+      impactStats.value = statsRes.data.data.setting
+    } else {
+      impactStats.value = [
+        { label: 'Empresas Transformadas', value: '50', icon: 'pi pi-building' },
+        { label: 'Projetos GIS Concluídos', value: '100', icon: 'pi pi-map' },
+        { label: 'Países Atendidos', value: '10', icon: 'pi pi-globe' }
+      ]
     }
   } catch (error) {
-    console.error('Erro ao buscar projetos:', error)
+    console.error('Erro ao buscar dados do portfólio:', error)
   } finally {
     loading.value = false
   }
@@ -57,6 +72,28 @@ const filteredProjects = computed(() => {
         Transformamos ideias complexas em plataformas digitais elegantes. Conheça as nossas 
         soluções de destaque criadas sob medida para nossos clientes.
       </p>
+    </section>
+
+    <!-- Impact Stats Bar -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 bg-white/50 dark:bg-white/5 backdrop-blur-xl rounded-[2.5rem] p-8 md:p-12 border border-white/10 shadow-xl relative overflow-hidden group">
+        <!-- Background Gradient Glow -->
+        <div class="absolute -top-24 -left-24 w-64 h-64 bg-primary-500/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-primary-500/20 transition-all duration-700"></div>
+        
+        <div v-for="(stat, index) in impactStats" :key="index" class="relative flex flex-col items-center text-center p-4">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-500/20 to-accent-500/20 flex items-center justify-center mb-6 border border-white/10 group-hover:scale-110 transition-transform duration-500">
+            <i :class="stat.icon" class="text-2xl text-primary-500 dark:text-primary-400"></i>
+          </div>
+          <div class="flex items-baseline justify-center gap-1 mb-2">
+            <span class="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mt-1">+</span>
+            <span class="text-4xl md:text-5xl font-display font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-accent-500">{{ stat.value }}</span>
+          </div>
+          <p class="text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">{{ stat.label }}</p>
+          
+          <!-- Divider for mobile/tablet -->
+          <div v-if="index < impactStats.length - 1" class="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 h-16 w-px bg-gradient-to-b from-transparent via-gray-200 dark:via-white/10 to-transparent"></div>
+        </div>
+      </div>
     </section>
 
     <!-- Filters Section -->
