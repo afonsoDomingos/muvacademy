@@ -1,4 +1,4 @@
-import cloudinary, { uploadCourseImage, uploadAvatar, uploadProof, uploadMaterial, uploadBanner, uploadWorkshop, uploadProduct } from '../config/cloudinary.js';
+import cloudinary, { uploadCourseImage, uploadAvatar, uploadProof, uploadMaterial, uploadBanner, uploadWorkshop, uploadProduct, uploadGallery } from '../config/cloudinary.js';
 
 // Upload banner
 export const uploadBannerHandler = (req, res) => {
@@ -21,6 +21,15 @@ export const uploadWorkshopHandler = (req, res) => {
 // Upload product image
 export const uploadProductHandler = (req, res) => {
     uploadProduct.single('image')(req, res, (err) => {
+        if (err) return res.status(400).json({ success: false, message: err.message });
+        if (!req.file) return res.status(400).json({ success: false, message: 'Nenhum arquivo enviado.' });
+        res.json({ success: true, data: { url: req.file.path, publicId: req.file.filename } });
+    });
+};
+
+// Upload gallery field photo
+export const uploadGalleryHandler = (req, res) => {
+    uploadGallery.single('image')(req, res, (err) => {
         if (err) return res.status(400).json({ success: false, message: err.message });
         if (!req.file) return res.status(400).json({ success: false, message: 'Nenhum arquivo enviado.' });
         res.json({ success: true, data: { url: req.file.path, publicId: req.file.filename } });

@@ -42,6 +42,16 @@ const workshopStorage = new CloudinaryStorage({
     }
 });
 
+// Storage for gallery (field photos)
+const galleryStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'muv-academy/gallery',
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+        transformation: [{ width: 1200, height: 900, crop: 'limit', quality: 'auto' }]
+    }
+});
+
 // Storage for products
 const productStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
@@ -132,6 +142,11 @@ export const uploadWorkshop = multer({
 export const uploadProduct = multer({
     storage: productStorage,
     limits: { fileSize: 5 * 1024 * 1024 }
+});
+
+export const uploadGallery = multer({
+    storage: galleryStorage,
+    limits: { fileSize: 10 * 1024 * 1024 } // 10MB for field photos
 });
 
 // Direct Cloudinary upload function

@@ -19,15 +19,18 @@ const services = ref([])
 const workshops = ref([])
 const projects = ref([])
 const products = ref([])
+const galleryPhotos = ref([])
 const loading = ref(true)
 
 const showBannerDialog = ref(false)
 const showServiceDialog = ref(false)
 const showWorkshopDialog = ref(false)
 const showProjectDialog = ref(false)
+const showGalleryDialog = ref(false)
 const productDialog = ref(false)
 const editingItem = ref(null)
 const editingProduct = ref(null)
+const editingGalleryPhoto = ref(null)
 
 const productForm = ref({
   name: '',
@@ -100,6 +103,17 @@ const projectForm = ref({
   order: 0
 })
 
+const galleryForm = ref({
+  title: '',
+  description: '',
+  image: '',
+  imagePublicId: '',
+  location: '',
+  category: 'campo',
+  isPublished: true,
+  order: 0
+})
+
 import api from '@/services/api'
 
 async function loadData() {
@@ -108,6 +122,13 @@ async function loadData() {
   services.value = await contentStore.fetchServices()
   projects.value = await contentStore.fetchProjects()
   products.value = await contentStore.fetchProducts()
+  // Load gallery photos
+  try {
+    const galleryRes = await api.get('/gallery/admin/all')
+    if (galleryRes.data.success) galleryPhotos.value = galleryRes.data.data.photos
+  } catch (e) {
+    console.error('Gallery load error:', e)
+  }
    try {
      const [wsRes, setRes, aboutRes, partnersRes, impactStatsRes, prodCatsRes, projCatsRes] = await Promise.all([
         api.get('/workshops'),
@@ -178,6 +199,62 @@ async function loadData() {
      console.error('Error loading extra data:', e)
   }
   loading.value = false
+}
+
+// =============================================
+// Gallery Photo CRUD Functions
+// =============================================
+
+function openNewGalleryPhoto() {
+  editingGalleryPhoto.value = null
+  galleryForm.value = { title: '', description: '', image: '', imagePublicId: '', location: '', category: 'campo', isPublished: true, order: 0 }
+  showGalleryDialog.value = true
+}
+
+function editGalleryPhoto(photo) {
+  editingGalleryPhoto.value = photo
+  galleryForm.value = { ...photo }
+  showGalleryDialog.value = true
+}
+
+async function saveGalleryPhoto() {
+  if (!galleryForm.value.image) {
+    toast.add({ severity: 'warn', summary: 'Atenção', detail: 'É necessário fazer upload de uma imagem', life: 3000 })
+    return
+  }
+  try {
+    if (editingGalleryPhoto.value) {
+      await api.put(`/gallery/${editingGalleryPhoto.value._id}`, galleryForm.value)
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Foto atualizada', life: 3000 })
+    } else {
+      await api.post('/gallery', galleryForm.value)
+      toast.add({ severity: 'success', summary: 'Sucesso', detail: 'Foto adicionada à galeria', life: 3000 })
+    }
+    showGalleryDialog.value = false
+    const galleryRes = await api.get('/gallery/admin/all')
+    if (galleryRes.data.success) galleryPhotos.value = galleryRes.data.data.photos
+  } catch (err) {
+    toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao guardar foto', life: 3000 })
+  }
+}
+
+function confirmDeleteGalleryPhoto(id) {
+  confirmation.require({
+    message: 'Tem a certeza que deseja eliminar esta foto da galeria?',
+    header: 'Confirmação de Eliminação',
+    icon: 'pi pi-exclamation-triangle',
+    acceptClass: 'p-button-danger',
+    accept: async () => {
+      try {
+        await api.delete(`/gallery/${id}`)
+        toast.add({ severity: 'success', summary: 'Eliminada', detail: 'Foto removida da galeria', life: 3000 })
+        const galleryRes = await api.get('/gallery/admin/all')
+        if (galleryRes.data.success) galleryPhotos.value = galleryRes.data.data.photos
+      } catch (err) {
+        toast.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao eliminar foto', life: 3000 })
+      }
+    }
+  })
 }
 
 async function saveCategories() {
@@ -586,6 +663,7 @@ async function handleFileUpload(event, type) {
     if (type === 'workshop') endpoint = '/upload/workshop'
     if (type === 'product') endpoint = '/upload/product'
     if (type === 'project') endpoint = '/upload/course-image' // Reuse course image for projects
+    if (type === 'gallery') endpoint = '/upload/gallery'
 
     const res = await api.post(endpoint, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -605,6 +683,9 @@ async function handleFileUpload(event, type) {
     } else if (type === 'product') {
       if (!productForm.value.images) productForm.value.images = []
       productForm.value.images.push(res.data.data.url)
+    } else if (type === 'gallery') {
+      galleryForm.value.image = res.data.data.url
+      galleryForm.value.imagePublicId = res.data.data.publicId
     } else if (type.startsWith('partner-')) {
       const idx = parseInt(type.split('-')[1])
       partnersSetting.value[idx].image = res.data.data.url
@@ -1050,6 +1131,73 @@ onMounted(loadData)
       </div>
     </section>
 
+    <!-- Galeria do Campo Section -->
+    <section class="mt-16 mb-16">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="pi pi-camera text-emerald-500 dark:text-emerald-400"></i>
+          Galeria do Campo (Fotos Reais)
+        </h2>
+        <button @click="openNewGalleryPhoto" class="btn btn-primary !py-2 !px-4 text-sm">
+          <i class="pi pi-plus"></i> Adicionar Foto
+        </button>
+      </div>
+
+      <div class="glass-card p-4 mb-6 border-l-4 border-emerald-500">
+        <p class="text-sm text-slate-600 dark:text-slate-400">
+          <i class="pi pi-info-circle mr-2 text-emerald-500"></i>
+          As fotos publicadas aqui aparecerão na página inicial do site na secção <strong>"Galeria do Campo"</strong>. 
+          Partilhe imagens autênticas dos vossos projetos, instalações e equipa no terreno.
+        </p>
+      </div>
+
+      <div v-if="galleryPhotos.length === 0" class="glass-card p-12 text-center">
+        <i class="pi pi-camera text-5xl text-slate-300 dark:text-slate-600 mb-4 block"></i>
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Nenhuma foto ainda</h3>
+        <p class="text-slate-500 dark:text-slate-400 mb-6">Adiciona a primeira foto do campo para aparecer no site.</p>
+        <button @click="openNewGalleryPhoto" class="btn btn-primary !py-2 !px-6 text-sm">
+          <i class="pi pi-plus"></i> Adicionar Primeira Foto
+        </button>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div v-for="photo in galleryPhotos" :key="photo._id" class="glass-card overflow-hidden group relative">
+          <!-- Publish status badge -->
+          <div class="absolute top-2 left-2 z-10">
+            <span :class="photo.isPublished ? 'bg-emerald-500/90 text-white' : 'bg-slate-500/90 text-white'" class="text-[9px] font-bold uppercase px-2 py-1 rounded-full backdrop-blur-sm">
+              {{ photo.isPublished ? 'Publicada' : 'Oculta' }}
+            </span>
+          </div>
+          <!-- Category badge -->
+          <div v-if="photo.category" class="absolute top-2 right-2 z-10">
+            <span class="text-[9px] font-bold uppercase px-2 py-1 rounded-full backdrop-blur-sm bg-black/50 text-white">
+              {{ { campo: 'Campo', instalacao: 'Instalação', equipa: 'Equipa', formacao: 'Formação', evento: 'Evento', outro: 'Outro' }[photo.category] }}
+            </span>
+          </div>
+          <!-- Image -->
+          <div class="h-40 relative overflow-hidden bg-slate-100 dark:bg-black/30">
+            <img :src="photo.image" :alt="photo.title" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-500" />
+            <!-- Hover actions -->
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center gap-2">
+              <button @click="editGalleryPhoto(photo)" class="btn btn-secondary !p-2 rounded-full" title="Editar">
+                <i class="pi pi-pencil"></i>
+              </button>
+              <button @click="confirmDeleteGalleryPhoto(photo._id)" class="btn bg-red-500 text-white border-none !p-2 rounded-full" title="Eliminar">
+                <i class="pi pi-trash"></i>
+              </button>
+            </div>
+          </div>
+          <!-- Info -->
+          <div class="p-3">
+            <h3 class="font-bold text-slate-900 dark:text-white text-sm truncate">{{ photo.title || 'Sem título' }}</h3>
+            <p v-if="photo.location" class="text-[10px] text-slate-500 flex items-center gap-1 mt-0.5">
+              <i class="pi pi-map-marker text-[8px]"></i> {{ photo.location }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Portfolio Section -->
     <section class="mt-16">
       <div class="flex justify-between items-center mb-6">
@@ -1345,6 +1493,93 @@ onMounted(loadData)
       <template #footer>
         <button @click="productDialog = false" class="btn btn-secondary !py-2 !px-4">Cancelar</button>
         <button @click="saveProduct" class="btn btn-primary !py-2 !px-4">Guardar Produto</button>
+      </template>
+    </Dialog>
+
+    <!-- Gallery Photo Dialog -->
+    <Dialog v-model:visible="showGalleryDialog" :header="editingGalleryPhoto ? 'Editar Foto do Campo' : 'Adicionar Foto à Galeria'" modal class="p-fluid w-full max-w-2xl bg-surface-dark text-white">
+      <div class="grid gap-6 py-4">
+        <!-- Title & Category -->
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Título da Foto</label>
+            <InputText v-model="galleryForm.title" class="input" placeholder="Ex: Instalação de Painéis Fotovoltaicos" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Categoria</label>
+            <Dropdown 
+              v-model="galleryForm.category" 
+              :options="[
+                { id: 'campo', label: 'Trabalho de Campo' },
+                { id: 'instalacao', label: 'Instalação' },
+                { id: 'equipa', label: 'Equipa' },
+                { id: 'formacao', label: 'Formação' },
+                { id: 'evento', label: 'Evento / Workshop' },
+                { id: 'outro', label: 'Outros' }
+              ]" 
+              optionLabel="label" 
+              optionValue="id" 
+              class="input" 
+            />
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="field">
+          <label class="block text-sm font-bold mb-2">Descrição / Legenda</label>
+          <Textarea v-model="galleryForm.description" rows="3" class="input w-full" placeholder="Descrição ou notas sobre o trabalho..." />
+        </div>
+
+        <!-- Image Upload and Preview -->
+        <div class="field">
+          <label class="block text-sm font-bold mb-2">Imagem da Foto (Fazer Upload)</label>
+          <div class="flex flex-col sm:flex-row gap-4 items-center">
+            <!-- Preview Box -->
+            <div class="w-48 h-32 rounded-xl border border-white/10 overflow-hidden bg-slate-900 flex items-center justify-center flex-shrink-0">
+              <img v-if="galleryForm.image" :src="galleryForm.image" class="w-full h-full object-cover" />
+              <div v-else class="text-center p-4 text-slate-500">
+                <i class="pi pi-camera text-2xl mb-1 block"></i>
+                <span class="text-[10px] uppercase font-bold">Sem imagem</span>
+              </div>
+            </div>
+            <!-- Upload Trigger -->
+            <div class="flex-1 w-full">
+              <label class="btn btn-secondary !py-3 !px-6 cursor-pointer flex items-center justify-center gap-3 border border-white/10 w-full text-center">
+                <i v-if="uploading" class="pi pi-spin pi-spinner"></i>
+                <i v-else class="pi pi-upload"></i>
+                <span>{{ galleryForm.image ? 'Substituir Imagem' : 'Carregar Imagem' }}</span>
+                <input type="file" @change="handleFileUpload($event, 'gallery')" class="hidden" accept="image/*" />
+              </label>
+              <p class="text-[10px] text-slate-500 mt-2 text-center sm:text-left">Formatos aceites: JPG, PNG, WEBP. Tamanho máx: 10MB</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Location, Order & Status -->
+        <div class="grid sm:grid-cols-3 gap-4">
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Localização (Cidade/Província)</label>
+            <InputText v-model="galleryForm.location" class="input" placeholder="Ex: Matola, Maputo" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Ordem de Exibição</label>
+            <InputText v-model.number="galleryForm.order" type="number" class="input" placeholder="0" />
+          </div>
+          <div class="field">
+            <label class="block text-sm font-bold mb-2">Estado de Publicação</label>
+            <label class="flex items-center gap-3 cursor-pointer p-2 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-slate-900/60 transition-colors h-[42px] mt-0">
+              <div class="relative">
+                <input type="checkbox" v-model="galleryForm.isPublished" class="sr-only peer">
+                <div class="w-11 h-6 bg-slate-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-200 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+              </div>
+              <span class="text-xs font-bold text-white whitespace-nowrap">{{ galleryForm.isPublished ? 'Publicar' : 'Ocultar' }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <template #footer>
+        <button @click="showGalleryDialog = false" class="btn btn-secondary !py-2 !px-4">Cancelar</button>
+        <button @click="saveGalleryPhoto" class="btn btn-primary !py-2 !px-4">Guardar Registo</button>
       </template>
     </Dialog>
 

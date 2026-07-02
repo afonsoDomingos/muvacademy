@@ -9,3 +9,4 @@ export { default as Log } from './Log.js';
 export { default as Setting } from './Setting.js';
 export { default as Project } from './Project.js';
 export { default as Product } from './Product.js';
+export { default as GalleryPhoto } from './GalleryPhoto.js';

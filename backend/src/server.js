@@ -20,6 +20,7 @@ import serviceRequestRoutes from './routes/serviceRequest.routes.js';
 import workshopRoutes from './routes/workshop.routes.js';
 import organizationRoutes from './routes/organization.routes.js';
 import contentRoutes from './routes/content.routes.js';
+import galleryRoutes from './routes/gallery.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -104,6 +105,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/stats', statsRoutes);
 app.use('/api/content', contentRoutes);
+app.use('/api/gallery', galleryRoutes);
 app.use('/api/service-requests', serviceRequestRoutes);
 app.use('/api/workshops', workshopRoutes);
 app.use('/api/organization', organizationRoutes);

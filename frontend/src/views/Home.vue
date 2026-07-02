@@ -24,6 +24,7 @@ const banners = ref([])
 const services = ref([])
 const workshops = ref([])
 const partners = ref([])
+const galleryPhotos = ref([])
 const aboutUs = ref({
    title: 'MUV Educação e Engenharia',
    description: 'A MUV é uma empresa moçambicana especializada em Educação, Engenharia e Transformação Digital, comprometida em impulsionar o desenvolvimento sustentável de pessoas e organizações. Acreditamos que educação e tecnologia são os motores do progresso — por isso, unimos formação de excelência e soluções tecnológicas práticas para preparar profissionais e empresas para os desafios do futuro.',
@@ -77,13 +78,14 @@ const selectSlide = (index) => {
 onMounted(async () => {
   try {
     loading.value = true
-    const [coursesData, bannersData, servicesData, workshopsRes, aboutRes, partnersRes] = await Promise.all([
+    const [coursesData, bannersData, servicesData, workshopsRes, aboutRes, partnersRes, galleryRes] = await Promise.all([
       courseStore.fetchFeaturedCourses().catch(e => { console.error('FeaturedCourses Error:', e); return [] }),
       contentStore.fetchHomeBanners().catch(e => { console.error('Banners Error:', e); return [] }),
       contentStore.fetchServices().catch(e => { console.error('Services Error:', e); return [] }),
       api.get('/workshops').catch(e => { console.error('Workshops Error:', e); return { data: { data: { workshops: [] } } } }),
       api.get('/content/settings/about_us').catch(e => { console.error('About Error:', e); return { data: { data: { setting: null } } } }),
-      api.get('/content/settings/partners').catch(e => { console.error('Partners Error:', e); return { data: { data: { setting: null } } } })
+      api.get('/content/settings/partners').catch(e => { console.error('Partners Error:', e); return { data: { data: { setting: null } } } }),
+      api.get('/gallery').catch(e => { console.error('Gallery Error:', e); return { data: { data: { photos: [] } } } })
     ])
     
     featuredCourses.value = coursesData || []
@@ -97,6 +99,10 @@ onMounted(async () => {
 
     if (partnersRes.data?.data?.setting?.value) {
       partners.value = partnersRes.data.data.setting.value
+    }
+
+    if (galleryRes.data?.data?.photos) {
+      galleryPhotos.value = galleryRes.data.data.photos
     }
     
     // Smooth scroll for pretty URLs
@@ -177,6 +183,24 @@ const selectedWorkshopImage = ref(null)
 const openWorkshopImage = (workshop) => {
   selectedWorkshopImage.value = workshop
   showWorkshopImageModal.value = true
+}
+
+// Gallery lightbox
+const showGalleryModal = ref(false)
+const selectedGalleryPhoto = ref(null)
+
+const openGalleryPhoto = (photo) => {
+  selectedGalleryPhoto.value = photo
+  showGalleryModal.value = true
+}
+
+const galleryCategories = {
+  campo: 'Campo',
+  instalacao: 'Instalação',
+  equipa: 'Equipa',
+  formacao: 'Formação',
+  evento: 'Evento',
+  outro: 'Outro'
 }
 </script>
 
@@ -497,6 +521,75 @@ const openWorkshopImage = (workshop) => {
       </div>
     </section>
 
+    <!-- ============================================ -->
+    <!-- GALERIA DO CAMPO -->
+    <!-- ============================================ -->
+    <section v-if="galleryPhotos.length > 0" class="py-20 lg:py-32 relative overflow-hidden">
+      <!-- Background decorations -->
+      <div class="absolute inset-0 bg-gradient-to-b from-transparent via-primary-500/3 to-transparent pointer-events-none"></div>
+      <div class="absolute top-20 right-0 w-80 h-80 bg-accent-500/8 rounded-full blur-[100px] pointer-events-none"></div>
+      <div class="absolute bottom-20 left-0 w-80 h-80 bg-primary-500/8 rounded-full blur-[100px] pointer-events-none"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+          <div class="inline-flex items-center gap-2 px-4 py-2 bg-accent-500/10 text-accent-500 dark:text-accent-400 text-sm font-bold rounded-full mb-6 border border-accent-500/20">
+            <i class="pi pi-camera text-xs"></i>
+            MUV no Terreno
+          </div>
+          <h2 class="text-4xl md:text-5xl font-display font-bold text-gray-900 dark:text-white mb-6">
+            Galeria do <span class="gradient-text">Campo</span>
+          </h2>
+          <p class="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            Imagens reais dos nossos projetos, instalações e equipas no terreno. 
+            Ver para crer — isto é a MUV em ação.
+          </p>
+        </div>
+
+        <!-- Gallery Grid -->
+        <div class="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4">
+          <div
+            v-for="(photo, index) in galleryPhotos"
+            :key="photo._id"
+            @click="openGalleryPhoto(photo)"
+            class="break-inside-avoid group relative overflow-hidden rounded-2xl cursor-pointer bg-gray-100 dark:bg-surface-dark border border-gray-200 dark:border-white/5 hover:border-primary-500/40 transition-all duration-500 hover:-translate-y-1 hover:shadow-2xl hover:shadow-primary-500/10"
+          >
+            <!-- Image -->
+            <img
+              :src="photo.image"
+              :alt="photo.title || 'Foto do campo'"
+              class="w-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+              loading="lazy"
+            />
+
+            <!-- Hover overlay -->
+            <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-400 flex flex-col justify-end p-4">
+              <!-- Category badge -->
+              <span v-if="photo.category" class="self-start mb-2 text-[10px] font-bold uppercase tracking-widest px-2 py-1 bg-primary-500/80 text-white rounded-full backdrop-blur-sm">
+                {{ galleryCategories[photo.category] || photo.category }}
+              </span>
+              <p v-if="photo.title" class="text-white font-bold text-sm leading-tight mb-1">{{ photo.title }}</p>
+              <p v-if="photo.location" class="text-white/70 text-xs flex items-center gap-1">
+                <i class="pi pi-map-marker text-[9px]"></i>
+                {{ photo.location }}
+              </p>
+              <!-- Zoom icon -->
+              <div class="absolute top-3 right-3 w-9 h-9 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center border border-white/20">
+                <i class="pi pi-search-plus text-white text-sm"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- View more link (optional future) -->
+        <div class="text-center mt-12">
+          <router-link to="/portifolio" class="inline-flex items-center gap-2 text-primary-500 dark:text-primary-400 font-bold hover:gap-3 transition-all">
+            Ver Portfólio Completo <i class="pi pi-arrow-right text-sm"></i>
+          </router-link>
+        </div>
+      </div>
+    </section>
+
     <!-- CTA Section -->
     <section class="py-20 lg:py-40 relative overflow-hidden">
       <div class="absolute inset-0 bg-primary-600"></div>
@@ -542,6 +635,53 @@ const openWorkshopImage = (workshop) => {
            <a :href="selectedWorkshopImage.link" target="_blank" class="btn btn-primary !py-4 !px-8 text-lg font-bold shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] transition-shadow whitespace-nowrap">
              Inscrever-se Agora <i class="pi pi-arrow-up-right ml-2"></i>
            </a>
+        </div>
+      </div>
+    </Dialog>
+
+    <!-- Gallery Photo Lightbox Modal -->
+    <Dialog
+      v-model:visible="showGalleryModal"
+      modal
+      dismissableMask
+      class="p-0 overflow-hidden bg-surface-dark border-none w-full max-w-4xl mx-4"
+      contentClass="p-0 overflow-hidden"
+      :showHeader="false"
+    >
+      <div v-if="selectedGalleryPhoto" class="relative">
+        <!-- Close button -->
+        <button
+          @click="showGalleryModal = false"
+          class="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-black/50 backdrop-blur-sm text-white flex items-center justify-center hover:bg-black transition-colors"
+        >
+          <i class="pi pi-times"></i>
+        </button>
+
+        <!-- Full image -->
+        <div class="bg-black flex items-center justify-center" style="min-height: 50vh; max-height: 80vh;">
+          <img
+            :src="selectedGalleryPhoto.image"
+            :alt="selectedGalleryPhoto.title"
+            class="max-w-full max-h-[80vh] object-contain"
+          />
+        </div>
+
+        <!-- Info bar -->
+        <div v-if="selectedGalleryPhoto.title || selectedGalleryPhoto.description || selectedGalleryPhoto.location" class="p-6 bg-surface-dark border-t border-white/10">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <span v-if="selectedGalleryPhoto.category" class="text-[10px] font-bold uppercase tracking-widest px-2 py-1 bg-primary-500/20 text-primary-400 rounded-full border border-primary-500/20">
+                  {{ galleryCategories[selectedGalleryPhoto.category] || selectedGalleryPhoto.category }}
+                </span>
+                <span v-if="selectedGalleryPhoto.location" class="text-xs text-slate-400 flex items-center gap-1">
+                  <i class="pi pi-map-marker text-[9px]"></i> {{ selectedGalleryPhoto.location }}
+                </span>
+              </div>
+              <h3 v-if="selectedGalleryPhoto.title" class="text-white font-bold text-lg mb-1">{{ selectedGalleryPhoto.title }}</h3>
+              <p v-if="selectedGalleryPhoto.description" class="text-slate-400 text-sm leading-relaxed">{{ selectedGalleryPhoto.description }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </Dialog>
